@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .table-container {
+        height: 600px;
+        padding-bottom: 100%;
+          }
+    .button-container {
+       width: 100px;
+        margin-left: 540px;
+        background-color: rgb(230, 171, 45);
+    }
+    .form-control{
+      background-color: black transparent;
+    }
+    .button-container a{
+        color: #FFFEEE;
+    }
+    td a{
+        color: rgb(247, 246, 244);
+    }
+    #over:hover{
+        background-color: rgba(110, 110, 110, 0.616);
+        
+    }
+    td {
+    white-space: nowrap; /* Prevent content from wrapping */
+    /* Add any additional styles or width as needed */
+    color: #FFFEEE;
+  }
+  tr{
+    color: #fff;
+  }
+  
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
+
+
+
+
+
+
+<div class="table-container bg-dark" style="border-radius: 10px; width: 100%;padding-left: 20px;padding-right: 20px;padding-top: 20px;">
+  <div class="heading" >
+    <h1 class="text-center"style="margin-top: 20px;">Payment Made</h1>
+  </div>
+  <div class="row mt-3 " style="margin-top: -3rem; margin-left:1rem;" >
+    <div class="col-md-10 form-inline ">
+      <div class="row">
+        
+        <input type="text"  id="searchInput" class="form-control bg-dark" oninput="searchTable()" placeholder="Search Payment Made..." style="margin-top: 25px; width: 30%;border: 2px solid rgb(214, 141, 5);">
+        
+        <div class="btn-group" role="group"  style="margin-top:1.7rem;display:inline-flex;width:4rem;height:2rem;">
+          <button  type="button" class="btn text-white btn-outline-light " style="background-color: rgb(214, 141, 5);border-radius: 5px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa-solid fa-sort"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'paymentmethod' %}">All</a>
+            <a class="dropdown-item" href="{% url 'view_vendor_name' %}">Name</a>
+            <a class="dropdown-item" href="{% url 'view_paidthrough' %}">Paid Through</a>
+           
+          </div>
+          
+        </div>
+        <div class="btn-group" role="group"  style="margin-left: 89%;margin-top:-1.9rem;display:inline-flex;width:4rem">
+          <button id="btnGroupDrop1" type="button" class="btn btn-outline-light" style="background-color: rgb(214, 141, 5);border-radius: 5px;color: white;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-filter"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="" id="filterAllButton">All</a>
+            <a class="dropdown-item" href="" id="filterSaveButton">Saved</a>
+            <a class="dropdown-item" href="" id="filterDraftButton">Draft</a>
+          </div>
+          
+        </div>
+        <div class="col-md-9 form-inline"  style="margin-top: -2rem; margin-left:68rem;"><a style="background-color: rgb(214, 141, 5);border-radius: 5px;color: white;" class="btn btn-outline-light " href="{% url 'paymentadd_method' %}"><i class="fa-solid fa-plus "></i>NEW</a>
+          <a style="color: #ccc;"href="#3"> </a>
+        </div> 
+      </div>
+    </div>
+  </div>  
+    <div class="table-responsive">
+    <table id="vendorTable" class="table" style="width:100%;  margin-top: 20px;">
+        <thead>
+            <tr>
+                <th class="text-white">#</th>
+                <th class="text-white">Vendor</th>
+                <th class="text-white">Email Id</th>
+                <th class="text-white">Reference</th>
+                <th class="text-white">Payment Date</th>
+                <th class="text-white">Paid Through</th>
+                <th class="text-white">Ammount Received</th>
+                <th class="text-white">Balance</th>
+                <th class="text-white">status</th>
+
+
+
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in paymnt %}
+                                <tr id="over">
+                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">{{ p.id}}</td>
+                                    <td><a href="{% url 'payment_details_view' p.id %}">{{ p.vendor.first_name}}&nbsp;{{ p.vendor.last_name}}</a></td>
+                                    <td>{{ p.vendor.vendor_email }}</td>
+                                    <td>{{ p.reference }}</td>
+                                    <td>{{ p.date }}</td>
+                                    <td>{{ p.cash }}</td>  
+                                    <td>₹{{ p.balance }}</td>
+                                    <td>₹{{ p.current_balance }}</td>
+                                    <td>{{ p.status }}</td> 
+                                    </tr>
+                                    {% endfor %}
+
+            </tbody>
+            </table>
+        </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+      
+<script>
+// $(document).ready(function() {
+//   var originalTable = $('#vendorTable').clone(); // Clone the original table on page load
+//  // Function to sort items by name
+//  function sortByName() {
+//         var rows = $('#vendorTable tbody tr').get();
+//         rows.sort(function(a, b) {
+//           var keyA = $(a).children('td').eq(0).text().toUpperCase();
+//           var keyB = $(b).children('td').eq(0).text().toUpperCase();
+//           if (keyA < keyB) return -1;
+//           if (keyA > keyB) return 1;
+//           return 0;
+//         });
+//         $.each(rows, function(index, row) {
+//           $('#vendorTable').children('tbody').append(row);
+//         });
+//       }
+// // Function to sort items by HSN/SAC
+// function sortByHSN() {
+//         var rows = $('#vendorTable tbody tr').get();
+//         rows.sort(function(a, b) {
+//           var keyA = $(a).children('td').eq(4).text();
+//           var keyB = $(b).children('td').eq(4).text();
+//           return keyA.localeCompare(keyB);
+//         });
+//         $.each(rows, function(index, row) {
+//           $('#vendorTable').children('tbody').append(row);
+//         });
+//       }
+
+
+//       function restoreOriginalTable() {
+//         $('#vendorTable').replaceWith(originalTable.clone()); // Replace the current table with the original table clone
+//       }
+
+//       $('[data-sort]').on('click', function() {
+//         var sortType = $(this).data('sort');
+//         if (sortType === 'name') {
+//           sortByName();
+//         } else if (sortType === 'HSN') {
+//           sortByHSN();
+//         } 
+//       });
+//     });
+
+
+const vendorTable = document.getElementById("vendorTable").getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+document.getElementById('filterAllButton').addEventListener('click', function (event) {
+  event.preventDefault();
+  showRows('all');
+});
+
+document.getElementById('filterSaveButton').addEventListener('click', function (event) {
+  event.preventDefault();
+  showRows('save');
+});
+
+document.getElementById('filterDraftButton').addEventListener('click', function (event) {
+  event.preventDefault();
+  showRows('draft');
+});
+
+function showRows(status) {
+  for (let i = 0; i < vendorTable.length; i++) {
+    const row = vendorTable[i];
+    const rowStatus = row.getElementsByTagName('td')[8].innerText.toLowerCase(); // Assuming status is in the 9th column (index 8)
+
+    if (status === 'all') {
+      row.style.display = '';
+    } else if (status === rowStatus) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  }
+}
+
+
+
+function searchTable() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("vendorTable");
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        var rowVisible = false;
+
+        for (var j = 0; j < td.length; j++) {
+            var cell = td[j];
+            if (cell) {
+                txtValue = cell.textContent || cell.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    rowVisible = true;
+                    break;
+                }
+            }
+        }
+
+        if (rowVisible) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
+
+
+
+
+    </script>
+    {% endblock %}
+
+  
+

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load mathfilters %}
+
+
+<style>
+    .modal{
+        z-index: 9999;
+
+    }
+</style>
+
+<div class="container-fluid">
+    <div>
+        <center>
+            
+            <h6>{{company.company_name}}</h6>
+            <h2 class="mt-4" id="headline">HOLIDAYS</h2>
+            <div class="display">
+                
+            </div>
+
+        </center>
+    </div>
+    <div  style="justify-content: space-between;display: flex;align-items: center;">
+    
+        <div> 
+            <input type="text" id="search" class="form-control bg-light text-dark" name="search"
+                placeholder="Search Here..." style="width: 20vw;"  onkeyup="searchFunction()">
+        </div>
+        <div>
+            <a class="btn btn-warning " style="font-size: 1rem; width: 12rem;" href="{% url 'holiday_add' %}"><i class="fa fa-plus" aria-hidden="true"></i> Add
+            Holiday</a>
+        </div>
+        
+    </div>
+    <script>
+    
+       function searchFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        // input.style.borderColor = "green";
+        for (i = 1; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+    </script>
+    <table class="table mt-3" style="background-color: rgba(0, 0, 0, 0.568);" id="myTable">
+        <thead>
+            <th class="text-center">Sl no.</th>
+            <th class="text-center">Month</th>
+            <th class="text-center">Holidays</th>
+            <th class="text-center">Working days</th>
+        </thead>
+        {% for key, value in event_counts_json.items %}
+        <tr class="text-light mt-2 pt-1 clickable-row" data-href="{% url 'holidays' key %}">
+            <td class="text-center">{{forloop.counter }}</td>
+            <td class="text-center">{{ key }}</td>
+            <td class="text-center">{{ value.count }}</td>
+            <td class="text-center">{{ value.total_days|sub:value.count }}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+
+
+
+
+<script>
+    jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+   
+   
+</script>
+
+
+{% endblock %}
