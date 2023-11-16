@@ -1620,6 +1620,17 @@ def allestimates(request):
 
     return render(request, 'all_estimates.html', context)
 
+def item_dropdown_estimate(request):
+    user = User.objects.get(id=request.user.id)
+    options = {}
+    option_objects = AddItem.objects.filter(user = request.user)
+    for option in option_objects:
+      display_name = option.Name        
+    #   options[option.id] = [option.Name,option.id]
+      options[option.id] = [display_name, f"{display_name}"]
+
+    return JsonResponse(options)
+
 
 
 
@@ -1629,32 +1640,46 @@ def newestimate(request):
     # print(user_id)
     
     company = company_details.objects.get(user=user)
+    cmp1=company.id
     items = AddItem.objects.filter(user_id=user.id)
     customers = customer.objects.filter(user_id=user.id)
-    # item=AddItem.objects.all()
     unit=Unit.objects.all()
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
-    payments = payment_terms.objects.all()
-    if Estimates.objects.all().exists():
-        estimates_count = Estimates.objects.last().id
-        next_count = estimates_count+1
-    else:
-        next_count=1 
-    # estimates_count = Estimates.objects.last().id
-    # next_count = estimates_count+1
-    context = {'company': company,
-               'items': items,
-               'customers': customers,
-               'count': next_count,
-               'units':unit,
-               'sales':sales,
-               'purchase':purchase,
-               'payments':payments,
-               }
+    payments = payment_terms.objects.filter(user=user)
+    print("helloooooooooooooooooooooooooo")
 
-    return render(request,'new_estimate.html',context)
-
+    try:
+        latest_bill = Estimates.objects.filter(company = cmp1).order_by('-reference').first()
+        print("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii") 
+        if latest_bill:
+                print("ssssssssssssssssssssssssssssssssssssssss") 
+                last_number = int(latest_bill.reference)
+                new_number = last_number + 1
+        else:
+                new_number = 1
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") 
+        if deletedestimates.objects.filter(cid = cmp1).exists():
+                deleted = deletedestimates.objects.get(cid = cmp1)
+                if deleted:
+                    while int(deleted.reference_number) >= new_number:
+                        new_number+=1
+        print("helloooooooooooooooooooooooooo")
+        if Estimates.objects.filter(reference=1).exists():
+                est_obj=Estimates.objects.get(reference=1)
+                est_no=est_obj.estimate_no
+                context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments}
+                return render(request,'new_estimate.html',context)
+        else:
+                context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments}
+                return render(request,'new_estimate.html',context)
+        
+    
+    except Exception as e:
+        return redirect("allestimates")
+                    
+                    
+ 
 
 def itemdata_est(request):
     cur_user = request.user
@@ -1680,6 +1705,8 @@ def createestimate(request):
     print('hi1')
     cur_user = request.user
     user = User.objects.get(id=cur_user.id)
+    cmp=company_details.objects.get(user=user.id)
+    cmp1=cmp
     if request.method == 'POST':
         x=request.POST["hidden_state"]
         y=request.POST["hidden_cus_place"]
@@ -1736,7 +1763,7 @@ def createestimate(request):
         estimate = Estimates(user=user,customer=customer_id1,customer_name=cust_name,customer_mailid=customer_mailid,customer_placesupply=customer_placesupply,estimate_no=est_number, reference=reference, estimate_date=est_date, 
                              expiry_date=exp_date, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, shipping_charge=shipping,
                              adjustment=adjustment, total=total, status=status, customer_notes=cust_note, terms_conditions=tearms_conditions, 
-                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales)
+                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales,company=cmp)
         estimate.save()
 
         if x == y:
@@ -1761,6 +1788,8 @@ def createestimate(request):
 def create_and_send_estimate(request):
     cur_user = request.user
     user = User.objects.get(id=cur_user.id)
+    cmp=company_details.objects.get(user=user.id)
+    cmp1=cmp.id
     print("hello")
     if request.method == 'POST':
         x=request.POST["hidden_state"]
@@ -1826,7 +1855,7 @@ def create_and_send_estimate(request):
         estimate = Estimates(user=user,customer=customer_id1,customer_name=cust_name,customer_mailid=customer_mailid,customer_placesupply=customer_placesupply,estimate_no=est_number, reference=reference, estimate_date=est_date, 
                              expiry_date=exp_date, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, shipping_charge=shipping,
                              adjustment=adjustment, total=total, status=status, customer_notes=cust_note, terms_conditions=tearms_conditions, 
-                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales)
+                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales,company=cmp1)
         estimate.save()
 
         if x == y:
@@ -6012,6 +6041,11 @@ def get_customerdet(request):
     name = request.POST.get('name')
     id = request.POST.get('id')
     cust = customer.objects.get(user=company.user_id,id=id)
+    address=cust.Address1
+    city=cust.city
+    cus_state=cust.state
+    country=cust.country
+    pincode=cust.zipcode
     email = cust.customerEmail
     cust_id=id
     cust_place_supply=cust.placeofsupply
@@ -6022,7 +6056,7 @@ def get_customerdet(request):
     print(gstin)
     print(id)
     state = 'Not Specified' if cstate == "" else cstate
-    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin , 'state' : state,'cust_id':cust_id,'cust_place_supply':cust_place_supply},safe=False)
+    return JsonResponse({'cus_state':cus_state,'country':country,'address':address,'city':city,'pincode':pincode,'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin , 'state' : state,'cust_id':cust_id,'cust_place_supply':cust_place_supply},safe=False)
 
 
 @login_required(login_url='login')
@@ -6343,12 +6377,9 @@ def recurbill_add_file(request,id):
 
 @require_POST
 def recurbill_email(request,id):
-
     company = company_details.objects.get(user = request.user)
     bill = recurring_bills.objects.get(user = request.user,id=id)
-
     if request.method == 'POST':
-
         recipient =request.POST.get('recipient')
         sender =request.POST.get('sender')
         sub =request.POST.get('subject')

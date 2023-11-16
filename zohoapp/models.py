@@ -246,6 +246,7 @@ class Retaineritems(models.Model):
             
 class Estimates(models.Model): 
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
     customer=models.ForeignKey(customer,on_delete=models.CASCADE,null=True,blank=True)
     customer_name = models.CharField(max_length=100,null=True,blank=True)
     customer_mailid = models.CharField(max_length=100,null=True,blank=True)
@@ -1647,3 +1648,7 @@ class InvoicePayment(models.Model):
     cheque_number = models.CharField(max_length=100, null=True, blank=True)
     upi_id = models.CharField(max_length=100, null=True, blank=True)
     bank = models.ForeignKey(Bankcreation, on_delete=models.SET_NULL, null=True, blank=True)
+
+class deletedestimates(models.Model):
+    cid = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True)
+    reference_number = models.CharField(max_length=50)

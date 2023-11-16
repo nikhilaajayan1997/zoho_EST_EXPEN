@@ -840,7 +840,6 @@ urlpatterns = [
     path('customer_purchase_sort/<int:b_id>',views.customer_purchase_sort,name='customer_purchase_sort'),
     path('purchase_bill_save/<int:b_id>',views.purchase_bill_save,name='purchase_bill_save'),
     path('purchase_bill_draft/<int:b_id>',views.purchase_bill_draft,name='purchase_bill_draft'),
-    
     path('terms_dropdowns',views.terms_dropdowns,name='terms_dropdowns'),
     
     #Nikhila
@@ -852,6 +851,8 @@ urlpatterns = [
     path('est_sort_by_estno',views.est_sort_by_estno,name='est_sort_by_estno'),
     path('est_sort_by_name_estimate_view/<int:pk>',views.est_sort_by_name_estimate_view,name='est_sort_by_name_estimate_view'),
     path('est_sort_by_estno_estimate_view/<int:pk>',views.est_sort_by_estno_estimate_view,name='est_sort_by_estno_estimate_view'),
+    path('item_dropdown_estimate',views.item_dropdown_estimate,name='item_dropdown_estimate'),
+
 
     path('retainer_invoice_sort_by_name',views.retainer_invoice_sort_by_name,name='retainer_invoice_sort_by_name'),
     path('retainer_invoice_sort_by_no',views.retainer_invoice_sort_by_no,name='retainer_invoice_sort_by_no'),

@@ -17,6 +17,17 @@
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
 
+
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
+    
+  
 <style>
     select:focus {
         outline: none !important;
@@ -281,6 +292,9 @@ function calc() {
 
 
 
+
+
+
 <div class="container-fulid containerprof" >
   <div class="card " style="width: 100%;">
     <div class="card-body">
@@ -314,14 +328,16 @@ function calc() {
                 
                 <div class="row mb-4 ">
                     <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
-                    <div class="col-sm-6 d-flex">
-                        <select class="form-control text-dark" id="customer_sel" name="customer_name" >
+                    <div class="col-sm-6 d-flex ">
+                        <!-- <div class="search_select_box"> -->
+                          <select  class="form-control text-dark"  id="customer_sel" name="customer_name" >
                             <option>Select Customer</option>
                             {% for cust in customers %}
                             <option value="{{cust.id}} {{cust.customerName}}" data-pos="{{cust.placeofsupply}}">
                                 {{cust.customerName}}</option>
                             {% endfor %}
                         </select>
+                        <!-- </div> -->
                         <a  href="" data-toggle="modal" data-target="#newcustomer" class="btn" style="background-color: chocolate; color: black; height: 80%; margin-left: 2vh; font-size: large; padding-top: 1vh;">+</a>
                                                                        
                     </div>
@@ -337,6 +353,16 @@ function calc() {
                         
                     </div>
                 </div>
+                <div class="row mb-4 d-none" id="cus_billing_address" >
+                  <div class="col-sm-2"><label >Customer Address</label></div>
+                  <div class="col-sm-6">
+                    <!-- <input type="text" id="customer_mail" name="customer_mail" class="form-control text-dark"
+                          value="" readonly> -->
+                          <textarea id="customer_address" class="form-control text-dark"  name="customer_address" style="height: 12rem;;" readonly></textarea>
+                      
+                  </div>
+              </div>
+
 
                 <div class="row mb-4 d-none" id="cgst_treat_row" >
                   <div class="col-sm-2"><label for="">GST Treatment</label></div>
@@ -403,27 +429,49 @@ function calc() {
           </div>
 
 
-                <div class="row mb-4">
-                    <div class="col-sm-2"><label for="estimate_number">Estimate#*</label></div>
-                    <div class="col-sm-6"><input type="text" id="estimate_number" name="estimate_number" class="form-control text-dark"
-                            value="EST-{{count}}">
-                            
-                        
-                    </div>
-                </div>
+                
 
                 <div class="row mb-4">
                     <div class="col-sm-2"><label for="reference">Reference#</label></div>
                     <div class="col-sm-6"> <input type="number" id="reference" name="reference" class="form-control text-dark"
-                            style="height: 35px;"></div>
+                            style="height: 35px;" value="{{count}}" readonly></div>
+                </div>
+                <div class="row mb-4">
+                  <div class="col-sm-2"><label for="estimate_number">Estimate#*</label></div>
+                  <div class="col-sm-6"><input type="text" id="estimate_number" name="estimate_number" class="form-control text-dark"
+                          value="EST-{{count}}">
+                 
+                  </div>
+              </div>
+
+              <div class="row mb-4  mt-3">
+                <div class="col-sm-2"><label for="reference">Estimate Date*</label></div>
+                <div class="col-sm-2 col-md-6"> 
+                  <input type="date" id="estimate_date" name="estimate_date" class="form-control text-dark" style="width: 100%;height: 35px;">
                 </div>
 
-               <div class="row mb-4 border-bottom pb-5">
-                    <div class="col-sm-2"><label for="reference">Estimate Date*</label></div>
-                    <div class="col-sm-2"> <input type="date" id="estimate_date" name="estimate_date" class="form-control text-dark" style="width: 100%;height: 35px;">
+              </div>
+
+                <div class="row mt-2">
+                  <div class="col-md-2 col-lg-2  mt-2">
+                    <label for="c_terms">Payment Terms</label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <div class="d-flex">
+                      <select class="form-control text-dark bg-light" onclick="calculateExpiryDate()" id="c_terms" name="c_terms" required>
+                        {% for p in payments %}
+                        <option value="{{p.Terms}} {{p.id}}">{{p.Terms}}</option>
+                        {% endfor %}
+                      </select>                
+                      <a href="#" class="btn  py-2 my-1" data-target="#newpayment" data-toggle="modal"  style="background-color: chocolate; color: black; height: 80%; margin-left: 2vh; font-size: large;">+</a>   
                     </div>
+                  </div>       
+                </div>
+
+               <div class="row mb-4 border-bottom mt-3 pb-5">
+                    
                     <div class="col-sm-2 text-right"><label for="reference">Expiry Date</label></div>
-                    <div class="col-sm-2"> <input type="date" id="expiry_date" name="expiry_date" class="form-control text-dark"
+                    <div class="col-sm-6 col-md-6 "> <input type="date" id="expiry_date" name="expiry_date" class="form-control text-dark"
                             style="width: 100%;height: 35px;"></div>
                 </div>
 <!-- .............................................  TABLE 1  ..................................................... -->
@@ -530,7 +578,7 @@ function calc() {
     <div class="col-sm-12 col-lg-12 col-md-12" >
         <label for="" id="label_tab2" class="tab2" style="display: none;">Price List</label><br>
         <div style="width: 100%;">
-            <table class="table  text-black table-bordered tab2 " id="item_tablee" style="background-color: rgba(58, 57, 57, 0.8);table-layout: fixed;width: 100%;background-color: #b6b3b36b; display: none;"
+            <table class="table  text-black table-bordered tab2 " id="item_tablee" style="background-color: rgba(58, 57, 57, 0.8);table-layout: fixed;width: 100%;display: none;"
             onchange="calc()" >
             <thead>
                 <tr>
@@ -713,7 +761,7 @@ function calc() {
                 <input type="submit" class="btn text-white mt-5" style="background-color: rgb(210, 132, 30) ; "
                     onclick="saveAndSendDialog()" value="Send"> 
                     <input type="submit" class="btn text-white mt-5" style="background-color:  rgb(210, 132, 30) ; "
-                            onclick="cancelDialog()" value="Cancel">
+                            onclick="cancelDialog()" value="Cancel"> 
                         </div>
                         <div class="-sm-12 col-md-6 col-lg-6"></div>
                     </div>
@@ -721,7 +769,7 @@ function calc() {
             
 <!-- .................................................ITEM MODAL................................................. -->
 
-
+<!-- 
 <div class="modal fade" id="newitem">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
@@ -950,7 +998,297 @@ function calc() {
       </div>
       </div>
   </div>  
+</div>   -->
+
+
+
+<div class="modal fade" id="newitem">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+      <div class="modal-header " style="background: rgb(32, 35, 37);">
+          <h3 class="m-3 text-uppercase">New Item</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" style="background: rgb(32, 35, 37);">
+        <div class="card p-3 m-3">
+          <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalItem">
+
+            <div class="row mt-2">
+              <div class="col-md-3 mr-0">
+                <label class="col-form-label p-0">Type</label>
+              </div>
+              <div class="col-md-6 ml-0 d-flex">
+                <div class="radio_opt mx-5 ">
+                  <input type="radio" id="item_type1" name="radioOption" value="Goods" >
+                  <label for="option1">Goods</label>
+                </div>
+                <div class="radio_opt mx-5 ">
+                  <input type="radio" id="item_type2" name="radioOption" value="Services" >
+                  <label for="option2">Services</label>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-3">
+                <label for="name" style="color: rgb(190, 88, 88);">Name *</label>
+              </div>
+              <div class="col-md-6">
+                <input type="text" class="form-control bg-light text-dark" id="item_name" name="item_name" required>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-3 ">
+                <label for="units">Unit</label>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex">
+                  <select class="form-control bg-light text-dark" id="item_units" name="item_units" required>
+                    <option value="" hidden>Select Unit</option>
+                    {% for u in unit %}
+                    <option value="{{u.id}}">{{u.unit}}</option>
+                    {% endfor %}
+                  </select>                
+                  <a href="#" class="btn" data-target="#newunit" data-toggle="modal" style="background-color: chocolate; color: black; margin-left: 2vh; font-size: large; padding-top: 1vh;">+</a>  
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-3 ">
+                <label for="">HSN Code</label>
+              </div>
+              <div class="col-md-6">
+                <input type="number" class="form-control bg-light text-dark" id="hsn" name="hsn" required>
+                <label id="hsn_war" style="display: none;"></label>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-3">
+                <label for="c_tax" style="color: rgb(190, 88, 88);">Tax Preference * </label>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex">
+                  <div class="radio_opt mx-5 mt-2">
+                    <input type="radio" id="item-tax1" name="radioOption1" value="Taxable" >
+                    <label for="option1">Taxable</label>
+                  </div>
+                  <div class="radio_opt mx-4 mt-2">
+                    <input type="radio" id="item-tax2" name="radioOption1" value="Tax-exempt" >
+                    <label for="option2">Tax-exempt</label>
+                  </div>
+                </div>
+              </div>       
+            </div>
+
+            <div class="row mt-2 mb-4 d-none inter-intra" >
+              <div class="col-md-3">
+                <label for="intra">Intra-State TAX</label>
+              </div>
+              <div class="col-md-6">
+                <select name="intra" class="form-control bg-light text-dark" id="intra">
+                  <option value="" hidden>Select GST</option>
+
+                  <option value="GST0[0%]">GST0[0%]</option>
+                  <option value="GST5[5%]">GST5[5%]</option>
+                  <option value="GST12[12%]">GST12[12%]</option>
+                  <option value="GST18[18%]">GST18[18%]</option>
+                  <option value="GST28[28%]">GST28[28%]</option>
+                </select>             
+              </div>
+
+              <div class="col-md-3"></div>
+              <div class="col-md-3">
+                <label for="inter">Inter-State TAX</label>
+              </div>
+              <div class="col-md-6">
+                <select name="inter" class="form-control bg-light text-dark" id="inter">
+                  <option value="" hidden>Select GST</option>
+
+                  <option value="IGST0[0%]">IGST0[0%]</option>
+                  <option value="IGST5[5%]">IGST5[5%]</option>
+                  <option value="IGST12[12%]">IGST12[12%]</option>
+                  <option value="IGST18[18%]">IGST18[18%]]</option>
+                  <option value="IGST28[28%]">IGST28[28%]</option>
+                </select>               
+              </div>
+              <div class="col-md-1"></div>
+
+            </div>
+            
+            <hr>
+
+            <div class="row mt-5 text-center">
+              <div class="col-md-6 d-flex text-center">
+                <input  type="checkbox" name="selling" checked class="mx-2 my-0">
+                <h6 class="m-0">Selling Information</h6>
+              </div>
+              <div class="col-md-6 d-flex text-center">
+                <input  type="checkbox" name="purchase" checked class="mx-2 my-0">
+                <h6 class="m-0">Purchase Information</h6>
+              </div>
+            </div>
+            
+            <div class="row mt-4">
+
+              <div class="col-md-6">
+                <div class="input-group mb-2">
+                <label for="sell_price" style="margin-right:3vh;">Selling Price *</label>
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">INR</div>
+                  </div>
+                  <input required type="text" class="form-control bg-light text-dark" name="sell_price" id="sell_price">
+                </div>                  
+              </div>
+
+              <div class="col-md-2">
+                <label for="cost_price">Cost Price *</label>
+              </div>
+              <div class="col-md-4 ">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">INR</div>
+                  </div>
+                  <input required type="text" class="form-control bg-light text-dark" name="cost_price" id="cost_price">
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-2">
+                <label for="vcity">Account</label>
+              </div>
+              <div class="col-md-4">
+                <select name="sell_acc" id="sell_acc" class="form-control bg-light text-dark">
+                  <option value="" hidden>Select Account</option>
+    
+                    <option value="" disabled class="btn btn-dark text-white"><b>SALES</b></option>
+                    {% for s in sales %}
+                        <option value="{{s.id}}">{{ s.Account_name }}</option>
+                  {% endfor %}
+                </select> 
+              </div>
+              <div class="col-md-2">
+                <label for="cost_acc">Account</label>
+              </div>
+              <div class="col-md-4">
+                <select name="cost_acc" class="form-control bg-light text-dark" id="cost_acc">
+                  <option value="" hidden>Select Account</option>
+                    <option value="" disabled class="btn btn-dark text-white"><b>PURCHASE</b></option>
+                    {% for p in purchase %}
+                        <option value="{{p.id}}">{{ p.Account_name }}</option>
+                  {% endfor %}
+
+                </select> 
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-2">
+                <label for="sell_desc">Description</label>
+              </div>
+              <div class="col-md-4">
+                <input  type="text" name="sell_desc" class="form-control bg-light text-dark"  id="sell_desc">
+              </div>
+
+              <div class="col-md-2">
+                <label for="cost_desc">Description</label>
+              </div>
+              <div class="col-md-4 ">
+                <input  type="text" name="cost_desc" class="form-control bg-light text-dark"  id="cost_desc">
+              </div>
+
+            </div> <br>
+
+            <div class="col-md-5">
+              <input type="checkbox" id="track" onclick="trackinventory()">  Track Inventory for this item
+            </div>
+
+            <div class="row mt-2 " id="trackdiv1" style="display: none;">
+              <div class="d-flex">
+                <div class="col-md-4">
+                  <label for="name" >Inventory Account *</label>
+                </div>
+                <div class="col-md-6">
+                  <select class="form-control bg-light text-dark" id="invasset" name="invasset" required>
+                    <option value="0" hidden> Choose ..</option>
+                    <option value="inventory assets">Inventory Asset</option>
+                  </select>    
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2 " id="trackdiv2" style="display: none;">
+              <div class="d-flex">
+                <div class="col-md-4">
+                  <label for="name" >Opening Stock </label>
+                </div>
+                <div class="col-md-6">
+                  <input type="number" class="form-control bg-light text-dark" id="opening_stock" name="opening_stock" value="0" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2 " id="trackdiv3" style="display: none;">
+              <div class="d-flex">
+                <div class="col-md-4">
+                  <label for="name" >Opening Stock Rate per unit</label>
+                </div>
+                <div class="col-md-6">
+                  <input type="number" class="form-control bg-light text-dark" id="opening_stock_unit" name="opening_stock_unit" value="0" required>  
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2" id="trackdiv4" style="display: none;">
+              <div class="col-md-4 mr-0">
+                <label class="col-form-label p-0">Activation Type</label>
+              </div>
+              <div class="col-md-7 ml-0 d-flex">
+                <div class="mx-5 ">
+                  <input type="radio" id="active" name="activation" value="active" >
+                  <label>Active</label>
+                </div>
+                <div class="mx-5 ">
+                  <input type="radio" id="nonactive" name="activation" value="nonactive" >
+                  <label>Non-Active</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                  <input type="checkbox" value="" id="invalidCheck" name="invalidCheck" required>
+                  <label for="invalidCheck" style="color: #909091;">Agree to terms and conditions</label>
+                  <div class="invalid-feedback text-warning" >You must agree before submitting.</div>
+                </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="d-flex">
+                  <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                  type="submit" data-dismiss="modal" id="itemSave">Submit
+                  </button> 
+
+                  <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
+                    data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">Cancel</span>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </form>
+              </div>
+          </div>
+      </div>
+  </div>  
 </div>  
+
+
 
 
           
@@ -959,7 +1297,7 @@ function calc() {
           <!-- ....................................................  END ITEM MODAL................................. -->
 
 <!-- ............................................unit modal............................................ -->
-
+<!-- 
  <div class="modal fade" id="newunit">
   <div class="modal-dialog modal-xl">
     <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
@@ -1006,7 +1344,59 @@ function calc() {
       </div>
     </div>
   </div>  
+</div>   -->
+
+
+<div class="modal fade" id="newunit">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+      <div class="modal-header " style="background: rgb(32, 35, 37);">
+          <h3 class="m-3 text-uppercase">Add Unit</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body" style="background: rgb(32, 35, 37);">
+        <div class="card p-3 m-3">
+          <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUnit">
+            <div class="row mt-2">
+              <div class="col-md-3 mt-2"></div>
+              <div class="col-md-1 mt-2">
+                <label for="unit" style="color: rgb(190, 88, 88);">Unit</label>
+              </div>
+
+              <div class="col-md-4 mt-2">
+                <input type="text" class="form-control bg-light text-dark" id="unit" name="unit" required>
+              </div>
+              <div class="col-md-4 mt-2"></div>
+            </div>
+            
+            <div class="row mt-5">
+              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="d-flex">
+                  <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                  type="submit" data-dismiss="modal" id="unitSave">Save
+                  </button> 
+
+                  
+
+                  <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
+                    data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">Cancel</span>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-4"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>  
 </div>  
+
+
 
 
 <!-- ............................................  END UNIT MODAL..................................................... -->
@@ -1311,14 +1701,6 @@ function calc() {
                   <div class="col-md-6 mt-2">
                     <div class="d-flex">
                       <select class="form-control text-dark bg-light" id="c_terms" name="c_terms" required>
-
-                        <!-- <option selected value="15">NET 15</option>
-                        <option value="30">NET 30</option>
-                        <option value="45">NET 45</option>
-                        <option value="60">NET 60</option>
-                        <option value="90">NET 90</option>
-                        <option value="">Due end of the month</option>
-                        <option value="recpt">Due on receipt</option> -->
                         {% for p in payments %}
                         <option value="{{p.Terms}} {{p.id}}">{{p.Terms}}</option>
                         {% endfor %}
@@ -1708,8 +2090,59 @@ function calc() {
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
     crossorigin="anonymous"></script>
 
+<script>
+  function calculateExpiryDate()
+  {
+    var estimate=document.getElementById('estimate_date').value;
+    console.log(estimate);
+    var terms=document.getElementById('c_terms').value;
+    var strg=terms.substring(0,3);
+    var upper=strg.toUpperCase();
+    if(upper == 'NET')
+    {
+      var num=0;
+      const match = terms.match(/\d+/);
+      if(match)
+      { 
+        num=match[0];
+      }
+      const expiryDate = new Date(estimate);
+      expiryDate.setDate(expiryDate.getDate() + parseInt(num,10));    // Format the result as DD-MM-YYYY
+  
+  
+  // Add leading zeros if needed
+     const formattedExpiryDate = expiryDate.toISOString().split('T')[0];
+     console.log("hellooooooooooooooooooooooooooooooooooooooooo")
+     console.log(formattedExpiryDate);
+     document.getElementById("expiry_date").value=formattedExpiryDate;
+
+     }
+    
+    
+    
+
+  
+  }
+</script>
+
+    <script>
+      function trackinventory(){
+        $("#trackdiv1").toggle();
+        $("#trackdiv2").toggle();
+        $("#trackdiv3").toggle();
+        $("#trackdiv4").toggle();
+        document.getElementById("invasset").value="0"
+        document.getElementById("opening_stock").value=0
+        document.getElementById("opening_stock_unit").value=0
+        document.getElementById("active").checked=false
+        document.getElementById("nonactive").checked=false
+      }
+    </script>
+
+
 
 <script>
+
   function place_of_supply()
   {
     var place_dropdown=document.getElementById("cus_place1").value;
@@ -2194,6 +2627,9 @@ $(document).ready(function() {
 
               $("#cplace_supply_row").removeClass('d-none');
               $("#cplace_supply_row").addClass('d-flex');
+
+              $("#cus_billing_address").removeClass('d-none');
+              $("#cus_billing_address").addClass('d-flex');
               
               
               $('#customer_mail').val(' '+ data.customer_email);
@@ -2203,6 +2639,11 @@ $(document).ready(function() {
               $('#cus_place_second').val(data.cust_place_supply);
               $('#customer_gst_treat').val(data.gst_treatment);
               $('#customer_gstno').val(data.gstin);
+              document.getElementById('customer_address').value = data.address + '\n' + data.city + '\n' + data.pincode +'\n' + data.cus_state+'\n'+data.country ;
+                        
+              // $('#customer_address').val(data.address);
+
+
               var GSTNO=document.getElementById('customer_gstno').value;
               var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
@@ -2349,61 +2790,141 @@ $("#item-tax2").click(function() {
 });
 
 
+
+
+
+// $(document).on("click","#itemSave",function(){
+
+// if ($('input[name="radioOption"]:checked').val() == 'Goods'){
+
+//     itemtype = $('#item_type1').val();
+//   }
+// else{
+//   itemtype = $('#item_type2').val();
+// }
+
+// if ($('input[name="radioOption1"]:checked').val() == 'Taxable'){
+//     inter_st = $('#inter').val();
+//     intra_st = $('#intra').val();
+//   }
+// else{
+//   inter_st = 0;
+//   intra_st = 0;
+// }
+
+// $.ajax({
+  
+//   type : 'POST',
+//   url:"{% url 'new_estimate_item' %}",
+  
+//   data:{
+//       type : itemtype,
+//       name : $("#item_name").val(),
+//       hsn:$("#hsn_no").val(),
+//       unit : $("#item_units").val(),
+//       inter : inter_st,
+//       intra : intra_st,
+//       sell_price : $("#sell_price").val(),
+//       cost_price : $("#cost_price").val(),
+//       sell_acc : $("#sell_acc").val(),
+//       cost_acc : $("#cost_acc").val(),
+//       sell_desc : $("#sell_desc").val(),
+//       cost_desc : $("#cost_desc").val(),
+      
+//       csrfmiddlewaretoken: '{{ csrf_token }}'
+      
+//     },
+  
+//     success: function(response) {
+//       // console.log(response)
+//       document.getElementById("modalItem").reset();
+//       reloadItem();
+//     },
+// });        
+// });
+
+$(document).ready(function() {
+      $("#hsn").change(function() {
+        var x=String($('#hsn').val());
+        if(x.length!= 6){
+          document.getElementById("hsn_war").style.display="block"
+          document.getElementById("hsn_war").style.color="red"
+          document.getElementById("hsn_war").innerHTML="HSN should be of length 6"
+        }
+        if(x.length == 6){
+          document.getElementById("hsn_war").style.color="green"
+          document.getElementById("hsn_war").innerHTML="HSN is valid"
+        }
+      });
+    });
+
+
+
 $(document).on("click","#itemSave",function(){
 
-if ($('input[name="radioOption"]:checked').val() == 'Goods'){
+  if ($('input[name="radioOption"]:checked').val() == 'Goods'){
 
-    itemtype = $('#item_type1').val();
+      itemtype = $('#item_type1').val();
+    }
+  else{
+    itemtype = $('#item_type2').val();
   }
-else{
-  itemtype = $('#item_type2').val();
-}
-
-if ($('input[name="radioOption1"]:checked').val() == 'Taxable'){
-    inter_st = $('#inter').val();
-    intra_st = $('#intra').val();
+  
+  if ($('input[name="radioOption1"]:checked').val() == 'Taxable'){
+    inter = $('#inter').val();
+    intra = $('#intra').val();
   }
-else{
-  inter_st = 0;
-  intra_st = 0;
-}
+  else{
+    inter = 0;
+    intra = 0;
+  }
+  
+  if ($('input[name="activation"]:checked').val() == 'active'){
 
-$.ajax({
+      active_type = "active"
+    }
+  else{
+    active_type = "nonactive"
+  }
+
   
-  type : 'POST',
-  url:"{% url 'new_estimate_item' %}",
-  
-  data:{
-      type : itemtype,
-      name : $("#item_name").val(),
-      hsn:$("#hsn_no").val(),
-      unit : $("#item_units").val(),
-      inter : inter_st,
-      intra : intra_st,
-      sell_price : $("#sell_price").val(),
-      cost_price : $("#cost_price").val(),
-      sell_acc : $("#sell_acc").val(),
-      cost_acc : $("#cost_acc").val(),
-      sell_desc : $("#sell_desc").val(),
-      cost_desc : $("#cost_desc").val(),
-      
-      csrfmiddlewaretoken: '{{ csrf_token }}'
-      
-    },
-  
-    success: function(response) {
-      // console.log(response)
-      document.getElementById("modalItem").reset();
-      reloadItem();
-    },
-});        
+  $.ajax({
+    
+    type : 'POST',
+    url:"{% url 'purchase_item' %}",
+    
+    data:{
+        type : itemtype,
+        name : $("#item_name").val(),
+        unit : $("#item_units").val(),
+        hsn : $("#hsn").val(),
+        inter : inter,
+        intra : intra,
+        sell_price : $("#sell_price").val(),
+        cost_price : $("#cost_price").val(),
+        sell_acc : $("#sell_acc").val(),
+        cost_acc : $("#cost_acc").val(),
+        sell_desc : $("#sell_desc").val(),
+        cost_desc : $("#cost_desc").val(),
+        active_type : active_type,
+        invasset : $("#invasset").val(),
+        opening_stock : $("#opening_stock").val(),
+        opening_stock_unit : $("#opening_stock_unit").val(),
+        
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
+      success: function(response) {
+        document.getElementById("modalItem").reset();
+        reloadItem();
+      },
+  });        
 });
-
-
 
 function reloadItem() {
   $.ajax({
-    url: "{% url 'item_dropdown' %}",
+    url: "{% url 'item_dropdown_estimate' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -2426,17 +2947,22 @@ function reloadItem() {
   });
 }
 
+
 // unit modal
 
 
 $(document).on("click","#unitSave",function(){
   $.ajax({
+    
     type : 'POST',
-    url:"{% url 'recurbills_unit' %}",
+    url:"{% url 'purchase_unit' %}",
+
     data:{
-        unit : $("#unit").val(),                
-        csrfmiddlewaretoken: '{{ csrf_token }}'        
-      },    
+        unit : $("#unit").val(),      
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
       success: function(response) {
         document.getElementById("modalUnit").reset();
         reloadUnit();
@@ -2448,7 +2974,7 @@ $(document).on("click","#unitSave",function(){
 function reloadUnit() {
 
   $.ajax({
-    url: "{% url 'unit_dropdown' %}",
+    url: "{% url 'purchase_unit_dropdown' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -2459,7 +2985,7 @@ function reloadUnit() {
       dropdown.empty();
 
       $.each(data, function(key, value) {
-          dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+          dropdown.append($('<option></option>').attr('value', key).text(value).val(value));
       });
     },
     error: function(xhr, status, error) {
@@ -2469,6 +2995,7 @@ function reloadUnit() {
 }
 
 
+ 
 
 
 
@@ -3984,6 +4511,13 @@ document.getElementById('hsnn16').value = data4
 
 
     });
+</script>
+<script>
+
+  $(document).ready(function(){
+    console.log("starrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr  ##############################")
+    $('.search_select_box select').selectpicker();
+  });
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
