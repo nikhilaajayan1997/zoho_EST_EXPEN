@@ -110,8 +110,9 @@
             <th>CUSTOMER MAIL ID</th>
             <th>AMOUNT</th>
             <th>STATUS</th>
-            <th>SALES ORDER</th>
-            <th>INVOICE</th>
+            <th>BALANCE</th>
+            <th>ACTION</th>
+            
 
 
           </tr>
@@ -126,8 +127,40 @@
             <td>{{estimate.customer_name}}</td>
             <td>{{estimate.customer_mailid}}</td>
             <td>{{estimate.total}}</td>
-            <td>{{estimate.status}}</td>
             
+            <td>{{estimate.status}}</td>
+            <td>{{estimate.balance}}</td>
+            <td>
+              <div class="dropdown " >
+                <a class="dropdown-toggle btn btn-outline-warning text-warning pt-2 pb-2" href="" data-toggle="dropdown">
+                  <i class="fa fa-exchange" aria-hidden="true">Convert</i>
+                </a>
+                <div class="dropdown-menu m-1">
+                  
+
+                  {% if estimate.convert_sales == 'converted' %}
+                  <a class="dropdown-item" href="">To Invoice </a>
+                  <a class="dropdown-item" href="">To SalesOrder <br> Done</a>
+                  <a class="dropdown-item" href="">To Rec.Invoice</a>
+                  {% elif estimate.convert_invoice == 'converted' %}
+                  <a class="dropdown-item" href="">To Invoice <br> Done </a>
+                  <a class="dropdown-item" href="">To SalesOrder</a>
+                  <a class="dropdown-item" href="">To Rec.Invoice</a>
+                  {% elif estimate.convert_recinvoice == 'converted' %}
+                  <a class="dropdown-item" href="">To Invoice <br> Done </a>
+                  <a class="dropdown-item" href="">To SalesOrder</a>
+                  <a class="dropdown-item" href="">To Rec.Invoice <br> Done</a>
+                  {% else %}
+                  <a class="dropdown-item" href="{% url 'converttoinvoice' estimate.id %}">To Invoice </a>
+                  <a class="dropdown-item" href="{% url 'convert_to_salesorder' estimate.id %}">To SalesOrder</a>
+                  <a class="dropdown-item" href="">To Rec.Invoice</a>
+                  {% endif %}
+
+                  
+                </div>
+              </div>
+            </td>
+<!--             
               {% if estimate.convert_sales == 'converted' %}
               <td style="color: rgb(3, 82, 3);">Done</td>
               {% else %}
@@ -139,7 +172,7 @@
               {% else %}
               <td style="color: rgb(158, 2, 2);">Not Done</td>
               {% endif %}
-            
+             -->
 
           </tr>
           {% endfor %}

@@ -268,7 +268,9 @@ class Estimates(models.Model):
     terms_conditions = models.CharField(max_length=250,null=True,blank=True)
     attachment = models.ImageField(upload_to="image/", null=True) 
     convert_invoice=models.CharField(max_length=50,null=True,blank=True) 
-    convert_sales=models.CharField(max_length=50,null=True,blank=True)  
+    convert_sales=models.CharField(max_length=50,null=True,blank=True)
+    convert_recinvoice=models.CharField(max_length=50,null=True,blank=True)
+    balance=models.CharField(max_length=200,null=True,blank=True) 
 
 class EstimateItems(models.Model):
     estimate = models.ForeignKey(Estimates,on_delete=models.CASCADE,null=True,blank=True)

@@ -1755,15 +1755,17 @@ def createestimate(request):
         total = request.POST['total']
         tearms_conditions = request.POST['terms_conditions']
         attachment = request.FILES.get('file')
+        balance=total
         status = 'Draft'
         convert_invoice='not_converted'
         convert_sales='not_converted'
+        convert_recinvoice='not_converted'
         
 
         estimate = Estimates(user=user,customer=customer_id1,customer_name=cust_name,customer_mailid=customer_mailid,customer_placesupply=customer_placesupply,estimate_no=est_number, reference=reference, estimate_date=est_date, 
                              expiry_date=exp_date, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, shipping_charge=shipping,
                              adjustment=adjustment, total=total, status=status, customer_notes=cust_note, terms_conditions=tearms_conditions, 
-                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales,company=cmp)
+                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales,convert_recinvoice=convert_recinvoice,balance=balance,company=cmp)
         estimate.save()
 
         if x == y:
@@ -1848,14 +1850,16 @@ def create_and_send_estimate(request):
         total = float(request.POST['total'])
         tearms_conditions = request.POST['terms_conditions']
         attachment = request.FILES.get('file')
+        balance=total
         status = 'Sent'
         convert_invoice='not_converted'
         convert_sales='not_converted'
+        convert_recinvoice='not_converted'
         tot_in_string = str(total)
         estimate = Estimates(user=user,customer=customer_id1,customer_name=cust_name,customer_mailid=customer_mailid,customer_placesupply=customer_placesupply,estimate_no=est_number, reference=reference, estimate_date=est_date, 
                              expiry_date=exp_date, sub_total=sub_total,igst=igst,sgst=sgst,cgst=cgst,tax_amount=tax_amnt, shipping_charge=shipping,
                              adjustment=adjustment, total=total, status=status, customer_notes=cust_note, terms_conditions=tearms_conditions, 
-                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales,company=cmp1)
+                             attachment=attachment,convert_invoice=convert_invoice,convert_sales=convert_sales,convert_recinvoice=convert_recinvoice,balance=balance,company=cmp1)
         estimate.save()
 
         if x == y:
@@ -2145,8 +2149,9 @@ def converttoinvoice(request,pk):
         items.save()
     estimate.convert_invoice=new_status
     estimate.save()
+    invo_obj=invoice.objects.get(estimate=estimate.id)
     
-    return redirect('allestimates')
+    return redirect('edited_prod',invo_obj.id)
 
 
 
@@ -2623,6 +2628,10 @@ def edited_prod(request, id):
         invoic.grandtotal = request.POST.get('t_total', "")
         invoic.paid_amount = request.POST.get('paid_amount', "")
         invoic.balance = request.POST.get('balance', "")
+        if invoic.estimate:
+            est_obj=Estimates.objects.get(id=invoic.estimate)
+            est_obj.balance=invoic.balance
+            est_obj.save()
 
         old = invoic.file
         new = request.FILES.get('file')
@@ -3987,13 +3996,10 @@ def edit_sales_order(request,id):
     if request.method == 'POST':
         u=request.user.id
         c=request.POST['cx_name']
-        
         cust=customer.objects.get(id=c) 
         sales.customer=cust
         term=request.POST['term']
-        
         sales_no=request.POST['sale_no']
-
         if len(sales_no) == 4:
             sales_no = sales_no[:3] + '0' +sales_no[-1]
 
@@ -4034,6 +4040,10 @@ def edit_sales_order(request,id):
         adjust=request.POST.getlist('adjust')
         adjust = float(adjust[0])
         sales.adjust=adjust
+        if sales.estimate:
+            est_obj=Estimates.objects.get(id=sales.estimate)
+            est_obj.balance=sales.estimate
+            est_obj.save()
         
         sales.save()
         hsn=tuple(request.POST.getlist('hsn[]'))
@@ -18784,9 +18794,10 @@ def convert_to_salesorder(request,pk):
     
     estimate.convert_sales=new_status
     estimate.save()
+    sales_obj=SalesOrder.objects.get(estimate=estimate.id)
 
     
-    return redirect('allestimates')
+    return redirect('edit_sales_order',sales_obj.id)
 
 
 def retainer_invoice_sort_by_name(request):
