@@ -54,7 +54,7 @@
       <div class="col-sm-1 col-md-1 col-lg-1">
         <div class="col-md-1 ">
           <div class="dropdown " >
-            <a class="dropdown-toggle btn btn-outline-warning text-war pt-2 pb-2" href="" data-toggle="dropdown">
+            <a class="dropdown-toggle btn btn-outline-warning text-warning pt-2 pb-2" href="" data-toggle="dropdown">
               <i class="fas fa-sort"></i>
             </a>
             <div class="dropdown-menu m-1">
@@ -140,20 +140,20 @@
 
                   {% if estimate.convert_sales == 'converted' %}
                   <a class="dropdown-item" href="">To Invoice </a>
-                  <a class="dropdown-item" href="">To SalesOrder <br> Done</a>
+                  <a class="dropdown-item" href="">To SalesOrder <br> Done </a>
                   <a class="dropdown-item" href="">To Rec.Invoice</a>
                   {% elif estimate.convert_invoice == 'converted' %}
                   <a class="dropdown-item" href="">To Invoice <br> Done </a>
                   <a class="dropdown-item" href="">To SalesOrder</a>
                   <a class="dropdown-item" href="">To Rec.Invoice</a>
                   {% elif estimate.convert_recinvoice == 'converted' %}
-                  <a class="dropdown-item" href="">To Invoice <br> Done </a>
+                  <a class="dropdown-item" href="">To Invoice </a>
                   <a class="dropdown-item" href="">To SalesOrder</a>
-                  <a class="dropdown-item" href="">To Rec.Invoice <br> Done</a>
+                  <a class="dropdown-item" href="">To Rec.Invoice <br> Done </a>
                   {% else %}
                   <a class="dropdown-item" href="{% url 'converttoinvoice' estimate.id %}">To Invoice </a>
                   <a class="dropdown-item" href="{% url 'convert_to_salesorder' estimate.id %}">To SalesOrder</a>
-                  <a class="dropdown-item" href="">To Rec.Invoice</a>
+                  <a class="dropdown-item" href="{% url 'convert_to_recinvoice' estimate.id %}">To Rec.Invoice</a>
                   {% endif %}
 
                   

@@ -130,58 +130,52 @@ $(function() {
 
 <div style="top: 7rem; ">
     <div class="row">
+        
         <div class="col-md-3 col-lg-3">
-            <div class="row  mx-2">
-                <div class="col-md-6 col-lg-6 py-2"><a class="text-white" style="font-size: 1.5rem;"> All  Estimates</a></div>
-                <div class="col-md-2 col-lg-2 "></div>
-                <div class="col-md-4 col-lg-4 ">
-                    
-                    <div class="dropdown ms-3 mt-5 ms-4 pt-1">
-                        <a class="dropdown-toggle btn btn-secondary text-dark pt-2 pb-2" href="" data-toggle="dropdown">
-                          <i style="color: chocolate;" class="fas fa-sort-alpha-down"></i>
-                        </a>
-                        <div class="dropdown-menu m-1">
-                            <a class="dropdown-item" href="{% url 'estimateslip' estimate.id %}">All</a>
-
-              
-                            <a class="dropdown-item" href="{% url 'est_sort_by_name_estimate_view' estimate.id %}">Name</a>
-                            <a class="dropdown-item" href="{% url 'est_sort_by_estno_estimate_view' estimate.id %}">EST No</a>
-                        </div>
-                      </div>
-                        
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="text-white" style="font-size: 1.5rem;"> All  Estimates</a>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-6">
+                <div class="col-md-2 col-lg-2 ">
+                    <div class="dropdown  pt-1">
+                        <a class="dropdown-toggle btn btn-outline-warning text-warning pt-2 pb-2" href="" data-toggle="dropdown">
+                          <i class="fas fa-sort"></i>
+                        </a>
+                        <div class="dropdown-menu m-1">
+                            <a class="dropdown-item" href="{% url 'estimateslip' estimate.id %}">All</a>
+                            <a class="dropdown-item" href="{% url 'est_sort_by_name_estimate_view' estimate.id %}">Name</a>
+                            <a class="dropdown-item" href="{% url 'est_sort_by_estno_estimate_view' estimate.id %}">EST No</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 ">
+                    <div class="dropdown ms-5  pt-1">
+                        <a class="dropdown-toggle btn btn-outline-warning text-warning  pt-2 pb-2" href="" data-toggle="dropdown">
+                          <i class="fa fa-filter"></i>
+                        </a>
+                        <div class="dropdown-menu m-1">
+                          <a class="dropdown-item" href="{% url 'estimateslip' estimate.id %}">All</a>
+                          <a class="dropdown-item" href="{% url 'filter_by_draft_estimate_view' estimate.id %}">Draft</a>
+                          <a class="dropdown-item" href="{% url 'filter_by_sent_estimate_view' estimate.id %}">Sent</a>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-md-2 col-lg-2">
+                    <div style="margin-left: 200%;margin-top: 18%;width: 100%;">
+                        <a  style="color: white; " class="btn btn-outline-warning p-2"
+                    href="{% url 'newestimate' %}"><b class="p-1 text-warning">+</b></a>
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
                     <input type="text" id="search" class="form-control text-dark mb-2 mt-2" placeholder="search......">
-                    
                 </div>
-                <div class="col-sm-2 col-lg-2 col-md-2">
-                    <a  style="color: white; background-color: rgb(210, 132, 30);" class="btn ms-3 mt-2 p-2"
-                    href="{% url 'newestimate' %}"><i class="fas fa-solid fa-plus "></i></a>
-
-                </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    
-                   
-                        <div class="dropdown ms-3 mt-1 pt-1">
-                            <a class="dropdown-toggle btn btn-secondary text-dark pt-2 pb-2" href="" data-toggle="dropdown">
-                              <i style="color: chocolate;" class="fa fa-filter"></i>
-                            </a>
-                            <div class="dropdown-menu m-1">
-                              <a class="dropdown-item" href="{% url 'estimateslip' estimate.id %}">All</a>
-                
-                              <a class="dropdown-item" href="{% url 'filter_by_draft_estimate_view' estimate.id %}">Draft</a>
-                              <a class="dropdown-item" href="{% url 'filter_by_sent_estimate_view' estimate.id %}">Sent</a>
-                            </div>
-                          </div>
-
-                        
-                    
-                </div>
-                
-                
-                
             </div>
             <div class="pt-3 ps-2 " style="height: 600px; overflow-y: scroll;overflow-x: hidden;">
                 <table class="text-white" style="width: 100%; ">
@@ -219,35 +213,38 @@ $(function() {
             </div>
         </div>
         <div class="col-md-9 col-lg-9">
-            <div class="row  mx-2 py-3"  style="background-color: rgba(136, 136, 135, 0.5)">
+            <div class="row "  >
                 <div class="col-md-5 text-light" style="font-size: 2.3rem;">
-                    {{estimate.estimate_no }}
-                    <button class="btn" onclick="overview_function()" style="background-color:rgb(212, 139, 3)  ;border-radius: 5px;height: 1.7rem;" title="Overview"><i class="fa fa-eye"></i></button>
-                    <button class="btn" onclick="template_function()" style="background-color:rgb(212, 139, 3)  ;border-radius: 5px;height: 1.7rem;" title="Template"><i class="fa fa-file-word"></i></button>
+                    {{estimate.estimate_no }} <br>
+                    <button class="btn btn-outline-warning text-warning p-2" onclick="overview_function()" style="border-radius: 5px;" title="Overview"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-outline-warning text-warning p-2" onclick="template_function()" style="border-radius: 5px;" title="Template"><i class="fa fa-file-word"></i></button>
                     {% if estimate.status == 'Draft' %}
-                    <a href="{% url 'estimste_status_edit' estimate.id %}" class="btn" title="save this draft" style="background-color:rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;"><i class="fas fa-save"></i></a>
+                    <a href="{% url 'estimste_status_edit' estimate.id %}" class="btn btn-outline-warning text-warning p-2" title="save this draft" style="border-radius: 5px;"><i class="fas fa-save"></i></a>
                     {% endif %}
                 </div>
-                <div class="col-md-7 text-white text-right my-auto " style="text-align: end;">
+                <div class="col-md-7 text-white text-right my-auto" style="text-align: end;"><br><br>
+                
                     <div class="btn-group" role="group" aria-label="Basic example">
                         
-                        <a href="{% url 'editestimate' estimate.id %}" class="btn btn-sm ms-1  text-white"
-                        style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;" data-toggle="tooltip" title="Edit">
+                        <a href="{% url 'editestimate' estimate.id %}" class="btn btn-outline-warning  btn-sm ms-1 p-2  text-warning"
+                        style="border-radius: 5px;" data-toggle="tooltip" title="Edit">
                             <i class="fas fa-pencil-alt"></i>                     
                         </a>
                         {% if setting_variable.pdf == 'yes' %}
-                        <a href="" class="btn btn-sm text-white ms-1 btn_print" style="background-color:  rgb(212, 139, 3);height: 1.7rem;border-radius: 5px;"
+                        <a href="" class="btn btn-outline-warning btn-sm text-warning btn_print ms-1 p-2" style="border-radius: 5px;"
                             data-toggle="tooltip" title="PDF" id="pdf">
                             <i class="far fa-file-pdf"></i></a>
                         {% else %}
-                        <a href="" class="btn btn-sm text-white ms-1 btn_print" style="display: none;background-color:  rgb(212, 139, 3);height: 1.7rem;border-radius: 5px;"
+                        <a href="" class="btn btn-outline-warning btn-sm text-warning btn_print ms-1 p-2" style="display: none;border-radius: 5px;"
                             data-toggle="tooltip" title="PDF" id="pdf">
                             <i class="far fa-file-pdf"></i></a>
                         {% endif %}
+                        
+                        
                            
                         {% if setting_variable.slip == 'yes' %}
-                            <div class="dropdown m-0 p-0 ms-1" title="slip" style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;">
-                                <a href=" " class=" fas fa-receipt dropdown-toggle  btn-sm text-white ms-1"  
+                            <div class="dropdown m-0 p-0 ms-1  btn-sm " title="slip" style="border-radius: 5px;">
+                                <a href=" " class="btn fas fa-receipt dropdown-toggle text-warning btn-outline-warning p-2   ms-1"  
                                     data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                                 </a>
     
@@ -258,8 +255,8 @@ $(function() {
                                 </div>
                             </div>
                         {% else %}
-                        <div class="dropdown m-0 p-0 ms-1" title="slip" style="display: none;background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;">
-                            <a href=" " class=" fas fa-receipt dropdown-toggle  btn-sm text-white ms-1"  
+                        <div class="dropdown m-0 p-0 ms-1 " title="slip" style="display: none;border-radius: 5px;">
+                            <a href=" " class="btn fas fa-receipt dropdown-toggle btn-outline-warning  btn-sm text-warning ms-1 p-2"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                             </a>
                             <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
@@ -269,22 +266,22 @@ $(function() {
                         </div>
                         {% endif %}
                         {% if setting_variable.print_opt == 'yes' %}
-                        <a href="" class="btn btn-sm text-white ms-1 "  style="background-color:  rgb(212, 139, 3);border-radius: 5px;"
+                        <a href="" class="btn btn-outline-warning btn-sm text-warning ms-1 "  style="border-radius: 5px;"
                             data-toggle="tooltip" title="Print" id="est_print">
                             <i class="fas fa-print"></i></a>
                             {% else %}
-                            <a href="" class="btn btn-sm text-white ms-1 "  style="display: none;background-color:  rgb(212, 139, 3);border-radius: 5px;"
+                            <a href="" class="btn btn-outline-warning btn-sm text-warning ms-1 "  style="display: none;border-radius: 5px;"
                             data-toggle="tooltip" title="Print" id="est_print">
                             <i class="fas fa-print"></i></a>
                             {% endif %}
 
-                        <a href="{% url 'emailattachment' %}" class="btn btn-sm text-white ms-1"
-                        style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;" data-toggle="tooltip" title="Email">
+                        <a href="{% url 'emailattachment' %}" class="btn btn-outline-warning btn-sm text-warning ms-1 p-2"
+                        style="border-radius: 5px;" data-toggle="tooltip" title="Email">
                             <i class="fas fa-envelope"></i></a>
 
 
-                        <div class="dropdown m-0 p-0 ms-1" title="comments" style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;">
-                            <a href=" " class=" fas fa-comment-dots dropdown-toggle  btn-sm text-white ms-1"  
+                        <div class="dropdown m-0 p-0 ms-1" title="comments" style="border-radius: 5px;">
+                            <a href=" " class="btn btn-outline-warning p-2 fas fa-comment-dots dropdown-toggle  btn-sm text-warning ms-1"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                             </a>
 
@@ -298,15 +295,15 @@ $(function() {
                         </div>
 
                         {% if estimate.attachment != ""%}
-                        <a href="{{estimate.attachment.url}}"  style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;" class="btn  ms-1 text-white"
+                        <a href="{{estimate.attachment.url}}"  style="border-radius: 5px;height: 1.7rem;" class="btn btn-outline-warning  ms-1 text-warning"
                             data-toggle="tooltip" title="Download Attached File">
                             <span class="mdi mdi-download"></span></a>
                         {%endif%}
                         
                        
                             {% if estimate.convert_invoice == "not_converted" and estimate.convert_sales == "not_converted" %}
-                            <div class="dropdown m-0 p-0 ms-1" title="Convert" style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;">
-                                <a href=" " class=" fas fa-file-invoice dropdown-toggle  btn-sm text-white ms-1"  
+                            <div class="dropdown m-0 p-0 ms-1" title="Convert" style="border-radius: 5px;">
+                                <a href=" " class="btn btn-outline-warning fas fa-file-invoice dropdown-toggle  btn-sm text-warning ms-1 p-2"  
                                     data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                                 </a>
         
@@ -331,10 +328,10 @@ $(function() {
                         
                     </div>
                     
-                        <!-- <a href="" class="btn btn-sm text-white " data-toggle="tooltip" title="Convert to invoice"
+                        <!-- <a href="" class="btn btn-outline-warning btn-sm text-warning " data-toggle="tooltip" title="Convert to invoice"
                         style="background-color: rgb(210, 132, 30);height: 1.7rem;" onclick="return confirm('Do you want to convert this estimate to an invoice?');">
                         <i class="fas fa-file-invoice"></i></a> -->
-                    <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-sm text-white" title="Delete" style="background-color:  rgb(212, 139, 3);border-radius: 5px;height: 1.7rem;" 
+                    <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-outline-warning btn-sm text-warning p-2" title="Delete" style="border-radius: 5px;" 
                     onclick="return confirm('Do you want to Delete this Estimate?');"><i class="fas fa-trash-alt"></i></a>
                 </div>
             </div>

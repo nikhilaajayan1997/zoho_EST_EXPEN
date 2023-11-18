@@ -1610,6 +1610,11 @@ def retainer_delete(request,pk):
 def allestimates(request):
     user = request.user
     estimates = Estimates.objects.filter(user=user).order_by('-id')
+    # for p in estimates:
+    #     if Recurring_invoice.objects.filter(estimate=p.id).exists():
+    #         cust=Recurring_invoice.objects.get(estimate=p.id)
+    #         p['cust']=cust.reinvoiceno
+    
     company = company_details.objects.get(user=user)
     context = {
         'estimates': estimates,
@@ -1651,11 +1656,14 @@ def newestimate(request):
 
     try:
         latest_bill = Estimates.objects.filter(company = cmp1).order_by('-reference').first()
+        # latest_bill = Estimates.objects.filter(company = cmp1).values_list('reference',flat=True).last()
         print("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii") 
         if latest_bill:
                 print("ssssssssssssssssssssssssssssssssssssssss") 
                 last_number = int(latest_bill.reference)
+                print(last_number)
                 new_number = last_number + 1
+                print(new_number)
         else:
                 new_number = 1
         print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") 
@@ -1725,7 +1733,6 @@ def createestimate(request):
         exp_date = request.POST['expiry_date']
 
         if x == y:
-
           item = request.POST.getlist('item[]')
           hsn=request.POST.getlist('hsn[]')
           quantity = request.POST.getlist('quantity[]')
@@ -1733,7 +1740,6 @@ def createestimate(request):
           discount = request.POST.getlist('discount[]')
           tax = request.POST.getlist('tax[]')
           amount = request.POST.getlist('amount[]')
-        
         else:
           itemm = request.POST.getlist('itemm[]')
           hsnn=request.POST.getlist('hsnn[]')
@@ -1743,7 +1749,6 @@ def createestimate(request):
           taxx = request.POST.getlist('taxx[]')
           amountt = request.POST.getlist('amountt[]')
         
-
         cust_note = request.POST['customer_note']
         sub_total = request.POST['subtotal']
         igst = request.POST['igst']
@@ -2106,9 +2111,74 @@ def updateestimate(request,pk):
                                     total=item.amount,discount=item.discount,rate=item.rate,inv=invid)
                 itemss.save()
 
+        if invoice.objects.filter(estimate=pk).exists():
+            invo=invoice.objects.get(estimate=pk)
+            custt=estimate.customer.id
+            custt_id=customer.objects.get(id=custt)
+            invo.customer=custt_id
+            invo.inv_date=estimate.estimate_date
+            invo.due_date=estimate.expiry_date
+            invo.cxnote=estimate.customer_notes
+            invo.subtotal=estimate.sub_total
+            invo.igst=estimate.igst
+            invo.cgst=estimate.cgst
+            invo.sgst=estimate.sgst
+            invo.t_tax=estimate.tax_amount
+            invo.subtotal=estimate.sub_total
+            invo.grandtotal=estimate.total
+            invo.status=estimate.status
+            invo.terms_condition=estimate.terms_conditions
+            invo.file=estimate.attachment
+            invo.shipping_charge=estimate.shipping_charge
+            invo.adjustment=estimate.adjustment
+            invo.save()
 
+            objects_to_delete = invoice_item.objects.filter(inv=invo.id)
+            objects_to_delete.delete()
 
+            items = EstimateItems.objects.filter(estimate=estimate.id)
+            invid = invoice.objects.get(id=invo.id)
+            for item in items:
+                itemss = invoice_item(product=item.item_name,quantity=item.quantity,hsn=item.hsn,tax=item.tax_percentage,
+                                    total=item.amount,discount=item.discount,rate=item.rate,inv=invid)
+                itemss.save()
+        
+        if Recurring_invoice.objects.filter(estimate=pk).exists():
+            invo=Recurring_invoice.objects.get(estimate=pk)
+            custt=estimate.customer.id
+            custt_id=customer.objects.get(id=custt)
+            invo.cust_name=custt_id
+            invo.start=estimate.estimate_date
+            invo.end=estimate.expiry_date
+            invo.cust_note=estimate.customer_notes
+            invo.sub_total=estimate.sub_total
+            invo.igst=estimate.igst
+            invo.cgst=estimate.cgst
+            invo.sgst=estimate.sgst
+            invo.tax_amount=estimate.tax_amount
+            invo.total=estimate.total
+            invo.status=estimate.status
+            invo.conditions=estimate.terms_conditions
+            invo.attachment=estimate.attachment
+            invo.shipping_charge=estimate.shipping_charge
+            invo.adjustment=estimate.adjustment
+            invo.cname=estimate.customer_name
+            invo.cemail=estimate.customer_mailid
+            invo.cadrs=estimate.customer.companyName
+            invo.gsttr=estimate.customer.GSTTreatment
+            invo.gstnum=estimate.customer.GSTIN
+            invo.p_supply=estimate.customer_placesupply
+            invo.save()
 
+            objects_to_delete = recur_itemtable.objects.filter(ri=invo.id)
+            objects_to_delete.delete()
+
+            items = EstimateItems.objects.filter(estimate=estimate.id)
+            invid = Recurring_invoice.objects.get(id=invo.id)
+            for item in items:
+                itemss = recur_itemtable(iname=item.item_name,quantity=item.quantity,hsncode=item.hsn,tax=item.tax_percentage,
+                                    amt=item.amount,discount=item.discount,rate=item.rate,ri=invid)
+                itemss.save()
 
     return redirect('estimateslip',estimate.id)
 
@@ -2152,9 +2222,6 @@ def converttoinvoice(request,pk):
     invo_obj=invoice.objects.get(estimate=estimate.id)
     
     return redirect('edited_prod',invo_obj.id)
-
-
-
 
 def add_customer_for_estimate(request):
     sb=payment_terms.objects.all()
@@ -4042,7 +4109,7 @@ def edit_sales_order(request,id):
         sales.adjust=adjust
         if sales.estimate:
             est_obj=Estimates.objects.get(id=sales.estimate)
-            est_obj.balance=sales.estimate
+            est_obj.balance=sales.balance
             est_obj.save()
         
         sales.save()
@@ -5074,10 +5141,8 @@ def payment_recur(request):
         }
         return JsonResponse(response_data)
 
-def create_recur(request):
+def create_recur(request): 
     user = request.user
-
-    
     company = company_details.objects.get(user=user)
     # custo=customer.objects.get(cust_name=cust)
     item=AddItem.objects.all()
@@ -5092,9 +5157,7 @@ def create_recur(request):
     return render(request,'samrecurpage.html',{'item':item,'sb':sb,'cus':cus,'pay':pay,'company':company,'every':every,'banks':banks,'unit':unit,'sales':sales,'purchase':purchase,})
 
 def new_recur(request):
-
     if request.method=='POST':
-        
         custname=request.POST.get('customer')
         cus=customer.objects.get(customerName=custname)   
         custo=cus.id 
@@ -5305,6 +5368,10 @@ def editrecurpage(request,id):
             for element in mapped:
                 created =recur_itemtable.objects.create(
                     iname=element[0], quantity=element[1],hsncode=element[2], rate=element[3], discount=element[4], tax=element[5], amt=element[6],ri=edit)
+        if edit.estimate:
+            est_obj=Estimates.objects.get(id=edit.estimate)
+            est_obj.balance=edit.balance
+            est_obj.save()
         edit.save()
         return redirect('view_recurpage')
 
@@ -18760,6 +18827,42 @@ def est_sort_by_estno_estimate_view(request,pk):
             }  
     return render(request, 'estimate_slip.html', context)
 
+def convert_to_recinvoice(request,pk):
+    user = request.user.id
+    estimate=Estimates.objects.get(id=pk)
+    recinvo_status=estimate.convert_recinvoice
+    if recinvo_status=='not_converted':
+        new_status="converted"
+    else:
+        new_status="converted"
+    items = EstimateItems.objects.filter(estimate=estimate.id)
+    cust=estimate.customer.id
+    cust1=customer.objects.get(id=cust)
+    if Recurring_invoice.objects.all().exists():
+        recc_count = Recurring_invoice.objects.last().id
+        count=recc_count+1
+    else:
+        count=1
+    rec = Recurring_invoice(cust_name_id=cust1.id,cname=estimate.customer_name,cemail=estimate.customer_mailid,gsttr=estimate.customer.GSTTreatment,
+                            cadrs=estimate.customer.companyName,gstnum=estimate.customer.GSTIN,reinvoiceno=count,order_num=estimate.reference, start=estimate.estimate_date,end=estimate.expiry_date,
+                        cust_note=estimate.customer_notes,sub_total=estimate.sub_total,igst=estimate.igst,cgst=estimate.cgst,sgst=estimate.sgst,tax_amount=estimate.tax_amount,
+                        total=estimate.total,status=estimate.status,conditions=estimate.terms_conditions,attachment=estimate.attachment,
+                        p_supply=estimate.customer_placesupply,shipping_charge=estimate.shipping_charge,adjustment=estimate.adjustment,balance=estimate.total,estimate=estimate.id)
+    rec.save()
+    reccid = Recurring_invoice.objects.get(id=rec.id)
+    for item in items:
+        itemss = recur_itemtable(iname=item.item_name,quantity=item.quantity,hsncode=item.hsn,tax=item.tax_percentage,
+                             amt=item.amount,discount=item.discount,rate=item.rate,ri=reccid)
+        itemss.save()
+    estimate.convert_recinvoice=new_status
+    estimate.save()
+    recc_obj=Recurring_invoice.objects.get(estimate=estimate.id)
+
+    
+    return redirect('edit_recur',recc_obj.id)
+    
+
+
 
 def convert_to_salesorder(request,pk):
     user = request.user.id
@@ -18781,10 +18884,11 @@ def convert_to_salesorder(request,pk):
         count=1 
         sal_string="SO-"
         next_no=sal_string+str(count)
+    adjust=float(estimate.adjustment)
     sal = SalesOrder(customer_id=cust1.id,sales_no=next_no,reference=estimate.reference, sales_date=estimate.estimate_date,
                         cxnote=estimate.customer_notes,subtotal=estimate.sub_total,igst=estimate.igst,cgst=estimate.cgst,sgst=estimate.sgst,t_tax=estimate.tax_amount,
                         grandtotal=estimate.total,status=estimate.status,terms_condition=estimate.terms_conditions,file=estimate.attachment,
-                        sos=estimate.customer.placeofsupply,sh_charge=estimate.shipping_charge,estimate=estimate.id)
+                        sos=estimate.customer_placesupply,sh_charge=estimate.shipping_charge,adjust=estimate.adjustment,advance=0,estimate=estimate.id)
     sal.save()
     saleid = SalesOrder.objects.get(id=sal.id)
     for item in items:

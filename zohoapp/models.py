@@ -252,7 +252,7 @@ class Estimates(models.Model):
     customer_mailid = models.CharField(max_length=100,null=True,blank=True)
     customer_placesupply = models.CharField(max_length=100,null=True,blank=True)
     estimate_no = models.CharField(max_length=100,null=True,blank=True)
-    reference = models.CharField(max_length=100,null=True,blank=True)
+    reference = models.IntegerField(null=True,blank=True)
     estimate_date = models.DateField(null=True)
     expiry_date = models.DateField(null=True)
     sub_total = models.FloatField(null=True,blank=True)
@@ -602,6 +602,7 @@ class Recurring_invoice(models.Model):
     comments = models.CharField(max_length=255,null=True,blank=True)
     payment_method = models.CharField(max_length=255,null=True,blank=True)
     payment_type=models.CharField(max_length=255,null=True,blank=True)
+    estimate=models.CharField(max_length=255,null=True,blank=True)
 
 class recur_itemtable(models.Model):
     
