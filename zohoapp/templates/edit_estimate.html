@@ -314,13 +314,17 @@ function calc(){
 </script>
 <section>
     <div style="top: 7rem; ">
-        <div class="row  ml-2">
-            <div class="col-md-3 "><a class="text-white" style="font-size: 1.5rem;"><i class="fa-solid fa-plus"></i> Edit 
-                    Estimate</a></div>
-            <!-- <input type="hidden" id="state" value="{{ company.state }}"> -->
+      <div class="container-fulid containerprof" >
+        <div class="card " style="width: 100%;">
+          <div class="card-body">
+              <div class="card-title">
+                <h2 class="mb-0 text-uppercase text-right"> Edit Estimate</h2>
+              </div>
+          </div>
         </div>
+      <div>
 
-        <div >
+        <div class="card  p-5">
             <form method="post" action="{% url 'updateestimate' estimate.id %}" class="p-5" enctype="multipart/form-data" novalidate
                 id="forms">
                 {% csrf_token %}
@@ -330,7 +334,7 @@ function calc(){
                 <input class="hidden"  id="cus_place" name="hidden_cus_place"  value="">
                 <input type="number" id="customer_id" name="customer_id" style="display: none;"  readonly>
           
-                <div class="row mb-4 border-top pt-5">
+                <div class="row mb-4 ">
                     <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div> 
                     <div class="col-sm-6">
                         <select class="form-control text-black" id="customer_sel" name="customer_name" >
@@ -447,7 +451,7 @@ function calc(){
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <label for="" id="label_tab1">Price List</label><br>
-                   <table class="table text-black table-bordered" id="item_table" style="background-color: rgba(250, 227, 198, 0.8);table-layout: fixed;width: 100%;background-color: #b6b3b36b;"
+                   <table class="table text-black table-bordered" id="item_table" style="background-color: rgba(58, 57, 57, 0.8);table-layout: fixed;width: 100%;"
                     onchange="calc()">
                     <thead>
                         <tr>
@@ -537,7 +541,7 @@ function calc(){
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
         <label for="" id="label_tab2" style="display: none;">Price List</label><br>
-   <table class="table  text-black table-bordered" id="item_tablee" style="background-color: rgba(250, 227, 198, 0.8);table-layout: fixed;width: 100%;background-color: #b6b3b36b;display: none;"
+   <table class="table  text-black table-bordered" id="item_tablee" style="background-color: rgba(58, 57, 57, 0.8);table-layout: fixed;width: 100%;display: none;"
     onchange="calc()">
     <thead>
         <tr>
@@ -631,7 +635,7 @@ function calc(){
                     </div>
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div style="width: 100%;">
-                            <table class="rounded table  text-black table-bordered" style="background-color: rgba(141, 140, 139, 0.507);table-layout: fixed;">
+                            <table class="rounded table  text-black table-bordered" style="background-color: rgba(58, 57, 57, 0.8);table-layout: fixed;">
                                 <tr style="font-weight: bold;">
                                     <td>Sub Total</td>
                                     <td><input type="text" id="subtotal" name="subtotal" value="{{estimate.sub_total}}"
@@ -703,7 +707,7 @@ function calc(){
                             placeholder=" Enter the terms & conditions of your business to be displayed in your transaction.">{{ estimate.terms_conditions }}</textarea>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-12 py-5 text-center rounded mt-4" >
-                        <div  style="width: 100%;background-color: rgba(153, 152, 152, 0.507);height: 120px;">
+                        <div  style="width: 100%;background-color: rgba(58, 57, 57, 0.8);height: 120px;">
                             <label class="text-black mt-3 pt-3" for="">Attach File(s) to Estimate</label><br>
 
                         <label for="file-upload" class="btn text-white border-0"
