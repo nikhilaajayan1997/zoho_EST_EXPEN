@@ -5,6 +5,12 @@
 
 
 <style>
+  .modal{
+      z-index: 9999;
+      overflow: scroll;
+    }
+
+
 .dropdown-item:hover{
     color: rgb(226, 149, 5);
 }
@@ -71,11 +77,11 @@
         </div>
       </div>
       <div class="col-sm-3 col-md-2 col-lg-2"></div>
-      <div class="col-sm-3 col-md-1 col-lg-1">
-        <a  style="color: white; height:35px;" id="exportBtn" class="btn btn-outline-warning text-warning mr-1 pt-2" >Export</a>
-
-      </div>
+      <!-- <div class="col-sm-3 col-md-1 col-lg-1">
+        
+      </div> -->
       <div class="col-sm-1 col-md-1 col-lg-1">
+       
         <div class="col-md-1 ">
           <div class="dropdown " >
             <a class="dropdown-toggle btn btn-outline-warning text-warning pt-2 pb-2" href="" data-toggle="dropdown">
@@ -94,7 +100,9 @@
         </a>
         </div>
       </div>
-      <div class="col-sm-5 col-md-2 col-lg-2">
+      <div class="col-sm-5 col-md-3 col-lg-3">
+        <a  style="color: white; height:35px;" id="exportBtn" class="btn btn-outline-warning text-warning mr-1 pt-2" >Export</a>
+        <a  style="color: white; height:35px;" id="importBtn" data-toggle="modal" data-target="#import_modal" class="btn btn-outline-warning text-warning mr-1 pt-2" >Import</a>
         <a  style="color: white; height:35px;" class="btn btn-outline-warning text-warning mr-1 pt-2" href="{% url 'newestimate' %}"><i
           class=" fas fa-plus " ></i>New</a>
       </div>
@@ -140,16 +148,16 @@
 
                   {% if estimate.convert_sales == 'converted' %}
                   <a class="dropdown-item" href="">To Invoice </a>
-                  <a class="dropdown-item" href="">To SalesOrder <br> Done </a>
+                  <a class="dropdown-item" href="">To SalesOrder (Done) <br> <span class="text-warning">{{ estimate.salesorder.sales_no}}</span> </a>
                   <a class="dropdown-item" href="">To Rec.Invoice</a>
                   {% elif estimate.convert_invoice == 'converted' %}
-                  <a class="dropdown-item" href="">To Invoice <br> Done </a>
-                  <a class="dropdown-item" href="">To SalesOrder</a>
+                  <a class="dropdown-item" href="">To Invoice ( Done )<br><span class="text-warning">{{ estimate.invoice.invoice_no}}</span></a>
+                  <a class="dropdown-item" href="" >To SalesOrder</a>
                   <a class="dropdown-item" href="">To Rec.Invoice</a>
                   {% elif estimate.convert_recinvoice == 'converted' %}
                   <a class="dropdown-item" href="">To Invoice </a>
                   <a class="dropdown-item" href="">To SalesOrder</a>
-                  <a class="dropdown-item" href="">To Rec.Invoice <br> Done </a>
+                  <a class="dropdown-item" href="">To Rec.Invoice (Done)<br><span class="text-warning">{{ estimate.reccinvoice.reinvoiceno}}</span> </a>
                   {% else %}
                   <a class="dropdown-item" href="{% url 'converttoinvoice' estimate.id %}">To Invoice </a>
                   <a class="dropdown-item" href="{% url 'convert_to_salesorder' estimate.id %}">To SalesOrder</a>
@@ -181,10 +189,39 @@
 
       </table>
 </div>
-  </section>
 
+<!-- ................................... import modal ................. -->
 
-  
+<div class="modal fade" id="import_modal">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+      <div class="modal-header " style="background: rgb(32, 35, 37);">
+        <h1 class="text-light">Import Estimate</h1>
+      </div>
+      <div class="modal-body" style="background: rgb(32, 35, 37);">
+        <div class="card p-3 m-3">        
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+              <h5 class="text-danger">IMPORTANT:</h5>
+              <p class="text-light">File should have 2 sheets named 'estimate' & 'items'and column name & order should be in the given format(Uppercase)</p>
+            </div>
+          </div>
+        </div>
+        <a href="" class="text-primary" style="font-size:medium;">Download Sample File here</a> <br>
+
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <h6 class="text-light">File</h6>
+          <input type="file" class="form-control" style="width: 50%;"><br>
+          <button class="btn btn-outline-warning mt-3">IMPORT</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ..........................................import modal end  ........................... -->
+</section>
 </div>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>

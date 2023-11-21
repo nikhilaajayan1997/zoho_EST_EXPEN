@@ -43,10 +43,11 @@ from calendar import HTMLCalendar
 from django.template import loader
 from .models import customer  # Import your Customer model
 from django.db.models import Max
+from openpyxl import load_workbook
+from openpyxl import Workbook
 
 
 def index(request):
-
     return render(request,'landpage.html')
 
 def register(request):
@@ -2218,6 +2219,7 @@ def converttoinvoice(request,pk):
                              total=item.amount,discount=item.discount,rate=item.rate,inv=inv)
         items.save()
     estimate.convert_invoice=new_status
+    estimate.invoice=inv
     estimate.save()
     invo_obj=invoice.objects.get(estimate=estimate.id)
     
@@ -18855,6 +18857,7 @@ def convert_to_recinvoice(request,pk):
                              amt=item.amount,discount=item.discount,rate=item.rate,ri=reccid)
         itemss.save()
     estimate.convert_recinvoice=new_status
+    estimate.reccinvoice=rec
     estimate.save()
     recc_obj=Recurring_invoice.objects.get(estimate=estimate.id)
 
@@ -18897,10 +18900,9 @@ def convert_to_salesorder(request,pk):
         itemss.save()
     
     estimate.convert_sales=new_status
+    estimate.salesorder=sal
     estimate.save()
     sales_obj=SalesOrder.objects.get(estimate=estimate.id)
-
-    
     return redirect('edit_sales_order',sales_obj.id)
 
 

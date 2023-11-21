@@ -244,43 +244,6 @@ class Retaineritems(models.Model):
     description=models.TextField()
     amount=models.CharField(max_length=100)
             
-class Estimates(models.Model): 
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
-    company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
-    customer=models.ForeignKey(customer,on_delete=models.CASCADE,null=True,blank=True)
-    customer_name = models.CharField(max_length=100,null=True,blank=True)
-    customer_mailid = models.CharField(max_length=100,null=True,blank=True)
-    customer_placesupply = models.CharField(max_length=100,null=True,blank=True)
-    estimate_no = models.CharField(max_length=100,null=True,blank=True)
-    reference = models.IntegerField(null=True,blank=True)
-    estimate_date = models.DateField(null=True)
-    expiry_date = models.DateField(null=True)
-    sub_total = models.FloatField(null=True,blank=True)
-    igst = models.FloatField(null=True,blank=True)
-    sgst = models.FloatField(null=True,blank=True)
-    cgst = models.FloatField(null=True,blank=True)
-    tax_amount = models.FloatField(null=True,blank=True)
-    shipping_charge = models.FloatField(null=True,blank=True)
-    adjustment = models.FloatField(null=True,blank=True)  
-    total = models.FloatField(null=True,blank=True)
-    status = models.CharField(max_length=100,null=True,blank=True)
-    customer_notes = models.CharField(max_length=250,null=True,blank=True)
-    terms_conditions = models.CharField(max_length=250,null=True,blank=True)
-    attachment = models.ImageField(upload_to="image/", null=True) 
-    convert_invoice=models.CharField(max_length=50,null=True,blank=True) 
-    convert_sales=models.CharField(max_length=50,null=True,blank=True)
-    convert_recinvoice=models.CharField(max_length=50,null=True,blank=True)
-    balance=models.CharField(max_length=200,null=True,blank=True) 
-
-class EstimateItems(models.Model):
-    estimate = models.ForeignKey(Estimates,on_delete=models.CASCADE,null=True,blank=True)
-    hsn=models.IntegerField(null=True,blank=True)
-    item_name = models.CharField(max_length=100,null=True,blank=True)
-    quantity = models.IntegerField(null=True,blank=True)
-    rate = models.FloatField(null=True,blank=True)
-    discount = models.FloatField(null=True,blank=True)
-    tax_percentage = models.IntegerField(null=True,blank=True)
-    amount = models.FloatField(null=True,blank=True)
 
 class payment(models.Model):
     term=models.TextField(max_length=255)
@@ -1072,15 +1035,7 @@ class usernamez(models.Model):
     users=models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     usernamez=models.CharField(max_length=255, null=True,blank=True)
     emailz=models.CharField(max_length=255, null=True,blank=True)
-    
-    
-    
-class estimate_comments(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
-    estimate=models.ForeignKey(Estimates,on_delete=models.CASCADE,null=True,blank=True)
-    comments=models.CharField(max_length=500,null=True,blank=True)
-    
-    
+ 
     
 class Vendor_Credits(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default='')
@@ -1655,3 +1610,49 @@ class InvoicePayment(models.Model):
 class deletedestimates(models.Model):
     cid = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True)
     reference_number = models.CharField(max_length=50)
+class Estimates(models.Model): 
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
+    customer=models.ForeignKey(customer,on_delete=models.CASCADE,null=True,blank=True)
+    invoice=models.ForeignKey(invoice,on_delete=models.CASCADE,null=True,blank=True)
+    salesorder=models.ForeignKey(SalesOrder,on_delete=models.CASCADE,null=True,blank=True)
+    reccinvoice=models.ForeignKey(Recurring_invoice,on_delete=models.CASCADE,null=True,blank=True)
+    customer_name = models.CharField(max_length=100,null=True,blank=True)
+    customer_mailid = models.CharField(max_length=100,null=True,blank=True)
+    customer_placesupply = models.CharField(max_length=100,null=True,blank=True)
+    estimate_no = models.CharField(max_length=100,null=True,blank=True)
+    reference = models.IntegerField(null=True,blank=True)
+    estimate_date = models.DateField(null=True)
+    expiry_date = models.DateField(null=True)
+    sub_total = models.FloatField(null=True,blank=True)
+    igst = models.FloatField(null=True,blank=True)
+    sgst = models.FloatField(null=True,blank=True)
+    cgst = models.FloatField(null=True,blank=True)
+    tax_amount = models.FloatField(null=True,blank=True)
+    shipping_charge = models.FloatField(null=True,blank=True)
+    adjustment = models.FloatField(null=True,blank=True)  
+    total = models.FloatField(null=True,blank=True)
+    status = models.CharField(max_length=100,null=True,blank=True)
+    customer_notes = models.CharField(max_length=250,null=True,blank=True)
+    terms_conditions = models.CharField(max_length=250,null=True,blank=True)
+    attachment = models.ImageField(upload_to="image/", null=True) 
+    convert_invoice=models.CharField(max_length=50,null=True,blank=True) 
+    convert_sales=models.CharField(max_length=50,null=True,blank=True)
+    convert_recinvoice=models.CharField(max_length=50,null=True,blank=True)
+    balance=models.CharField(max_length=200,null=True,blank=True) 
+
+class EstimateItems(models.Model):
+    estimate = models.ForeignKey(Estimates,on_delete=models.CASCADE,null=True,blank=True)
+    hsn=models.IntegerField(null=True,blank=True)
+    item_name = models.CharField(max_length=100,null=True,blank=True)
+    quantity = models.IntegerField(null=True,blank=True)
+    rate = models.FloatField(null=True,blank=True)
+    discount = models.FloatField(null=True,blank=True)
+    tax_percentage = models.IntegerField(null=True,blank=True)
+    amount = models.FloatField(null=True,blank=True)
+
+class estimate_comments(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    estimate=models.ForeignKey(Estimates,on_delete=models.CASCADE,null=True,blank=True)
+    comments=models.CharField(max_length=500,null=True,blank=True)
+

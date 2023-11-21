@@ -506,61 +506,72 @@ $(function() {
                 </div>
 
 <!-- ......................................................  template 1 ............................................ -->
-                <div class="slip p-5 convert_to_pdf bg-light printTemplates template1" id="whatToPrint"
+                <div class="slip p-2 convert_to_pdf bg-light printTemplates template1" id="whatToPrint"
                     style="box-shadow: 5px 5px 10px rgb(45, 45, 45);" >
-                    <div class="row">
-                        <div class="col-sm-2 col-lg-2 col-md-2">
-                                <h4 class="pt-2" style="color: rgb(192, 128, 8);">{{ estimate.status }}</h4>
+                    <div style="background-color:#8b3131;padding-top: 3%;padding-bottom: 3%;border-radius: 25px;">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-12 col-md-12">
+                                <center>
+                                    <h1 class="pt-2" style="color: rgb(233, 162, 31);text-transform: uppercase;">{{ company.company_name }}</h1>
+                                    <h6 class="text-light" >{{ company.address }},{{ company.city }} <br>{{ company.state }}</h6>
+                                </center>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-2">
+                    <div class="row mt-2" style="padding-left: 3%;padding-right: 3%;">
                         <div class="col-md-12 ">
-                            <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
-                            <p class="text-dark" style="font-size: 1rem;font-weight: bold;">{{ company.address }}</p>
-                            <p class="text-dark" style="font-size: 1rem;font-weight: bold;">{{ company.city }},{{ company.state }}</p>
-                            <h1 class="text-dark" style="font-size: 3rem; margin-left: 20rem;margin-top: -15%;">ESTIMATE</h1>
-                            <h6 class="text-dark" style="margin-left: 20rem;margin-top: -1%;">Estimate Number : {{estimate.estimate_no }}</h6>
+                            
+                            <h3 class="text-dark">ESTIMATE</h3>
+                            <h6 class="text-dark" >Estimate Number : {{estimate.estimate_no }} <span style="color:rgb(218, 142, 3);">({{ estimate.status }})</span></h6>
+                            <h6 class="text-dark " >Order Date : {{ estimate.estimate_date }}</h6>
                         </div>
                     </div>
                     <hr>
-                    <div class="row ">
+                    <div class="row " style="padding-left: 3%;padding-right: 3%;">
                         <div class="col-md-12 mt-auto">
-                            <h6 class="text-dark">Bill To</h6>
-                            <h6 style="color: rgb(218, 142, 3);">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span> </h6>
+                            <h6 style="color: rgb(218, 142, 3);">Billing Address:</h6>
+                            <h6 style="color: black;">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span> </h6>
                             {% if estimate.customer.GSTIN %}
                             <h6 class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
                             {% endif %}
-                            <h6 class="text-dark " style="margin-left: 20rem;margin-top: -4%;">Order Date : {{ estimate.estimate_date }}</h6>
+                            <h6 style="color: black;">{{ estimate.customer.Address1 }} ,{{ estimate.customer.city }} <br>{{ estimate.customer.state }} ,{{ estimate.customer.zipcode }} <br>{{ estimate.customer.phone1 }}</h6>
+                            <div style="margin-left: 28rem;margin-top: -22%;">
+                                <h6 style="color: rgb(218, 142, 3);">Shipping Address:</h6>
+                                <h6 style="color: black;">{{ estimate.customer.sAddress1 }} ,{{ estimate.customer.scity }} <br>{{ estimate.customer.sstate }} ,{{ estimate.customer.szipcode }} <br>{{ estimate.customer.sphone1 }}</h6>
+                            </div>
                         </div>
                     </div>
-                    <table class="table mt-2 " style="border-color: black;border-collapse: collapse;background-color: rgb(237, 237, 240);">
-                        <thead >
-                            <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
-                                <th style="color: black;">#</th>
-                                <th  style="width: 30rem;color: black;">Item</th>
-                                <th  style="width: 30rem;color: black;">Hsn</th>
-                                <th  style="color: black;width: 20rem;">Quantity</th>
-                                <th  style="color: black;width: 20rem;">Rate</th>
-                                <th  style="color: black;width: 20rem;">Discount</th>
-                                <th  style="color: black;width: 20rem;">Tax</th>
-                                <th  style="color: black;width: 20rem;">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody style="border-left: 1px solid black;border-right: 1px solid black">
-                            {% for item in items %}
-                            <tr style="border-bottom: 1px solid black;">
-                                <td>{{ forloop.counter }}</td>
-                                <td style="text-align: center;">{{ item.item_name }}</td>
-                                <td style="text-align: center;">{{ item.hsn }}</td>
-                                <td style="text-align: center;">{{ item.quantity }}</td>
-                                <td style="text-align: center;">{{ item.rate|floatformat:1 }}</td>
-                                <td style="text-align: center;">{{ item.discount|floatformat:1 }}</td>
-                                <td style="text-align: center;">{{ item.tax_percentage }}</td>
-                                <td style="text-align: center;">{{ item.amount|floatformat:1 }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <br>
+                    <div>
+                        <table class="table mt-5" style="border-color: black;border-collapse: collapse;background-color: rgb(237, 237, 240);">
+                            <thead >
+                                <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
+                                    <th style="color: black;">#</th>
+                                    <th  style="width: 30rem;color: black;">Item</th>
+                                    <th  style="width: 30rem;color: black;">Hsn</th>
+                                    <th  style="color: black;width: 20rem;">Quantity</th>
+                                    <th  style="color: black;width: 20rem;">Rate</th>
+                                    <th  style="color: black;width: 20rem;">Discount</th>
+                                    <th  style="color: black;width: 20rem;">Tax</th>
+                                    <th  style="color: black;width: 20rem;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border-left: 1px solid black;border-right: 1px solid black">
+                                {% for item in items %}
+                                <tr style="border-bottom: 1px solid black;">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td style="text-align: center;">{{ item.item_name }}</td>
+                                    <td style="text-align: center;">{{ item.hsn }}</td>
+                                    <td style="text-align: center;">{{ item.quantity }}</td>
+                                    <td style="text-align: center;">{{ item.rate|floatformat:1 }}</td>
+                                    <td style="text-align: center;">{{ item.discount|floatformat:1 }}</td>
+                                    <td style="text-align: center;">{{ item.tax_percentage }}</td>
+                                    <td style="text-align: center;">{{ item.amount|floatformat:1 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="row">
                         <div class="col-sm-11 col-md-11 col-lg-11">
                             <table class="mt-2" style="margin-left: 70%;margin-top: 3%;">
@@ -610,36 +621,46 @@ $(function() {
 
    <!-- ............................................... template 2 ...................................................              -->
 
-   <div class="slip p-5 convert_to_pdf bg-light printTemplates template2" id="whatToPrint2"
-                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;">
-                    <!-- <div style="background-color: #555;"> -->
-                    <div class="row">
-                        <div class="col-sm-2 col-lg-2 col-md-2">
-                                <h4 class="pt-2" style="color: rgb(192, 128, 8);">{{ estimate.status }}</h4>
-                        </div>
+   <div class="slip p-2 convert_to_pdf bg-light printTemplates template2" id="whatToPrint2"
+                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;background-color: #ffffff;
+                    background-image: linear-gradient(45deg, #ffffff 0%, #FFFB7D 33%, #ffffff 66%, #85FFBD 100%);
+                    ;
+                    ">
+
+            <div style="background-color: #FBAB7E;
+            background-image: linear-gradient(112deg, #FBAB7E 0%, #F7CE68 100%);
+            
+            padding-top: 3%;border-radius: 25px;
+            ">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 col-sm-12">
+                        <center><h1 style="color: black;">ESTIMATE</h1></center>
+                        <center><h6 style="color: black;">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6></center>
+                        <center><h6 style="color: black;">Order Date : {{ estimate.estimate_date }}</h6></center>
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12 ">
-                            <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
-                            <p class="text-dark" style="font-size: 1rem;font-weight: bold;">{{ company.address }}</p>
-                            <p class="text-dark" style="font-size: 1rem;font-weight: bold;">{{ company.city }},{{ company.state }}</p>
-                            <h1 class="text-dark" style="font-size: 3rem; margin-left: 20rem;margin-top: -15%;">ESTIMATE</h1>
-                            <h6 class="text-dark" style="margin-left: 20rem;margin-top: -1%;">Estimate Number : {{estimate.estimate_no }}</h6>
-                        </div>
+                </div>
+            </div>
+                <br>
+                <div class="row" style="padding-left: 3%;padding-right: 3%;">
+                    <div class="col-md-12 ">
+                        <h5 style="text-transform: uppercase;color:rgb(218, 142, 3);">{{ company.company_name }}</h5>
+                        <h6 class="text-dark" >{{ company.address }}</h6> 
+                        <h6 class="text-dark" >{{ company.city }},{{ company.state }}</h6>
+                        <h6 class="text-dark" >{{ company.company_email }}</h6>
+                        <h6 class="text-dark" >{{ company.contact_number }}</h6>
+                        <h6 class="text-dark" style="margin-left: 70%;margin-top: -19%;">Bill To :</h6>
+                        <h6 style="color: rgb(218, 142, 3);margin-left: 70%;">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span><br><span class="text-dark">{{ estimate.customer.Address1 }},&nbsp;{{ estimate.customer.city }}</span> </h6>
+                        {% if estimate.customer.GSTIN %}
+                        <h6 style="margin-left: 70%;" class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
+                        {% endif %}
                     </div>
-                <!-- </div> -->
-                    <hr>
-                    <div class="row ">
-                        <div class="col-md-12 mt-auto">
-                            <h6 class="text-dark">Bill To</h6>
-                            <h6 style="color: rgb(218, 142, 3);">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span> </h6>
-                            {% if estimate.customer.GSTIN %}
-                            <h6 class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
-                            {% endif %}
-                            <h6 class="text-dark " style="margin-left: 20rem;margin-top: -4%;">Order Date : {{ estimate.estimate_date }}</h6>
-                        </div>
-                    </div>
-                    <table class="table mt-2 " style="border-color: black;border-collapse: collapse;background-color: rgb(236, 201, 103);">
+                </div>
+                <hr>
+
+
+                    <table class="table mt-2 " style="border-color: black;border-collapse: collapse;background-color: #ffffff;
+                    background-image: linear-gradient(45deg, #ffffff 0%, #FFFB7D 33%, #ffffff 66%, #85FFBD 100%);
+                    ">
                         <thead >
                             <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
                                 <th style="color: black;">#</th>
@@ -713,37 +734,40 @@ $(function() {
                         <div class="col-sm-1 col-md-1 col-lg-1"></div>
                     </div>
                 </div>
-
     <!-- ..............................................  template 3..................................................... -->
-    <div class="slip p-5 convert_to_pdf bg-light printTemplates template3" id="whatToPrint3"
+    <div class="slip convert_to_pdf bg-light printTemplates template3" id="whatToPrint3"
                     style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;">
+                <div style="background-color: #286dad;
+                background-image: linear-gradient(135deg, #286dad 0%, #797cab 24%, #773b3b 49%, #7355bd 75%, #7f3737 100%);
+                padding-top: 3%;
+                ">
                     <div class="row">
-                        <div class="col-sm-2 col-lg-2 col-md-2">
-                                <h4 class="pt-2" style="color: rgb(192, 128, 8);">{{ estimate.status }}</h4>
+                        <div class="col-md-12 col-lg-12 col-sm-12">
+                            <center><h1 style="color: black;">ESTIMATE</h1></center>
+                            <center><h6 style="color: black;">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6></center>
+                            <center><h6 style="color: black;">Order Date : {{ estimate.estimate_date }}</h6></center>
                         </div>
                     </div>
-                    <div class="row mt-2">
+                </div>
+                    <br>
+                    <div class="row" style="padding-left: 3%;padding-right: 3%;">
                         <div class="col-md-12 ">
-                            <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
-                            <p class="text-dark" style="font-size: 1rem;font-weight: bold;">{{ company.address }}</p>
-                            <p class="text-dark" style="font-size: 1rem;font-weight: bold;">{{ company.city }},{{ company.state }}</p>
-                            <h1 class="text-dark" style="font-size: 3rem; margin-left: 20rem;margin-top: -15%;">ESTIMATE</h1>
-                            <h6 class="text-dark" style="margin-left: 20rem;margin-top: -1%;">Estimate Number : {{estimate.estimate_no }}</h6>
+                            <h5 style="text-transform: uppercase;color:rgb(218, 142, 3);">{{ company.company_name }}</h5>
+                            <h6 class="text-dark" >{{ company.address }}</h6> 
+                            <h6 class="text-dark" >{{ company.city }},{{ company.state }}</h6>
+                            <h6 class="text-dark" >{{ company.company_email }}</h6>
+                            <h6 class="text-dark" >{{ company.contact_number }}</h6>
+                            <h6 class="text-dark" style="margin-left: 70%;margin-top: -19%;">Bill To :</h6>
+                            <h6 style="color: rgb(218, 142, 3);margin-left: 70%;">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span><br><span class="text-dark">{{ estimate.customer.Address1 }},&nbsp;{{ estimate.customer.city }}</span> </h6>
+                            {% if estimate.customer.GSTIN %}
+                            <h6 style="margin-left: 70%;" class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
+                            {% endif %}
                         </div>
                     </div>
                     <hr>
-                    <div class="row ">
-                        <div class="col-md-12 mt-auto">
-                            <h6 class="text-dark">Bill To</h6>
-                            <h6 style="color: rgb(218, 142, 3);">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span> </h6>
-                            {% if estimate.customer.GSTIN %}
-                            <h6 class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
-                            {% endif %}
-                            <h6 class="text-dark " style="margin-left: 20rem;margin-top: -4%;">Order Date : {{ estimate.estimate_date }}</h6>
-                        </div>
-                    </div>
+                    <div style="padding-left: 3%;padding-right: 3%;">
                     <table class="table mt-2 " style="border-color: black;border-collapse: collapse;background-color: rgb(166, 166, 248);">
-                        <thead >
+                        <thead>
                             <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
                                 <th style="color: black;">#</th>
                                 <th  style="width: 30rem;color: black;">Item</th>
@@ -758,21 +782,22 @@ $(function() {
                         <tbody style="border-left: 1px solid black;border-right: 1px solid black">
                             {% for item in items %}
                             <tr style="border-bottom: 1px solid black;">
-                                <td>{{ forloop.counter }}</td>
-                                <td style="text-align: center;">{{ item.item_name }}</td>
-                                <td style="text-align: center;">{{ item.hsn }}</td>
-                                <td style="text-align: center;">{{ item.quantity }}</td>
-                                <td style="text-align: center;">{{ item.rate|floatformat:1 }}</td>
-                                <td style="text-align: center;">{{ item.discount|floatformat:1 }}</td>
-                                <td style="text-align: center;">{{ item.tax_percentage }}</td>
-                                <td style="text-align: center;">{{ item.amount|floatformat:1 }}</td>
+                                <td style="color: black;">{{ forloop.counter }}</td>
+                                <td style="text-align: center;color: black;">{{ item.item_name }}</td>
+                                <td style="text-align: center;color: black;">{{ item.hsn }}</td>
+                                <td style="text-align: center;color: black;">{{ item.quantity }}</td>
+                                <td style="text-align: center;color: black;">{{ item.rate|floatformat:1 }}</td>
+                                <td style="text-align: center;color: black;">{{ item.discount|floatformat:1 }}</td>
+                                <td style="text-align: center;color: black;">{{ item.tax_percentage }}</td>
+                                <td style="text-align: center;color: black;">{{ item.amount|floatformat:1 }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
                     <div class="row">
                         <div class="col-sm-11 col-md-11 col-lg-11">
-                            <table class="mt-2" style="margin-left: 70%;margin-top: 3%;">
+                            <table class="mt-2" style="margin-left: 70%;margin-top: 3%;margin-bottom: 5%;">
                                 <tr>
                                     <td class=" text-dark" style="font-weight: bold;">Sub-Total:</td>
                                     <td class="text-right text-dark" style="text-align: end;">{{ estimate.sub_total|floatformat:1}}</td>
