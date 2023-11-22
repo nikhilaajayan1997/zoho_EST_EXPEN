@@ -433,9 +433,10 @@ function calc() {
                 </div>
                 <div class="row mb-4">
                   <div class="col-sm-2"><label for="estimate_number">Estimate#*</label></div>
-                  <div class="col-sm-6"><input type="text" id="estimate_number" name="estimate_number" class="form-control text-dark"
-                          value="EST-{{count}}">
-                 
+                  <div class="col-sm-6">
+                    <label for="" style="color: rgb(196, 161, 8);" id="credit_span">( Estimate number format {{est_no}} )</label>
+                    <input type="text" id="estimate_number" onchange="check_estimate_number()" name="estimate_number" class="form-control text-dark">
+                  
                   </div>
               </div>
 
@@ -1455,11 +1456,11 @@ function calc() {
                   </div>
                   <div class="col-md-3">
                     <select name="ctitle" id="ctitle" class="form-control text-dark bg-light">
-                      <option value="Mr." selected>Mr.</option>
-                      <option value="Mrs.">Mrs.</option>
-                      <option value="Ms.">Ms.</option>
-                      <option value="Miss.">Miss.</option>
-                      <option value="Dr.">Dr.</option>
+                      <option value="Mr." selected>Mr</option>
+                      <option value="Mrs.">Mrs</option>
+                      <option value="Ms.">Ms</option>
+                      <option value="Miss.">Miss</option>
+                      <option value="Dr.">Dr</option>
                     </select>
                   </div>
                 </div>
@@ -2085,6 +2086,30 @@ function calc() {
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
     crossorigin="anonymous"></script>
 
+    <script>
+      function check_estimate_number(){
+        console.log("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+           var str=document.getElementById('estimate_number').value;
+
+           var ref_no=document.getElementById('reference').value;
+           var ref_len=ref_no.length;
+           var x=ref_len
+           var sliced_string=str.slice(-x,)
+           console.log("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+           console.log(ref_no)
+           console.log(sliced_string)
+           if(parseInt(ref_no) == parseInt(sliced_string))
+           {
+               document.getElementById('credit_span').style.color="green";
+               document.getElementById('credit_span').innerHTML="consicutive number";
+
+           }
+           else{
+               document.getElementById('credit_span').style.color="red";
+               document.getElementById('credit_span').innerHTML="not consicutive number";
+           }
+       }
+   </script>
 
 
 <script>

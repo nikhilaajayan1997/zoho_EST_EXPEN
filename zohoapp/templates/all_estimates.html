@@ -45,6 +45,9 @@
 
   <section id="estimates_section">
     <div class="row  mx-2">
+      {% for message in messages %}
+      {{ message }}
+      {% endfor %}
       <div class="col-md-6 py-2"><a class="text-white" style="font-size: 1.5rem;"> All Estimates</a></div>
       <div class="col-md-6 form-inline justify-content-end py-2">
         <!-- <a style="color: white; background-color: rgb(210, 132, 30);" class="btn mr-1" href="{% url 'newestimate' %}"><i
@@ -203,16 +206,17 @@
           <div class="row">
             <div class="col-md-12 col-lg-12 col-sm-12">
               <h5 class="text-danger">IMPORTANT:</h5>
-              <p class="text-light">File should have 2 sheets named 'estimate' & 'items'and column name & order should be in the given format(Uppercase)</p>
+              <p class="text-light">File should have 2 sheets named 'Sheet1' & 'Sheet2'and column name & order should be in the given format(Uppercase)</p><br>
+              <p class="text-light">Place of supply should be in the following format ,eg: for kerala  Type [KL]-Kerala  </p>
             </div>
           </div>
         </div>
-        <a href="" class="text-primary" style="font-size:medium;">Download Sample File here</a> <br>
+        <a href="{% url 'downloadEstimateSampleImportFile' %}" class="text-primary" style="font-size:medium;">Download Sample File here</a> <br>
 
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="{% url 'import_estimate' %}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           <h6 class="text-light">File</h6>
-          <input type="file" class="form-control" style="width: 50%;"><br>
+          <input type="file" name="excel_file" class="form-control" style="width: 50%;"><br>
           <button class="btn btn-outline-warning mt-3">IMPORT</button>
         </form>
       </div>

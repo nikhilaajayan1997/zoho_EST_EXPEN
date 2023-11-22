@@ -7,16 +7,11 @@
 #       return redirect('/')
 #     staff =  staff_details.objects.get(id=staff_id)
 #     com =  company.objects.get(id = staff.company.id)    
-    
 #     current_datetime = timezone.now()
 #     dateToday =  current_datetime.date()
-
 #     if request.method == "POST" and 'excel_file' in request.FILES:
-    
 #         excel_file = request.FILES['excel_file']
-
-#         wb = load_workbook(excel_file)
-
+#         wb = load_workbook(excel _file)
 #         # checking challan sheet columns
 #         try:
 #           ws = wb["challan"]
@@ -24,7 +19,7 @@
 #           print('sheet not found')
 #           messages.error(request,'`challan` sheet not found.! Please check.')
 #           return redirect(delivery_challan)
-
+        
 #         ws = wb["challan"]
 #         estimate_columns = ['SLNO','DATE','DUE DATE','NAME','STATE OF SUPPLY','DESCRIPTION','SUB TOTAL','IGST','CGST','SGST','TAX AMOUNT','ADJUSTMENT','GRAND TOTAL']
 #         estimate_sheet = [cell.value for cell in ws[1]]
