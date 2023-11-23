@@ -2036,6 +2036,20 @@ def estimateslip(request, est_id):
     }
     return render(request, 'estimate_slip.html', context)
 
+def attach_estimate_file(request,pk):
+    user1=request.user.id
+    user2=User.objects.get(id=user1)
+    cmp1 = company_details.objects.get(user=user2)
+    estobj= Estimates.objects.get(id=pk,company=cmp1,user=user2)
+
+    if request.method == 'POST':
+        # file=request.POST["file"]
+        if len(request.FILES) != 0:
+           print("hellooooooooooooooooooooooooooooooooooooooooo")
+           estobj.attachment=request.FILES.get('file')
+           estobj.save()
+    return redirect('estimateslip',estobj.id)
+
 
 
 
@@ -2052,6 +2066,10 @@ def editestimate(request,est_id):
     cust_id=estimate.customer.id
     cust_gst_treat=estimate.customer.GSTTreatment
     cust_gstno=estimate.customer.GSTIN
+    cust_address=estimate.customer.Address1
+    cust_city=estimate.customer.city
+    cust_state=estimate.customer.state
+    cust_country=estimate.customer.country
     unit=Unit.objects.all()
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
@@ -2074,6 +2092,11 @@ def editestimate(request,est_id):
         'payments':payments,
         'cust_gst_treat':cust_gst_treat,
         'cust_gstno':cust_gstno,
+        'cust_address':cust_address,
+        'cust_state':cust_state,
+        'cust_country':cust_country,
+        'cust_city':cust_city,
+
     }
     return render(request,'edit_estimate.html', context)
 

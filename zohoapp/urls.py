@@ -855,6 +855,7 @@ urlpatterns = [
     path('convert_to_recinvoice/<int:pk>',views.convert_to_recinvoice,name='convert_to_recinvoice'),
     path('import_estimate',views.import_estimate,name='import_estimate'),
     path('downloadEstimateSampleImportFile',views.downloadEstimateSampleImportFile,name='downloadEstimateSampleImportFile'),
+    path('attach_estimate_file/<int:pk>',views.attach_estimate_file,name='attach_estimate_file'),
 
 
     path('retainer_invoice_sort_by_name',views.retainer_invoice_sort_by_name,name='retainer_invoice_sort_by_name'),

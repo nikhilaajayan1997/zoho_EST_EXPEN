@@ -216,27 +216,25 @@ $(function() {
         </div>
         <div class="col-md-9 col-lg-9">
             <div class="row "  >
-                <div class="col-md-5 text-light" style="font-size: 2.3rem;">
+                <div class="col-md-3 text-light" style="font-size: 2.3rem;">
                     {{estimate.estimate_no }} <br>
-                    <button class="btn btn-outline-warning text-warning p-2" onclick="overview_function()" style="border-radius: 5px;" title="Overview"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-outline-warning text-warning p-2" onclick="template_function()" style="border-radius: 5px;" title="Template"><i class="fa fa-file-word"></i></button>
-                    <button class="btn btn-outline-warning text-warning p-2" id="toggleTemplate4" onclick="showslip_function(),toggleTemplate('estimate_slip','estimate_slip')"  style="border-radius: 5px;" title="Slip"><i class="fas fa-receipt"></i></button>
-                    {% if estimate.status == 'Draft' %}
-                    <a href="{% url 'estimste_status_edit' estimate.id %}" class="btn btn-outline-warning text-warning p-2" title="save this draft" style="border-radius: 5px;"><i class="fas fa-save"></i></a>
-                    {% endif %}
+                    <button class="btn btn-outline-warning text-warning " onclick="overview_function()"  title="Overview"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-outline-warning text-warning " onclick="template_function()"  title="Template"><i class="fa fa-file-word"></i></button>
+                    <button class="btn btn-outline-warning text-warning" id="toggleTemplate4" onclick="showslip_function(),toggleTemplate('estimate_slip','estimate_slip')"  title="Slip"><i class="fas fa-receipt"></i></button>
+                    
                 </div>
-                <div class="col-md-7 text-white text-right my-auto" style="text-align: end;"><br><br>
+                <div class="col-md-9 text-white text-right my-auto" style="text-align: end;"><br><br>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a href="{% url 'editestimate' estimate.id %}" class="btn btn-outline-warning  btn-sm ms-1 p-2  text-warning"
-                        style="border-radius: 5px;" data-toggle="tooltip" title="Edit">
+                        <a href="{% url 'editestimate' estimate.id %}" class="btn btn-outline-warning   ms-1  text-warning"
+                         data-toggle="tooltip" title="Edit">
                             <i class="fas fa-pencil-alt"></i>                     
                         </a>
                         {% if setting_variable.pdf == 'yes' %}
-                        <a href="" class="btn btn-outline-warning btn-sm text-warning btn_print ms-1 p-2" style="border-radius: 5px;"
+                        <a href="" class="btn btn-outline-warning btn-sm text-warning btn_print ms-1 "
                             data-toggle="tooltip" title="PDF" id="pdf">
                             <i class="far fa-file-pdf"></i></a>
                         {% else %}
-                        <a href="" class="btn btn-outline-warning btn-sm text-warning btn_print ms-1 p-2" style="display: none;border-radius: 5px;"
+                        <a href="" class="btn btn-outline-warning btn-sm text-warning btn_print ms-1 " style="display: none;"
                             data-toggle="tooltip" title="PDF" id="pdf">
                             <i class="far fa-file-pdf"></i></a>
                         {% endif %}
@@ -267,11 +265,11 @@ $(function() {
                         </div>
                         {% endif %} -->
                         {% if setting_variable.print_opt == 'yes' %}
-                        <a href="" class="btn btn-outline-warning btn-sm text-warning ms-1 "  style="border-radius: 5px;"
+                        <a href="" class="btn btn-outline-warning  text-warning ms-1 "  
                             data-toggle="tooltip" title="Print" id="templatePrintButton"  onclick="printSection('whatToPrint')">
                             <i class="fas fa-print"></i></a>
                             {% else %}
-                            <a href="" class="btn btn-outline-warning btn-sm text-warning ms-1 "  style="display: none;border-radius: 5px;"
+                            <a href="" class="btn btn-outline-warning text-warning ms-1 "  style="display: none;"
                             data-toggle="tooltip" title="Print" id="est_print">
                             <i class="fas fa-print"></i></a>
                             {% endif %}
@@ -292,13 +290,13 @@ $(function() {
 
                             
 
-                        <a href="{% url 'emailattachment' %}" class="btn btn-outline-warning btn-sm text-warning ms-1 p-2"
-                        style="border-radius: 5px;" data-toggle="tooltip" title="Email">
+                        <a href="{% url 'emailattachment' %}" class="btn btn-outline-warning text-warning ms-1"
+                         data-toggle="tooltip" title="Email">
                             <i class="fas fa-envelope"></i></a>
 
 
-                        <div class="dropdown m-0 p-0 ms-1" title="comments" style="border-radius: 5px;">
-                            <a href=" " class="btn btn-outline-warning p-2 fas fa-comment-dots dropdown-toggle  btn-sm text-warning ms-1"  
+                        <div class="dropdown ms-1" title="comments" >
+                            <a href=" " class="btn btn-sm btn-outline-warning p-2 fas fa-comment-dots dropdown-toggle text-warning ms-1"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                             </a>
 
@@ -310,19 +308,44 @@ $(function() {
                                         
                             </div>
                         </div>
+                        {% if estimate.status == 'Draft' %}
+                    <a href="{% url 'estimste_status_edit' estimate.id %}" class="btn btn-outline-warning btn-sm text-warning 
+                     ms-1" title="save this draft" ><i class="fas fa-save"></i></a>
+                    {% endif %}
+
+                        <div class="dropdown  ms-1" title="Attach" >
+                            <a href=" " class="btn btn-sm btn-outline-warning p-2 fa fa-paperclip dropdown-toggle  btn-sm text-warning ms-1"  
+                                data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                 data-target="#attach">Attach</a>
+                                 {% if estimate.attachment != ""%}
+                                <a href="{{estimate.attachment.url}}
+                                
+                                
+                                
+                                
+                                " class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                data-target="">&nbsp;Download</a>
+                                {%endif%}
+                                        
+                            </div>
+                        </div>
 
                         
 
                         {% if estimate.attachment != ""%}
-                        <a href="{{estimate.attachment.url}}"  style="border-radius: 5px;height: 1.7rem;" class="btn btn-outline-warning  ms-1 text-warning"
+                        <a href="{{estimate.attachment.url}}"  class="btn btn-sm btn-outline-warning ms-1 text-warning"
                             data-toggle="tooltip" title="Download Attached File">
-                            <span class="mdi mdi-download"></span></a>
+                            <i class="fas fa-download"></i></a>
                         {%endif%}
                         
                        
                             {% if estimate.convert_invoice == "not_converted" and estimate.convert_sales == "not_converted" %}
-                            <div class="dropdown m-0 p-0 ms-1" title="Convert" style="border-radius: 5px;">
-                                <a href=" " class="btn btn-outline-warning fas fa-file-invoice dropdown-toggle  btn-sm text-warning ms-1 p-2"  
+                            <div class="dropdown ms-1" title="Convert" >
+                                <a href=" " class="btn btn-sm p-2 btn-outline-warning fas fa-file-invoice dropdown-toggle  btn-sm text-warning ms-1"  
                                     data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                                 </a>
         
@@ -350,7 +373,7 @@ $(function() {
                         <!-- <a href="" class="btn btn-outline-warning btn-sm text-warning " data-toggle="tooltip" title="Convert to invoice"
                         style="background-color: rgb(210, 132, 30);height: 1.7rem;" onclick="return confirm('Do you want to convert this estimate to an invoice?');">
                         <i class="fas fa-file-invoice"></i></a> -->
-                    <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-outline-warning btn-sm text-warning p-2" title="Delete" style="border-radius: 5px;" 
+                    <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-outline-warning text-warning " title="Delete" 
                     onclick="return confirm('Do you want to Delete this Estimate?');"><i class="fas fa-trash-alt"></i></a>
                 </div>
             </div>
@@ -845,6 +868,82 @@ $(function() {
                 <h4 class="text-light pt-5">More Information</h4>
                 <h6 class="text-light">Sales Person: Xyz</h6>
             </div>
+
+
+            
+<!-- ................................ attach file modal ...................... -->
+
+<div class="modal fade" id="attach" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background-color: #213b52;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'attach_estimate_file' estimate.id %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="file" class="form-control text-black" name="file">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-info">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ......................................................................................................... -->
+
+<!-- ....................................  comment list modal ................ -->
+
+<div class="modal fade " id="cmt_list"
+   style="width: 750px; margin-left: 350px; justify-content: center; overflow: hidden;">
+ <div class="modal-dialog modal-dialog-scrollable modal-xl m-5 p-5">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+        <div class="modal-header " style="background: rgb(32, 35, 37);">
+            <h5 class="m-3 text-uppercase text-light">LIST</h5>
+            <button type="button" class="close text-dark bg-none" data-dismiss="modal"
+                aria-label="Close">&times;</button>
+
+        </div>
+        <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow-x: hidden;">
+            <div class="card p-0 m-0">
+
+                <div class="row mt-3">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="p-2">
+                            <table class="table table-bordered" style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="background-color:rgb(218, 143, 3) ;color: white;">Comments</th>
+                                    </tr>
+                                </thead>
+                                {% for comt in est_comments %}
+                                <tbody>
+                                    <tr>
+                                        <!-- <td><input type="text" value="{{ comt.comments }}" style="width: 100%;height: 20px;"></td> -->
+                                        <td><textarea name="" id="" cols="80" rows="5" style="border: none;background-color:transparent ;color: white;">{{ comt.comments }}</textarea></td>
+                                    </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div>
+<!-- ................................................end  comment list modal ........................................ -->
     
     <!-- comment modal -->
 
@@ -1324,53 +1423,6 @@ $(function() {
 </div>
 
 </fieldset2>
-<!-- ......................................................................................................... -->
-
-<!-- ....................................  comment list modal ................ -->
-
-<div class="modal fade " id="cmt_list"
-   style="width: 750px; margin-left: 350px; justify-content: center; overflow: hidden;">
- <div class="modal-dialog modal-dialog-scrollable modal-xl m-5 p-5">
-    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-        <div class="modal-header " style="background: rgb(32, 35, 37);">
-            <h5 class="m-3 text-uppercase text-light">LIST</h5>
-            <button type="button" class="close text-dark bg-none" data-dismiss="modal"
-                aria-label="Close">&times;</button>
-
-        </div>
-        <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow-x: hidden;">
-            <div class="card p-0 m-0">
-
-                <div class="row mt-3">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <div class="p-2">
-                            <table class="table table-bordered" style="table-layout: fixed;">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center" style="background-color:rgb(218, 143, 3) ;color: white;">Comments</th>
-                                    </tr>
-                                </thead>
-                                {% for comt in est_comments %}
-                                <tbody>
-                                    <tr>
-                                        <!-- <td><input type="text" value="{{ comt.comments }}" style="width: 100%;height: 20px;"></td> -->
-                                        <td><textarea name="" id="" cols="80" rows="5" style="border: none;background-color:transparent ;color: white;">{{ comt.comments }}</textarea></td>
-                                    </tr>
-                                </tbody>
-                                {% endfor %}
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </div>
-
-  </div>
-</div>
-<!-- ................................................  comment modal ........................................ -->
-
 </div>
 </div>
 

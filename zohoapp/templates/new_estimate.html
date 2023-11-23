@@ -7,7 +7,7 @@
 <!-- ...................                  edited by Nikhila Ajayan............................ -->
 
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
@@ -15,15 +15,18 @@
     crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
 
+    <script src="https://code.jquery.com/jquery-3.6.0.js" 
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.js" integrity="sha512-eSeh0V+8U3qoxFnK3KgBsM69hrMOGMBy3CNxq/T4BArsSQJfKVsKb5joMqIPrNMjRQSTl4xG8oJRpgU2o9I7HQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css ">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script> -->
-    
-  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" integrity="sha512-0nkKORjFgcyxv3HbE4rzFUlENUMNqic/EzDIeYCgsKa/nwqr2B91Vu/tNAu4Q0cBuG4Xe/D1f/freEci/7GDRA=="
+     crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <style>
+
     select:focus {
         outline: none !important;
         box-shadow: none !important;
@@ -248,7 +251,7 @@ function calc() {
 
 </script>
 
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> -->
 <script>
 
     function cancelDialog() {
@@ -312,7 +315,7 @@ function calc() {
 
         </div> -->
          <div>
-            <form method="POST" action="" class="p-5" enctype="multipart/form-data" novalidate
+            <form method="POST" action="" class="p-1" enctype="multipart/form-data" novalidate
                 id="forms">
                 {% csrf_token %}
                 <input class="hidden"   id="state1" name="hidden_state1" value="{{ company.state }}">
@@ -322,16 +325,20 @@ function calc() {
                 <input class="hidden"  id="cus_place" name="hidden_cus_place"  value="">
                 
                 <div class="row mb-4 ">
+                  
                     <div class="col-sm-2"><label for="customer_name">Customer Name*</label></div>
                     <div class="col-sm-6 d-flex ">
                         <!-- <div class="search_select_box"> -->
-                          <select  class="form-control text-dark "  id="customer_sel" name="customer_name" >
+                          <select  class="form-control text-dark ch"  id="customer_sel" name="customer_name" >
                             <option>Select Customer</option>
                             {% for cust in customers %}
                             <option value="{{cust.id}} {{cust.customerName}}" data-pos="{{cust.placeofsupply}}">
                                 {{cust.customerName}}</option>
                             {% endfor %}
                         </select>
+                        
+
+                        
                         <!-- </div> -->
                         <a  href="" data-toggle="modal" data-target="#newcustomer" class="btn" style="background-color: chocolate; color: black; height: 80%; margin-left: 2vh; font-size: large; padding-top: 1vh;">+</a>
                                                                        
@@ -481,7 +488,8 @@ function calc() {
                             onchange="calc()">
                             <thead>
                                 <tr>
-                                    <th class="p-3" style="font-weight: bold;color: rgb(245, 154, 36);" >Item  <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
+                                  <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">#</th>
+                                  <th class="p-3" style="font-weight: bold;color: rgb(245, 154, 36);" >Item  <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
                                                 style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
                                    <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Hsn</th>
                                     <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Quantity</th>
@@ -494,6 +502,7 @@ function calc() {
                             <tbody>
         
                                 <tr id='row1'>
+                                  <td class="text-light">1</td>
                                     <td style="width: 15%;">
                                         <div class='form-group'><select
                                                 class=' bg-transparent text-light border-0 item_select itm'
@@ -578,6 +587,8 @@ function calc() {
             onchange="calc()" >
             <thead>
                 <tr>
+                  <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">#</th>
+
                     <th class="p-3" style="font-weight: bold;color:rgb(245, 154, 36);">Item  <a href="" data-toggle="modal" data-target="#newitem"><i class="fas fa-plus p-2 rounded"
                                 style="color: white; background-color: rgb(210, 132, 30);"></i></a></th>
                      <th class="text-right" style="font-weight: bold;color: rgb(245, 154, 36);">Hsn</th>
@@ -592,7 +603,8 @@ function calc() {
             <tbody>
 
                 <tr id='row1'>
-                    <td style="width: 15%;">
+                  <td class="text-light">1</td>
+                  <td style="width: 15%;">
                         <div class='form-group'><select
                                 class=' bg-transparent text-light border-0 item_selectt itmm'
                                 name='itemm[]' id='itemm1'>
@@ -2074,7 +2086,7 @@ function calc() {
 
 </section>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
@@ -2084,7 +2096,15 @@ function calc() {
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
+
+    
+    <script>
+      $(document).ready(function () {
+        jQuery.noConflict();
+          $(".ch").chosen();
+      });
+    </script>
 
     <script>
       function check_estimate_number(){
@@ -2321,12 +2341,13 @@ function addressSame(){
             console.log(RowCount);
             var newRow = $(`
             <tr id='row${RowCount}'>
+              <td class="text-light">${RowCount}</td>
                 <td>
                     <div class='form-group'>
                         <select
                             class='bg-transparent text-light border-0 item_select' name='item[]'
                             id='item${RowCount}'>
-                            <option class='text-dark'>Select Items</option>
+                            <option class='text-dark'>Select</option>
                             {% for i in items %}
                             <option class="text-dark" value="{{i.Name}}">{{i.Name}}</option>
                             {% endfor %}
@@ -2388,6 +2409,7 @@ function addressSame(){
             console.log(RowCountt);
             var newRoww = $(`
             <tr id='row${RowCountt}'>
+              <td class="text-light">${RowCountt}</td>
                 <td>
                     <div class='form-group'>
                         <select
