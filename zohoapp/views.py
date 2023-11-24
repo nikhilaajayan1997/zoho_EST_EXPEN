@@ -9924,6 +9924,18 @@ def expensepage(request):
        }
     return render(request,'expense.html',context)
 
+def exp_sort_by_name(request):
+    user=request.user.id
+    est=ExpenseE.objects.filter(user=user).values()
+    for r in est:
+        vn = r['customer_name'].split()[1:]
+        r['cust_name'] = " ".join(vn)
+    sorted_est = sorted(est, key=lambda r: r['cust_name'])  
+    context = {
+                'estimates' : sorted_est
+            }  
+    return render(request,'expense.html',context)
+
 def save_expense(request):
     company = company_details.objects.get(user = request.user)
     if request.user.is_authenticated:

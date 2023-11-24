@@ -995,8 +995,7 @@ class ExpenseE(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True, blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
     expense_account=models.CharField(max_length=100,default="",null=True, blank=True)
-    # expense_account=models.ForeignKey(AccountE,on_delete=models.CASCADE)
-    amount=models.TextField(max_length=255,null=True, blank=True)
+    amount=models.IntegerField(null=True, blank=True)
     currency=models.TextField(max_length=255,null=True, blank=True)
     expense_type=models.TextField(max_length=255,null=True, blank=True)
     paid=models.TextField(max_length=255,null=True, blank=True)
@@ -1009,14 +1008,15 @@ class ExpenseE(models.Model):
     reverse_charge=models.TextField(max_length=255,null=True, blank=True)
     tax=models.TextField(max_length=255,null=True, blank=True)
     invoice=models.TextField(max_length=255,null=True, blank=True)
-    # vendor=models.CharField(max_length=100,default='')
-    # customer_name= models.CharField(max_length=100,default='')
+    vendor_name=models.CharField(max_length=100,null=True, blank=True)
     customer_name = models.ForeignKey(customer, on_delete=models.CASCADE,null=True, blank=True)
     reporting_tags=models.TextField(max_length=255,null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     sac=models.TextField(max_length=255,null=True, blank=True)
     taxamt=models.TextField(max_length=255,null=True, blank=True)
     image = models.FileField(upload_to='expense_image/', blank=True, null=True)
+    status=models.TextField(max_length=100,null=True, blank=True)
+    attachment= models.FileField(upload_to='attachment/', blank=True, null=True)
     
     
 class AttachE(models.Model):

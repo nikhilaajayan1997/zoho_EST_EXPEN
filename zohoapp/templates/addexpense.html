@@ -494,7 +494,6 @@ document.getElementById("hsn_code").addEventListener("input", function() {
                 <option value="Petty Cash">Petty Cash</option>
                 <option value="Undeposited Funds">Undeposited Funds</option>
               </optgroup>
-            
             </select>
             <div class="row" id="upiTextBoxRow" style="display: none;">
               <label class="col-md-3">Ener UPI Id</label>
@@ -537,13 +536,12 @@ document.getElementById("hsn_code").addEventListener("input", function() {
         <label class="col-md-3">Vendor</label>
         <div class="col-md-6 p-3">
             <div class="input-group">
- 
             <select class="form-control text-dark bg-light form-select" id="vendor" name="vendor">
               <option value="">-- Select vendor --</option>
               {% for v in vendor %}
-              <option value="{{ v.id}}">{{v.vendor_display_name }}</option>
+              <option value="{{ v.id }}">{{v.vendor_display_name }}</option>
               <!-- <option value="{{v.id}} {{ v.first_name }} {{ v.last_name }}" class="text-dark bg-light">{{ v.first_name }} {{ v.last_name }}</option> -->
-               {% endfor %} 
+              {% endfor %}  
             </select>
             <div class="input-group-append">
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newvendor" style="width: 20px; height: 38px;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
