@@ -9924,15 +9924,39 @@ def expensepage(request):
        }
     return render(request,'expense.html',context)
 
-def exp_sort_by_name(request):
+def filter_by_draft_exp(request):
+    user = request.user
+    company=company_details.objects.get(user=user)
+    estimates=ExpenseE.objects.filter(status='draft',user=user,company=company)
+    return render(request, 'expense.html', {'expenses':estimates})
+
+def filter_by_save_exp(request):
+    user = request.user
+    company=company_details.objects.get(user=user)
+    estimates=ExpenseE.objects.filter(status='save',user=user,company=company)
+    return render(request, 'expense.html', {'expenses':estimates})
+
+def exp_sort_by_amount(request):
     user=request.user.id
     est=ExpenseE.objects.filter(user=user).values()
     for r in est:
-        vn = r['customer_name'].split()[1:]
-        r['cust_name'] = " ".join(vn)
-    sorted_est = sorted(est, key=lambda r: r['cust_name'])  
+        vn = r['amount']
+        r['vend_name'] =vn
+    sorted_exp = sorted(est, key=lambda r: r['vend_name'])  
     context = {
-                'estimates' : sorted_est
+                'expenses' : sorted_exp
+            }  
+    return render(request,'expense.html',context)
+
+def exp_sort_by_expen_acc(request):
+    user=request.user.id
+    est=ExpenseE.objects.filter(user=user).values()
+    for r in est:
+        vn = r['expense_account']
+        r['vend_name'] = " ".join(vn)
+    sorted_exp = sorted(est, key=lambda r: r['vend_name'])  
+    context = {
+                'expenses' : sorted_exp
             }  
     return render(request,'expense.html',context)
 
@@ -9942,6 +9966,11 @@ def save_expense(request):
         if request.method == 'POST':
            
             date = request.POST.get('date')
+            stat=request.POST['sub']
+            if stat == 'draft':
+                status='draft'
+            else:
+                status='save'
             
            
             expense_account = request.POST.get('expense_account')
@@ -9968,6 +9997,10 @@ def save_expense(request):
             customere = customer.objects.get(id=c)
             v= request.POST.get('vendor')
             vendor=vendor_table.objects.get(id=v)
+            vend_name=vendor.vendor_display_name 
+            print("hellooooooooooooooooooooooooooooo")
+            print(vend_name)
+            vend_name1=vend_name.upper()
 
           
             taxamt = request.POST.get('taxamt',False)
@@ -9996,7 +10029,9 @@ def save_expense(request):
                 invoice=invoice,
                 customer_name= customere,
                 vendor=vendor,
-                company=company
+                company=company,
+                vendor_name=vend_name1,
+                status=status
             )
 
             expense.save()

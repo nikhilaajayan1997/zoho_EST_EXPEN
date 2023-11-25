@@ -357,6 +357,14 @@ urlpatterns = [
     path('projcomment/<int:id>', views.projcomment, name='projcomment'),
     path('projcommentdb/<int:id>', views.projcommentdb, name='projcommentdb'),
     
+
+    path('exp_sort_by_amount',views.exp_sort_by_amount,name='exp_sort_by_amount'),
+    path('exp_sort_by_expen_acc',views.exp_sort_by_expen_acc,name='exp_sort_by_expen_acc'),
+    path('filter_by_draft_exp',views.filter_by_draft_exp,name='filter_by_draft_exp'),
+    path('filter_by_save_exp',views.filter_by_save_exp,name='filter_by_save_exp'),
+
+
+
     path('expensepage',views.expensepage,name='expensepage'),
     path('save_expense',views.save_expense,name='save_expense'),
     path('add_accountE',views.add_accountE,name='add_accountE'),
@@ -856,6 +864,8 @@ urlpatterns = [
     path('import_estimate',views.import_estimate,name='import_estimate'),
     path('downloadEstimateSampleImportFile',views.downloadEstimateSampleImportFile,name='downloadEstimateSampleImportFile'),
     path('attach_estimate_file/<int:pk>',views.attach_estimate_file,name='attach_estimate_file'),
+    
+    
 
 
     path('retainer_invoice_sort_by_name',views.retainer_invoice_sort_by_name,name='retainer_invoice_sort_by_name'),

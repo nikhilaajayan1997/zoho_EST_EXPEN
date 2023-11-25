@@ -197,9 +197,9 @@
                             <i class="fas fa-sort"></i>
                         </button>
                         <div class="dropdown-menu" id="sort-options">
-                            <a class="dropdown-item" href="#" data-sort="all">All</a>
-                            <a class="dropdown-item" href="{% url 'exp_sort_by_name' %}" data-sort="name">Name</a>
-                            <a class="dropdown-item" href="#" data-sort="amount">Expense A/C</a>
+                            <a class="dropdown-item" href="{% url 'expensepage' %}" data-sort="all">All</a>
+                            <a class="dropdown-item" href="{% url 'exp_sort_by_amount' %}" data-sort="name">Amount</a>
+                            <a class="dropdown-item" href="{% url 'exp_sort_by_expen_acc' %}" data-sort="amount">Expense A/C</a>
                         </div>
                     </div>
                 </div>
@@ -209,9 +209,9 @@
                         <i class="fa fa-filter mx-3"></i>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">All</a>
-                        <a class="dropdown-item" href="#">Active</a>
-                        <a class="dropdown-item" href="#">Inactive</a>
+                        <a class="dropdown-item" href="{% url 'expensepage' %}">All</a>
+                        <a class="dropdown-item" href="{% url 'filter_by_draft_exp' %}">Draft</a>
+                        <a class="dropdown-item" href="{% url 'filter_by_save_exp' %}">Save</a>
                     </div>
   
                 </div>
@@ -244,16 +244,17 @@
                 {% for expense in expenses %}
                 <tr style="cursor: pointer;">
                     <td><a href="{% url 'expense_details' expense.id %}">{{ expense.date }}</a></td>
-                    <td>{{ expense.vendor.vendor_display_name }}</td>
+                    <td>{{ expense.vendor_name }}</td>
                     <td>{{ expense.expense_account }}</td>
                     <td>{{ expense.expense_type }}</td>
                     <td>{{ expense.paid }}</td>
                     <td>{{ expense.amount }}</td> 
-                    <td{% if forloop.last %} class="disabled-column"{% endif %}> {% if expense.is_active %}
+                    <td>{{ expense.status }}</td>
+                    <!-- <td{% if forloop.last %} class="disabled-column"{% endif %}> {% if expense.is_active %}
                         Active 
                     {% else %}
                         Inactive
-                    {% endif %}</td>
+                    {% endif %}</td> -->
                 </tr>
                 {% endfor %}
             </tbody>

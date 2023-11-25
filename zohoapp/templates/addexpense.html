@@ -234,7 +234,7 @@
               <div class="col-md-6 p-3">
                   <div class="input-group">
                     <input type="text" id="myInput" class="dropdown-toggle form-control bg-light text-dark" onkeyup="filterFunction()"  data-bs-toggle="dropdown" aria-expanded="false" placeholder="search reports" >
-                    <select >
+                    <select name="expense_account">
               
               <option value=""></option>
                <optgroup class=""label="Accounts Payable">
@@ -774,7 +774,8 @@ document.getElementById("hsn_code").addEventListener("input", function() {
       <div class="row mt-5 mb-3">
     <div class="col-md-4">
       <div class="d-flex justify-content-center">
-        <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE" id="save">
+        <button type="submit" name="sub" class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;"  id="draft" value="draft">DRAFT</button>
+        <button type="submit" name="sub" class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" id="save" value="save">SAVE</button>
         <input class="btn  save_btn  rounded-pill text-grey  my-4 mt-2 py-2" type="reset" value="RESET">
         <!-- <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4 mt-2 py-2" type="reset" aria-label="Close" id="cancelButton">CANCEL</button> -->
       </div>
