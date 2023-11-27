@@ -567,6 +567,57 @@ document.getElementById("hsn_code").addEventListener("input", function() {
   </div>
 </div>
 
+<div class="row" id="address_field" style="display: none;">
+  <label class="col-md-3">Address</label>
+  <div class="col-md-6 p-3">
+      <textarea  class="form-control text-dark bg-light" style="height: 10rem;" id="vend_address" name="vend_address"></textarea>
+  </div>
+</div>
+
+<div class="row" id="s_supply_field" style="display: none;">
+  <label class="col-md-3">Source Of Supply</label>
+  <div class="col-md-6 p-3">
+    <select class="form-control text-dark bg-light form-select" id="source_of_supply" name="source_of_supply">
+      <!-- <option value=""id="cpos" >-- Select Destination State --</option> -->
+      <option value="[AN] Andaman and Nicobar Islands"  data-vendor="Vendor1">Andaman and Nicobar Islands (AN)</option>
+      <option value="[AP] Andhra Pradesh" data-vendor="Vendor2">Andhra Pradesh (AP)</option>
+      <option value="[AR] Arunachal Pradesh"  data-vendor="Vendor3">Arunachal Pradesh (AR)</option>
+      <option value="[AS] Assam"  data-vendor="Vendor4">Assam (AS)</option>
+      <option value="[BR] Bihar" data-vendor="Vendor5">Bihar (BR)</option>
+      <option value="[CH] Chandigarh">Chandigarh (CH)</option>
+      <option value="[CT] Chhattisgarh">Chhattisgarh (CT)</option>
+      <option value="[DN] Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu (DN)</option>
+      <option value="[DL] Delhi">Delhi (DL)</option>
+      <option value="[GA] Goa">Goa (GA)</option>
+      <option value="[GJ] Gujarat">Gujarat (GJ)</option>
+      <option value="[HR] Haryana">Haryana (HR)</option>
+      <option value="[HP] Himachal Pradesh">Himachal Pradesh (HP)</option>
+      <option value="[JK] Jammu and Kashmir">Jammu and Kashmir (JK)</option>
+      <option value="[JH] Jharkhand">Jharkhand (JH)</option>
+      <option value="[KA] Karnataka">Karnataka (KA)</option>
+      <option value="[KL] Kerala">Kerala (KL)</option>
+      <option value="[LD] Lakshadweep">Lakshadweep (LD)</option>
+      <option value="[MP] Madhya Pradesh">Madhya Pradesh (MP)</option>
+      <option value="[MH] Maharashtra">Maharashtra (MH)</option>
+      <option value="[MN] Manipur">Manipur (MN)</option>
+      <option value="[ML] Meghalaya">Meghalaya (ML)</option>
+      <option value="[MZ] Mizoram">Mizoram (MZ)</option>
+      <option value="[NL] Nagaland">Nagaland (NL)</option>
+      <option value="[OR] Odisha">Odisha (OR)</option>
+      <option value="[PY] Puducherry">Puducherry (PY)</option>
+      <option value="[PB] Punjab">Punjab (PB)</option>
+      <option value="[RJ] Rajasthan">Rajasthan (RJ)</option>
+      <option value="[SK] Sikkim">Sikkim (SK)</option>
+      <option value="[TN] Tamil Nadu">Tamil Nadu (TN)</option>
+      <option value="[TG] Telangana">Telangana (TG)</option>
+      <option value="[TR] Tripura">Tripura (TR)</option>
+      <option value="[UP] Uttar Pradesh">Uttar Pradesh (UP)</option>
+      <option value="[UK] Uttarakhand">Uttarakhand (UK)</option>
+      <option value="[WB] West Bengal">West Bengal (WB)</option>
+    </select>
+  </div>
+</div>
+
         
         <div class="row">
           <label for="destination_of_supply" class="col-md-3">Destination of Supply</label>
@@ -3394,42 +3445,44 @@ function reloadVendor() {
       }
       //used for call 
     
-    $(document).ready(function() {
-        function fetchVendorGSTTreatment() {
-            var selectedVendor = $("#vendor").val();
-            console.log("Selected Vendor:", selectedVendor);
-            $.ajax({
-                type: "GET",
-                url: "{% url 'get_vendor_gst_treatment' %}", 
-                data: {
-                    vendor: selectedVendor
-                },
-                success: function (response) {
-                    var gstTreatment = response.gst_treatment;
-                    var gstin = response.gstin;
+    //   $(document).ready(function() {
+    //     function fetchVendorGSTTreatment() {
+    //         var selectedVendor = $("#vendor").val();
+    //         console.log("Selected Vendor:", selectedVendor);
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "{% url 'get_vendor_gst_treatment' %}", 
+    //             data: {
+    //                 vendor: selectedVendor
+    //             },
+    //             success: function (response) {
+    //                 var gstTreatment = response.gst_treatment;
+    //                 var gstin = response.gstin;
+    //                 var s_supply=response.sourcesupply;
+    //                 console.log(response.sourcesupply);
 
-                    $("#gst_treatment").val(gstTreatment);
+    //                 $("#gst_treatment").val(gstTreatment);
+    //                 $("#source_of_supply").val(s_supply);
+    //                 if (gstin) {
+    //                     $("#gstin_field").show();
+    //                     $("#gstin").val(gstin);
+    //                 } else {
+    //                     $("#gstin_field").hide();
+    //                 }
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error(error);
+    //             }
+    //         });
+    //     }
 
-                    if (gstin) {
-                        $("#gstin_field").show();
-                        $("#gstin").val(gstin);
-                    } else {
-                        $("#gstin_field").hide();
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
+    //     fetchVendorGSTTreatment();
 
-        fetchVendorGSTTreatment();
-
-        // Call the function when the vendor selection changes
-        $("#vendor").change(function() {
-            fetchVendorGSTTreatment();
-        });
-    });
+    //     // Call the function when the vendor selection changes
+    //     $("#vendor").change(function() {
+    //         fetchVendorGSTTreatment();
+    //     });
+    // });
     },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
@@ -3442,6 +3495,7 @@ function reloadVendor() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
             console.log("Selected Vendor:", selectedVendor);
+            console.log("********************************************************************");
             $.ajax({
                 type: "GET",
                 url: "{% url 'get_vendor_gst_treatment' %}", 
@@ -3451,17 +3505,34 @@ function reloadVendor() {
                 success: function (response) {
                     var gstTreatment = response.gst_treatment;
                     var gstin = response.gstin;
+                    var s_supply=response.sourcesupply;
+                    var adrs=response.address;
+                    var city=response.city;
+                    var state=response.state;
+                    var country=response.country;
+
+                    if(adrs != null )
+                    {
+                      $("#address_field").show();
+                      $("#s_supply_field").show();
+                    }
 
                     $("#gst_treatment").val(gstTreatment);
+                    $("#source_of_supply").val(s_supply);
+                    $("#vend_address").val(adrs+"\n"+city+"\n"+state+"\n"+country);
 
-                    if (gstin) {
+                    if (gstin) 
+                    {
                         $("#gstin_field").show();
                         $("#gstin").val(gstin);
-                    } else {
+                    } 
+                    else 
+                    {
                         $("#gstin_field").hide();
                     }
                 },
-                error: function (xhr, status, error) {
+                error: function (xhr, status, error) 
+                {
                     console.error(error);
                 }
             });

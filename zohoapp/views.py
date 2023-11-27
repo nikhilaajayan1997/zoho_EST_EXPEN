@@ -11816,14 +11816,22 @@ def get_vendor_gst_treatment(request):
         try:
             vendor = vendor_table.objects.get(id=vendor_name, user=user)
             gst_treatment = vendor.gst_treatment
-            gstin = vendor.gst_number  
+            gstin = vendor.gst_number 
+            sourcesupply=vendor.source_supply 
+            address=vendor.baddress
+            city=vendor.bcity
+            state=vendor.bstate
+            country=vendor.bcountry
+            print(" source ........................ of ....................... supply")
+            
+
         except vendor_table.DoesNotExist:
             gst_treatment = None
             gstin = None
 
         print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}, GSTIN: {gstin}")
 
-        return JsonResponse({'gst_treatment': gst_treatment, 'gstin': gstin})
+        return JsonResponse({'gst_treatment': gst_treatment, 'gstin': gstin,'sourcesupply':sourcesupply,'address':address,'city':city,'state':state,'country':country})
     else:
      
         return JsonResponse({'gst_treatment': None, 'gstin': None})
