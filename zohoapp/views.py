@@ -9936,6 +9936,32 @@ def filter_by_save_exp(request):
     estimates=ExpenseE.objects.filter(status='save',user=user,company=company)
     return render(request, 'expense.html', {'expenses':estimates})
 
+def filter_expense_view_draft(request,pk):
+    print("helloooooooooooooooooooooooooooo")
+    user=request.user.id
+    user1=User.objects.get(id=user)
+    company = company_details.objects.get(user = user1)
+    expense = ExpenseE.objects.filter(company=company,status='draft')
+    expense_account=ExpenseE.objects.get(id=pk)
+    context = {
+        'expenses': expense,
+        'expense': expense_account,
+        'company':company
+    }
+    return render(request, 'expenseview.html', context)
+
+# def expense_details(request, pk):
+#     user = request.user
+#     expense = ExpenseE.objects.filter(user=user)
+#     company = company_details.objects.get(user = request.user)
+#     expense_account=ExpenseE.objects.get(id=pk)
+#     context = {
+#         'expenses': expense,
+#         'expense': expense_account,
+#         'company':company
+#     }
+#     return render(request, 'expenseview.html', context)
+
 def exp_sort_by_amount(request):
     user=request.user.id
     est=ExpenseE.objects.filter(user=user).values()

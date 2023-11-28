@@ -362,6 +362,7 @@ urlpatterns = [
     path('exp_sort_by_expen_acc',views.exp_sort_by_expen_acc,name='exp_sort_by_expen_acc'),
     path('filter_by_draft_exp',views.filter_by_draft_exp,name='filter_by_draft_exp'),
     path('filter_by_save_exp',views.filter_by_save_exp,name='filter_by_save_exp'),
+    path('filter_expense_view_draft/<int:pk>',views.filter_expense_view_draft,name='filter_expense_view_draft'),
 
 
 
