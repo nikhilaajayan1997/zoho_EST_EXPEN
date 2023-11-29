@@ -3722,13 +3722,19 @@ def show_recurring(request, expense_id):
 
 def expense_details(request, pk):
     user = request.user
+    user1=User.objects.get(id=user.id)
     expense = ExpenseE.objects.filter(user=user)
     company = company_details.objects.get(user = request.user)
     expense_account=ExpenseE.objects.get(id=pk)
+    if expense_comments.objects.filter(expense=expense_account.id,user=user1).exists():
+        est_comments=expense_comments.objects.filter(expense=expense_account.id,user=user1)
+    else:
+        est_comments=""
     context = {
         'expenses': expense,
         'expense': expense_account,
-        'company':company
+        'company':company,
+        'est_comments':est_comments
     }
     return render(request, 'expenseview.html', context)
     
@@ -9950,6 +9956,20 @@ def filter_expense_view_draft(request,pk):
     }
     return render(request, 'expenseview.html', context)
 
+def filter_expense_view_save(request,pk):
+    print("helloooooooooooooooooooooooooooo")
+    user=request.user.id
+    user1=User.objects.get(id=user)
+    company = company_details.objects.get(user = user1)
+    expense = ExpenseE.objects.filter(company=company,status='save')
+    expense_account=ExpenseE.objects.get(id=pk)
+    context = {
+        'expenses': expense,
+        'expense': expense_account,
+        'company':company
+    }
+    return render(request, 'expenseview.html', context)
+
 # def expense_details(request, pk):
 #     user = request.user
 #     expense = ExpenseE.objects.filter(user=user)
@@ -9961,6 +9981,82 @@ def filter_expense_view_draft(request,pk):
 #         'company':company
 #     }
 #     return render(request, 'expenseview.html', context)
+
+def exp_view_sort_by_amount(request,pk):
+    user=request.user.id
+    user1=User.objects.get(id=user)
+    company = company_details.objects.get(user = user1)
+    expense_account=ExpenseE.objects.get(id=pk)
+    est=ExpenseE.objects.filter(user=user,company=company).values()
+    for r in est:
+        vn = r['amount']
+        r['vend_name'] =vn
+    sorted_exp = sorted(est, key=lambda r: r['vend_name'])  
+    context = {
+                'expenses' : sorted_exp,
+                'expense': expense_account,
+                'company':company
+            }  
+    return render(request,'expenseview.html',context)
+
+def exp_view_sort_by_account(request,pk):
+    user=request.user.id
+    user1=User.objects.get(id=user)
+    company = company_details.objects.get(user = user1)
+    expense_account=ExpenseE.objects.get(id=pk)
+    est=ExpenseE.objects.filter(user=user,company=company).values()
+    for r in est:
+        vn = r['expense_account']
+        r['vend_name'] =vn
+    sorted_exp = sorted(est, key=lambda r: r['vend_name'])  
+    context = {
+                'expenses' : sorted_exp,
+                'expense': expense_account,
+                'company':company
+            }  
+    return render(request,'expenseview.html',context)
+
+def add_exp_comment(request,pk):
+    if request.method=="POST":
+        user=request.user.id
+        user1=User.objects.get(id=user)     
+        exp=ExpenseE.objects.get(id=pk)
+       
+        comment_user=user1
+        comment_expense=exp
+        comment_comments=request.POST['comment']
+        x=date.today()
+        comment=expense_comments(user=comment_user,expense=comment_expense,comments=comment_comments,date=x)
+        comment.save()
+    return redirect('expense_details',exp.id)
+
+def attach_expense_file(request,pk):
+    print("inside functionnnnnnnnnnnnnnnnnnnn")
+    user1=request.user.id
+    user2=User.objects.get(id=user1)
+    cmp1 = company_details.objects.get(user=user2)
+    estobj= ExpenseE.objects.get(id=pk,company=cmp1,user=user2)
+
+    if request.method == 'POST':
+        if len(request.FILES) != 0:
+            estobj.attachment=request.FILES.get('file')
+            estobj.save()
+            return redirect('expense_details',estobj.id)
+
+# def attach_estimate_file(request,pk):
+#     user1=request.user.id
+#     user2=User.objects.get(id=user1)
+#     cmp1 = company_details.objects.get(user=user2)
+#     estobj= Estimates.objects.get(id=pk,company=cmp1,user=user2)
+
+#     if request.method == 'POST':
+#         # file=request.POST["file"]
+#         if len(request.FILES) != 0:
+#            print("hellooooooooooooooooooooooooooooooooooooooooo")
+#            estobj.attachment=request.FILES.get('file')
+#            estobj.save()
+#     return redirect('estimateslip',estobj.id)
+
 
 def exp_sort_by_amount(request):
     user=request.user.id

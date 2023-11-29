@@ -363,6 +363,11 @@ urlpatterns = [
     path('filter_by_draft_exp',views.filter_by_draft_exp,name='filter_by_draft_exp'),
     path('filter_by_save_exp',views.filter_by_save_exp,name='filter_by_save_exp'),
     path('filter_expense_view_draft/<int:pk>',views.filter_expense_view_draft,name='filter_expense_view_draft'),
+    path('filter_expense_view_save/<int:pk>',views.filter_expense_view_save,name='filter_expense_view_save'),
+    path('exp_view_sort_by_amount/<int:pk>',views.exp_view_sort_by_amount,name='exp_view_sort_by_amount'),
+    path('exp_view_sort_by_account/<int:pk>',views.exp_view_sort_by_account,name='exp_view_sort_by_account'),
+    path('add_exp_comment/<int:pk>',views.add_exp_comment,name='add_exp_comment'),
+    path('attach_expense_file/<int:pk>',views.attach_expense_file,name='attach_expense_file'),
 
 
 

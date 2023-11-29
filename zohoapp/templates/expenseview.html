@@ -1,11 +1,19 @@
 
 
 {% extends 'base.html' %}
+{% load social_share %}
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script> -->
  
 
 </body>
@@ -173,7 +181,7 @@
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: #fffefe;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -281,22 +289,20 @@
                         <div class="col-md-2 mt-2 mx-1">
                             <a id="sort-button" class="btn text-center btn-outline-warning text-warning fa fa-sort px-3" data-bs-toggle="dropdown" role="button"></a>&nbsp;&nbsp;&nbsp;
                             <div class="dropdown-menu " >
-                                <a class="dropdown-item" href="#" data-sort="customer-az">Customer A-Z</a>
-                                <a class="dropdown-item" href="#" data-sort="customer-za">Customer Z-A</a>
-                                <a class="dropdown-item" href="#" data-sort="amount">Amount</a>
+                                <a class="dropdown-item" href="{% url 'expense_details' expense.id %}">All</a>
+                                <a class="dropdown-item" href="{% url 'exp_view_sort_by_account' expense.id %}">Expense A/C</a>
+                                <a class="dropdown-item" href="{% url 'exp_view_sort_by_amount' expense.id %}">Amount</a>
                             </div>
                         </div>
                         <div class="col-md-2  mt-2 mx-1">
-                         <div class="dropdown">
-                            <button class="btn text-center btn-outline-warning text-warning  px-3" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-filter"></i>
-                            </button>
+                            <a class="btn text-center btn-outline-warning text-warning  px-3 fa fa-filter" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            </a>
                             <div class="dropdown-menu " >
-                                <a class="dropdown-item" href="#">All</a>
-                                <a class="dropdown-item" href="{% url 'expensepage' %}">Draft</a>
-                                <a class="dropdown-item" href="{% url 'filter_expense_view_draft' expense.id %}">Save</a>
+                                <a class="dropdown-item" href="{% url 'expense_details' expense.id %}">All</a>
+                                <a class="dropdown-item" href="{% url 'filter_expense_view_draft' expense.id %}">Draft</a>
+                                <a class="dropdown-item" href="{% url 'filter_expense_view_save' expense.id %}">Save</a>
                             </div>
-                         </div>
+                         <!-- </div> -->
 
                         </div>
                         <div class="col-md-2 mr-4 mt-2">
@@ -314,115 +320,8 @@
                         </div>
                     </div>
                     <div class="row p-0 d-flex">
-                        
-                        <!-- <div class="col-md-5">
-                            <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off" >
-                           
-                        </div> -->
                        
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                        <script>
-                            $(document).ready(function() {
-                                // Cache the customer table for faster access
-                                var customerTable = $("table");
-                            
-                                // Handle keyup event on the search input
-                                $("#search").keyup(function() {
-                                    var searchText = $(this).val().toLowerCase();
-                            
-                                    // Hide all rows initially
-                                    customerTable.find("tbody tr").hide();
-                            
-                                    // Show rows that match the search criteria
-                                    customerTable.find("tbody tr").each(function() {
-                                        var customerName = $(this).find("td:eq(0)").text().toLowerCase();
-                                        var creditNoteNumber = $(this).find("td:eq(1)").text().toLowerCase();
-                                        var totalAmount = $(this).find("td:eq(2)").text().toLowerCase();
-                            
-                                        // Clean up creditNoteNumber and totalAmount by removing special characters and whitespace
-                                        creditNoteNumber = creditNoteNumber.replace(/[^0-9]/g, '');
-                                        totalAmount = totalAmount.replace(/[^0-9.]/g, '');
-                            
-                                        if (
-                                            customerName.includes(searchText) ||
-                                            creditNoteNumber.includes(searchText) ||
-                                            totalAmount.includes(searchText)
-                                        ) {
-                                            $(this).show();
-                                        }
-                                    });
-                                });
-                            });
-                            </script>
-                           
-
-                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Cache the customer table for faster access
-        var customerTable = $(".customer-table");
-
-        // Handle click event on the sort buttons
-        $(".dropdown-item").click(function (e) {
-            e.preventDefault();
-            var sortOption = $(this).data("sort");
-            sortCustomers(sortOption);
-        });
-
-        // Function to sort customers
-        function sortCustomers(sortOption) {
-            var $customers = customerTable.find("tbody tr");
-            switch (sortOption) {
-                case "customer-az":
-                    $customers.sort(function (a, b) {
-                        var textA = $(a).find("td:eq(0)").text().toLowerCase();
-                        var textB = $(b).find("td:eq(0)").text().toLowerCase();
-                        return textA.localeCompare(textB);
-                    });
-                    break;
-                case "customer-za":
-                    $customers.sort(function (a, b) {
-                        var textA = $(a).find("td:eq(0)").text().toLowerCase();
-                        var textB = $(b).find("td:eq(0)").text().toLowerCase();
-                        return textB.localeCompare(textA);
-                    });
-                    break;
-                case "creditnote-asc":
-                    $customers.sort(function (a, b) {
-                        var noteA = parseInt($(a).find("td:eq(1)").text().replace("# ", ""));
-                        var noteB = parseInt($(b).find("td:eq(1)").text().replace("# ", ""));
-                        return noteA - noteB;
-                    });
-                    break;
-                case "creditnote-desc":
-                    $customers.sort(function (a, b) {
-                        var noteA = parseInt($(a).find("td:eq(1)").text().replace("# ", ""));
-                        var noteB = parseInt($(b).find("td:eq(1)").text().replace("# ", ""));
-                        return noteB - noteA;
-                    });
-                    break;
-                case "amount-asc":
-                    $customers.sort(function (a, b) {
-                        var amountA = parseFloat($(a).find("td:eq(2)").text().replace("₹", ""));
-                        var amountB = parseFloat($(b).find("td:eq(2)").text().replace("₹", ""));
-                        return amountA - amountB;
-                    });
-                    break;
-                case "amount-desc":
-                    $customers.sort(function (a, b) {
-                        var amountA = parseFloat($(a).find("td:eq(2)").text().replace("₹", ""));
-                        var amountB = parseFloat($(b).find("td:eq(2)").text().replace("₹", ""));
-                        return amountB - amountA;
-                    });
-                    break;
-            }
-
-            // Update the table with the sorted rows
-            customerTable.find("tbody").empty().append($customers);
-        }
-    });
-</script>
-
+                       
                          
                          <!-- <div class="col-md-2 mr-4 mt-2">
                             <a href="{% url 'save_expense' %}" class="btn btn-outline-warning text-warning fa fa-plus  pt-2"
@@ -434,22 +333,16 @@
                 </div>
                 <div class="border-bottom"></div>
 
-                <div id="customer-container" class="row mt-2 bills">
-                    <table class="table customer-table">
-                       
+                <div id="customer-container"  class="row mt-2 bills" >
+                    <table class="table customer-table" style="border:1px solid black;">
                       <tbody>
-    
                         {%for expense in expenses%}
                         <tr>
-        
                           <td>
-                            
                             <a class="text-white"  href="{% url 'expense_details' expense.id %}"><b>{{expense.expense_account}}</b> <span class="d-flex justify-content-end text-warning align-items-start" > {{expense.amount}}</span> <br>
                                 <span class="d-flex  align-items-start text-warning"> {{expense.status}}</span> <span class="d-flex justify-content-end align-items-start"> {{expense.date}}</span>
                             </a> 
-
                         </td>
-        
                         </tr>
                         {%endfor%}
                       </tbody>
@@ -460,6 +353,9 @@
             </div>
         </div>
     </div>
+
+  <!-- .......................................................  second half .......... -->
+
     <div id="quick-template" class="quick-template">
         
         <div  style="border-bottom: 0.5px solid; color: rgb(90, 89, 94);">
@@ -467,34 +363,70 @@
                 <div >
                     <h3 class="mb-0 mb-3 text-light" id="prof_name">{{expense.expense_account}}</h3>
                 </div>
-
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-sm-6">
+                    <a class=" mx-2 btn btn-outline-warning text-warning px-2 py-2" onclick="show_template()" role="button"><i
+                            class="fa fa-file-word "></i> Template</a>
+                    <a class="btn btn-outline-warning text-warning px-2 py-2" onclick="show_overview()" role="button"><i class="fa fa-eye"></i>
+                        Overview</a>
+                </div>
+               <div class="col-md-8 col-lg-8 col-sm-6">
                 <div class="d-flex" style="float: right; margin-right: 25px;">
+                    <div class="mx-1">
+                        <div class="dropdown m-0 p-0 ms-1" title="share" >
+                            <a href=" " class="btn btn-outline-warning p-2 fas fa-share-alt dropdown-toggle  btn-sm text-warning ms-1"  
+                                data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                                <a class="dropdown-item" style="cursor: pointer;text-align: center;" data-toggle="modal"
+                                 data-target="" href=" " ><center>{% post_to_whatsapp object_or_url "<b>WhatsApp</b>" %}</center></a>
+                                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                data-target=""><center>{% send_email object.title "New: {{object.title}}. Check it out!" object_or_url "<b>Email</b>" %}</center></a>
+                                        
+                            </div>
+                        </div>
+                    </div>
                     <div class="m-0">
-                        <a href="" class=" far fa-comment-alt btns px-2 py-2" title="COMMENTS"
-                            data-toggle="modal" data-target="#cmnts"> </a>
+                        <!-- <a href="" class=" far fa-comment-alt btn btn-outline-warning text-warning px-2 py-2" title="COMMENTS"
+                            data-toggle="modal" data-target="#cmnts"> </a> -->
+                            <div class="dropdown ms-1" title="comments" >
+                                <a href=" " class="btn btn-sm btn-outline-warning p-2 fas fa-comment-dots dropdown-toggle text-warning ms-1"  
+                                    data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
+                                </a>
+    
+                                <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                                    <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                     data-target="#cmnts"><i class="fa-solid fa fa-plus"></i>Add</a>
+                                    <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                    data-target="#cmt_list"><i class="fas fa-list"></i>&nbsp;View List</a>
+                                            
+                                </div>
+                            </div>
                     </div>
 
                     <div class="mx-1">
                         
+
                         
-                        <a href="{% url 'edit_expensee' expense.id %}" class=" fa fa-pencil btns px-2 py-2"
+                        <a href="{% url 'edit_expensee' expense.id %}" class=" fa fa-pencil btn btn-outline-warning text-warning px-2 py-2"
                               data-toggle="tooltip" title="EDIT"> </a>
                         
-                        <a href="{% url 'delet' expense.id %} " class="delete fa fa-trash btns px-2 py-2"
+                        <a href="{% url 'delet' expense.id %} " class="delete fa fa-trash btn btn-outline-warning text-warning px-2 py-2"
                          data-toggle="tooltip" title="DELETE" onclick="return confirm('Do you want to Delete this creditnote?');"> </a>
                     </div>
 
                     <div class="mx-1">
                    
-                        <a href=" " class="fa fa-file-pdf btns toPDF px-2 py-2" id="toPDF"
+                        <a href=" " class="fa fa-file-pdf btn btn-outline-warning text-warning toPDF px-2 py-2" id="toPDF"
                         data-toggle="tooltip" title="PDF"></a>
 
-                        <a href="" class=" fa fa-print btns px-2 py-2"   data-toggle="tooltip"
+                        <a href="" class=" fa fa-print btn btn-outline-warning text-warning px-2 py-2"   data-toggle="tooltip"
                             title="PRINT" id="templatePrintButton"  onclick="printSection('whatToPrint')"> </a>     
                     </div>
                     <div class="m-0">
                         <div class="dropdown m-0 p-0">
-                            <a href=" " class=" fas fa-paperclip dropdown-toggle btns px-2 py-2"  
+                            <a href=" " class=" fas fa-paperclip dropdown-toggle btn btn-outline-warning text-warning px-2 py-2"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                             </a>
 
@@ -502,7 +434,7 @@
                                 <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
                                     data-target="#files"><i class="fa fa-paperclip"></i> Attach File</a>
                                 {% if expense.document != "" %}
-                                <a class="dropdown-item" download href=""><i
+                                <a class="dropdown-item" href="{{expense.attachment.url}}"><i
                                         class="fa fa-download"></i> Download File</a>
                                 {% endif %}
                             </div>
@@ -510,19 +442,15 @@
                     </div>
 
                 </div>
-    
+             </div> 
 
-                <div class="tab">
-                    <a class="tablinks mx-2 btns px-2 py-2" onclick="openTab(event, 'Template')" role="button"><i
-                            class="fa fa-file-word "></i> Template</a>
-                    <a class="tablinks  btns px-2 py-2" onclick="openTab(event, 'Overview')" role="button"><i class="fa fa-eye"></i>
-                        Overview</a>
-                </div>
+                
+            </div>
             </div>
             <hr class="hr">
 
 
-            <div>
+            <div id="template_div">
                 <div id="templateToggle" class="templateToggleSegment mt-3 mb-0 w-100 d-flex justify-content-center">
                     <button id="toggleTemplate1" onclick="toggleTemplate('whatToPrint','toggleTemplate1')" class="btn btn-outline-warning btn-sm m-2 active templateToggleButtons">1</button>
                     <button id="toggleTemplate2" onclick="toggleTemplate('whatToPrint2','toggleTemplate2')" class="btn btn-outline-warning btn-sm m-2 templateToggleButtons">2</button>
@@ -903,7 +831,7 @@
                 </div>
                 <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow: hidden;">
                     <div class="card p-0 m-0">
-                        <form action="" method="post" id="modalComment">
+                        <form action="{% url 'add_exp_comment' expense.id %}" method="post" id="modalComment">
                             {% csrf_token %}
                             <input type="hidden" value="" id="com_id">
                             <div class="row mt-2">
@@ -929,49 +857,80 @@
             </div>
         </div>
     </div>
+
+    <!-- ....................................  comment list modal ................ -->
+
+<div class="modal fade " id="cmt_list"
+style="width: 750px; margin-left: 350px; justify-content: center; overflow: hidden;">
+<div class="modal-dialog modal-dialog-scrollable modal-xl m-5 p-5">
+ <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+     <div class="modal-header " style="background: rgb(32, 35, 37);">
+         <h5 class="m-3 text-uppercase text-light">LIST</h5>
+         <button type="button" class="close text-dark bg-none" data-dismiss="modal"
+             aria-label="Close">&times;</button>
+
+     </div>
+     <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow-x: hidden;">
+         <div class="card p-0 m-0">
+
+             <div class="row mt-3">
+                 <div class="col-sm-12 col-md-12 col-lg-12">
+                     <div class="p-2">
+                         <table class="table table-bordered" style="table-layout: fixed;">
+                             <thead>
+                                 <tr>
+                                    <th class="text-center" style="background-color:rgb(218, 143, 3) ;color: white;">Date</th>
+                                    <th class="text-center" style="background-color:rgb(218, 143, 3) ;color: white;">Comments</th>
+                                 </tr>
+                             </thead>
+                             {% for comt in est_comments %}
+                             <tbody>
+                                 <tr>
+                                     <td><input type="text" value="{{ comt.date }}" style="width: 100%;height: 20px;border: none;background-color:transparent ;color: white;"></td>
+                                     <td><textarea name="" id="" cols="80" rows="5" style="border: none;background-color:transparent ;color: white;">{{ comt.comments }}</textarea></td>
+                                 </tr>
+                             </tbody>
+                             {% endfor %}
+                         </table>
+                     </div>
+                 </div>
+             </div>
+             
+         </div>
+     </div>
+ </div>
+
+</div>
+</div>
+<!-- ................................................end  comment list modal ........................................ -->
+ 
     
 
     <!-- attach file modal -->
 
-    <div class="modal fade" id="files" style="width: 750px; margin-left: 350px;">
-        <div class="modal-dialog modal-xl m-5 p-5">
-            <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-                <div class="modal-header " style="background: rgb(32, 35, 37);">
-                    <h5 class="m-3 text-uppercase text-light" id="exampleModalLabel">Add File</h5>
-                    <button type="button" class="close text-dark bg-none" data-dismiss="modal"
-                        aria-label="Close">&times;</button>
+    <div class="modal fade" id="files" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #213b52;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow: hidden;">
-                    <div class="card p-0 m-0">
-                        
-                            <form action="" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <input type="file" name="file" accept="image/*" required>
-
-                            <div class="row mt-5">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-4">
-                                    <div class="d-flex">
-                                        <button
-                                            class=" font-weight-bold save_btn rounded-pill text-light w-50 my-4 mx-2"
-                                            type="submit" data-dismiss="modal" id="fileSave">Save </button>
-
-
-                                        <button type="button"
-                                            class="font-weight-bold save_btn rounded-pill text-light w-50 my-4"
-                                            data-dismiss="modal" aria-label="Close"> Cancel</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-4"></div>
-                            </div>
-                        </form>
+                <form action="{% url 'attach_expense_file' expense.id %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <input type="file" class="form-control text-black" name="file">
                     </div>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-outline-info">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
-
+    
     <!-- email modal -->
 
     <div class="modal fade p-3" id="emails" style="width: 800px; margin-left: 350px; overflow-x: hidden;">
@@ -1057,6 +1016,42 @@
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Cache the customer table for faster access
+        var customerTable = $("table");
+    
+        // Handle keyup event on the search input
+        $("#search").keyup(function() {
+            var searchText = $(this).val().toLowerCase();
+    
+            // Hide all rows initially
+            customerTable.find("tbody tr").hide();
+    
+            // Show rows that match the search criteria
+            customerTable.find("tbody tr").each(function() {
+                var customerName = $(this).find("td:eq(0)").text().toLowerCase();
+                var creditNoteNumber = $(this).find("td:eq(1)").text().toLowerCase();
+                var totalAmount = $(this).find("td:eq(2)").text().toLowerCase();
+    
+                // Clean up creditNoteNumber and totalAmount by removing special characters and whitespace
+                creditNoteNumber = creditNoteNumber.replace(/[^0-9]/g, '');
+                totalAmount = totalAmount.replace(/[^0-9.]/g, '');
+    
+                if (
+                    customerName.includes(searchText) ||
+                    creditNoteNumber.includes(searchText) ||
+                    totalAmount.includes(searchText)
+                ) {
+                    $(this).show();
+                }
+            });
+        });
+    });
+    </script>
+   
+
 
 <script>
     function openTab(evt, tabName) {
@@ -1115,7 +1110,9 @@
     });
 
 
-    $(document).ready(function () {
+
+
+       $(document).ready(function () {
         $("#emailSave").click(function () {
 
             $.ajax({
@@ -1332,6 +1329,24 @@ $(document).ready(function () {
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function show_overview()
+    {
+        document.getElementById('Overview').style.display="block";
+        document.getElementById('template_div').style.display="none";
+
+    }
+    function show_template()
+    {
+        document.getElementById('Overview').style.display="none";
+        document.getElementById('template_div').style.display="block";
+        toggleTemplate('whatToPrint','toggleTemplate1');
+
+    }
+</script>
+
+
 <script>
 $(document).ready(function() {
     // Function to sort expenses by profile name in ascending order
@@ -1487,6 +1502,15 @@ function updateDetails(data) {
    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-   
+   <!-- jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Bootstrap CSS -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+
+<!-- Bootstrap JavaScript -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+
  
 {% endblock %}

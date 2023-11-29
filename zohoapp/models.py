@@ -1023,6 +1023,14 @@ class AttachE(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default='')
     expense = models.ForeignKey(ExpenseE, on_delete=models.CASCADE, null=True)
     attachment= models.FileField(upload_to='attachment/', blank=True, null=True)
+
+class expense_comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default='')
+    expense = models.ForeignKey(ExpenseE,on_delete=models.CASCADE, null=True)
+    comments=models.TextField(max_length=1000,blank=True,null=True)
+    date = models.DateField(null=True, blank=True)
+
+
     
     
 class Payrollfiles(models.Model):
