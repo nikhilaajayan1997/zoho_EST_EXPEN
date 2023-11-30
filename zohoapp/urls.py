@@ -368,7 +368,8 @@ urlpatterns = [
     path('exp_view_sort_by_account/<int:pk>',views.exp_view_sort_by_account,name='exp_view_sort_by_account'),
     path('add_exp_comment/<int:pk>',views.add_exp_comment,name='add_exp_comment'),
     path('attach_expense_file/<int:pk>',views.attach_expense_file,name='attach_expense_file'),
-
+    path('expense_status_edit/<int:pk>',views.expense_status_edit,name='expense_status_edit'),
+    path('exp_get_customerdet',views.exp_get_customerdet,name='exp_get_customerdet'),
 
 
     path('expensepage',views.expensepage,name='expensepage'),

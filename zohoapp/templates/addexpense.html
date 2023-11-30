@@ -221,6 +221,8 @@
     <form action="{% url 'save_expense' %}" method="post" enctype="multipart/form-data"id="myForm">
       {% csrf_token %}
       <!-- <div style="height: 400px; width:1100px;padding-left: 10%;overflow-y: scroll;"> -->
+        <input type="number" name="igst" id="igst" value="0">  <input type="number" name="cgst" id="cgst" value="0">
+  <input type="number" name="sgst" id="sgst" value="0">
         <div class="row">
           <label for="date" class="col-md-3 ">Date</label>
           <div class="col-md-6 p-3">
@@ -577,44 +579,47 @@ document.getElementById("hsn_code").addEventListener("input", function() {
 <div class="row" id="s_supply_field" style="display: none;">
   <label class="col-md-3">Source Of Supply</label>
   <div class="col-md-6 p-3">
-    <select class="form-control text-dark bg-light form-select" id="source_of_supply" name="source_of_supply">
-      <!-- <option value=""id="cpos" >-- Select Destination State --</option> -->
-      <option value="[AN] Andaman and Nicobar Islands"  data-vendor="Vendor1">Andaman and Nicobar Islands (AN)</option>
-      <option value="[AP] Andhra Pradesh" data-vendor="Vendor2">Andhra Pradesh (AP)</option>
-      <option value="[AR] Arunachal Pradesh"  data-vendor="Vendor3">Arunachal Pradesh (AR)</option>
-      <option value="[AS] Assam"  data-vendor="Vendor4">Assam (AS)</option>
-      <option value="[BR] Bihar" data-vendor="Vendor5">Bihar (BR)</option>
-      <option value="[CH] Chandigarh">Chandigarh (CH)</option>
-      <option value="[CT] Chhattisgarh">Chhattisgarh (CT)</option>
-      <option value="[DN] Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu (DN)</option>
-      <option value="[DL] Delhi">Delhi (DL)</option>
-      <option value="[GA] Goa">Goa (GA)</option>
-      <option value="[GJ] Gujarat">Gujarat (GJ)</option>
-      <option value="[HR] Haryana">Haryana (HR)</option>
-      <option value="[HP] Himachal Pradesh">Himachal Pradesh (HP)</option>
-      <option value="[JK] Jammu and Kashmir">Jammu and Kashmir (JK)</option>
-      <option value="[JH] Jharkhand">Jharkhand (JH)</option>
-      <option value="[KA] Karnataka">Karnataka (KA)</option>
-      <option value="[KL] Kerala">Kerala (KL)</option>
-      <option value="[LD] Lakshadweep">Lakshadweep (LD)</option>
-      <option value="[MP] Madhya Pradesh">Madhya Pradesh (MP)</option>
-      <option value="[MH] Maharashtra">Maharashtra (MH)</option>
-      <option value="[MN] Manipur">Manipur (MN)</option>
-      <option value="[ML] Meghalaya">Meghalaya (ML)</option>
-      <option value="[MZ] Mizoram">Mizoram (MZ)</option>
-      <option value="[NL] Nagaland">Nagaland (NL)</option>
-      <option value="[OR] Odisha">Odisha (OR)</option>
-      <option value="[PY] Puducherry">Puducherry (PY)</option>
-      <option value="[PB] Punjab">Punjab (PB)</option>
-      <option value="[RJ] Rajasthan">Rajasthan (RJ)</option>
-      <option value="[SK] Sikkim">Sikkim (SK)</option>
-      <option value="[TN] Tamil Nadu">Tamil Nadu (TN)</option>
-      <option value="[TG] Telangana">Telangana (TG)</option>
-      <option value="[TR] Tripura">Tripura (TR)</option>
-      <option value="[UP] Uttar Pradesh">Uttar Pradesh (UP)</option>
-      <option value="[UK] Uttarakhand">Uttarakhand (UK)</option>
-      <option value="[WB] West Bengal">West Bengal (WB)</option>
+    <select class="form-control text-dark bg-light form-select" id="source_of_supply" onchange="show_tax()" name="source_of_supply">
+      <option value="[AN]-Andaman and Nicobar Islads">[AN]-Andaman and Nicobar Islads</option>
+      <option value="[AD]-Andhra Predhesh">[AD]-Andhra Predhesh</option>
+      <option value="[AR]-Arunachal Predesh">[AR]-Arunachal Predesh</option>
+      <option value="[AS]-Assam">[AS]-Assam</option>
+      <option value="[BR]-Bihar">[BR]-Bihar</option>
+      <option value="[CH]-Chandigarh">[CH]-Chandigarh</option>
+      <option value="[CG]-Chhattisgarh">[CG]-Chhattisgarh</option>
+      <option value="[DNH]-Dadra and Nagar Haveli">[DNH]-Dadra and Nagar Haveli</option>
+      <option value="[DD]-Damn anad Diu">[DD]-Damn anad Diu</option>
+      <option value="[DL]-Delhi">[DL]-Delhi</option>
+      <option value="[GA]-Goa">[GA]-Goa</option>
+      <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+      <option value="[HR]-Haryana">[HR]-Haryana</option>
+      <option value="[HP]-Himachal Predesh">[HP]-Himachal Predesh</option>
+      <option value="[JK]-Jammu and Kashmir">[JK]-Jammu and Kashmir</option>
+      <option value="[JH]-Jharkhand">[JH]-Jharkhand</option>
+      <option value="[KA]-Karnataka">[KA]-Karnataka</option>
+      <option value="[KL]-Kerala">[KL]-Kerala</option>
+      <option value="[LA]-Ladakh">[LA]-Ladakh</option>
+      <option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+      <option value="[MP]-Madhya Predesh">[MP]-Madhya Predesh</option>
+      <option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+      <option value="[MN]-Manipur">[MN]-Manipur</option>
+      <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+      <option value="[MZ]-Mizoram">[MZ]-Mizoram</option>
+      <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+      <option value="[OD]-Odisha">[OD]-Odisha</option>
+      <option value="[PY]-Puducherry">[PY]-Puducherry</option>
+      <option value="[PB]-Punjab">[PB]-Punjab</option>
+      <option value="[RJ]-Rajasthan">[RJ]-Rajasthan</option>
+      <option value="[SK]-Sikkim">[SK]-Sikkim</option>
+      <option value="[TN]-Tamil Nadu">[TN]-Tamil Nadu</option>
+      <option value="[TS]-Telangana">[TS]-Telangana</option>
+      <option value="[TR]-Tripura">[TR]-Tripura</option>
+      <option value="[UP]-Uttar Predesh">[UP]-Uttar Predesh</option>
+      <option value="[UK]-Uttarakhand">[UK]-Uttarakhand</option>
+      <option value="[WB]-West Bengal">[WB]-West Bengal</option>
+      <option value="[OT]-Other Territory">[OT]-Other Territory</option>
     </select>
+    <input type="text" id="source_of_supply2" name="source_of_supply2">
   </div>
 </div>
 
@@ -666,11 +671,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
           <label class="col-md-3">Reverse Charge</label>
           <div class="col-md-6 ">
            
-              <!-- <input type="checkbox" name="reverse_charge" id="reverse_charge" value="True">
-        
-        
-               <p class="text-white">This transaction is applicable for reverse charge</p>
-           -->
+              
            <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="reverse_charge" name="reverse_charge" value="True">
             <label class="custom-control-label" for="reverse_charge">This transaction is applicable for reverse charge</label>
@@ -711,31 +712,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
           }
       </script>
       
-        <div class="row">
-          <label for="tax" class="col-md-3">Tax</label>
-          <div class="col-md-6 p-3">
-              <select class="form-control text-dark bg-light form-select" id="tax" name="tax">
-                  <option value="">-- Select Tax --</option>
-                  <option value="">Non-Taxable</option>
-                  <optgroup label="Taxes" id="taxesGroup" value="taxes" class="scrollable">
-                      <option value="IGST0[0%]">IGST0[0%]</option>
-                      <option value="IGST3[3%]">IGST3[3%]</option>
-                      <option value="IGST5[5%]">IGST5[5%]</option>
-                      <option value="IGST12[12%]">IGST12[12%]</option>
-                      <option value="IGST18[18%]">IGST18[18%]</option>
-                      <option value="IGST28[28%]">IGST28[28%]</option>
-                
-                      <option value="GST0[0%]">GST0[0%]</option>
-                      <option value="GST3[3%]">GST3[3%]</option>
-                      <option value="GST5[5%]">GST5[5%]</option>
-                      <option value="GST12[12%]">GST12[12%]</option>
-                      <option value="GST18[18%]">GST18[18%]</option>
-                      <option value="GST28[28%]">GST28[28%]</option>
-                  </optgroup>
-              </select>
-          </div>
-      </div>
-     
+        
       <script>
         document.getElementById("destination_of_supply").addEventListener("change", function () {
             var selectedState = this.value;
@@ -805,7 +782,109 @@ document.getElementById("hsn_code").addEventListener("input", function() {
               <!-- <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a> -->
             </div>
           </div>
-     
+      </div>
+
+      <div class="row d-none" id="cgsttreat_field" >
+        <label class="col-md-3">GST Treatment</label>
+        <div class="col-md-6 p-3">
+            <input type="text" class="form-control text-dark bg-light" id="cgst_treatment" name="cgst_treatment">
+        </div>
+      </div>
+      
+      <div class="row d-none" id="cgstin_field" >
+        <label class="col-md-3">GSTIN</label>
+        <div class="col-md-6 p-3">
+            <input type="text" class="form-control text-dark bg-light" id="cgstin" name="cgstin">
+        </div>
+      </div>
+      
+      <div class="row d-none" id="caddress_field" >
+        <label class="col-md-3">Address</label>
+        <div class="col-md-6 p-3">
+            <textarea  class="form-control text-dark bg-light" style="height: 10rem;" id="cust_address" name="cust_address"></textarea>
+        </div>
+      </div>
+
+      
+<div class="row d-none" id="c_supply_field" onchange="show_tax2()">
+  <label class="col-md-3">place Of Supply</label>
+  <div class="col-md-6 p-3">
+    <select class="form-control text-dark bg-light form-select" id="place_of_supply" name="place_of_supply">
+      <option value="[AN]-Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
+      <option value="[AD]-Andhra Predhesh">[AD] Andhra Predhesh</option>
+      <option value="[AR]-Arunachal Predesh">[AR] Arunachal Predesh</option>
+      <option value="[AS]-Assam">[AS] Assam</option>
+      <option value="[BR]-Bihar">[BR] Bihar</option>
+      <option value="[CH]-Chandigarh">[CH] Chandigarh</option>
+      <option value="[CG]-Chhattisgarh">[CG] Chhattisgarh</option>
+      <option value="[DNH]-Dadra and Nagar Haveli">[DNH] Dadra and Nagar Haveli</option>
+      <option value="[DD]-Damn anad Diu">[DD] Damn anad Diu</option>
+      <option value="[DL]-Delhi">[DL] Delhi</option>
+      <option value="[GA]-Goa">[GA] Goa</option>
+      <option value="[GJ]-Gujarat">[GJ] Gujarat</option>
+      <option value="[HR]-Haryana">[HR] Haryana</option>
+      <option value="[HP]-Himachal Predesh">[HP] Himachal Predesh</option>
+      <option value="[JK]-Jammu and Kashmir">[JK] Jammu and Kashmir</option>
+      <option value="[JH]-Jharkhand">[JH] Jharkhand</option>
+      <option value="[KA]-Karnataka">[KA] Karnataka</option>
+      <option value="[KL]-Kerala">[KL] Kerala</option>
+      <option value="[LA]-Ladakh">[LA] Ladakh</option>
+      <option value="[LD]-Lakshadweep">[LD] Lakshadweep</option>
+      <option value="[MP]-Madhya Predesh">[MP] Madhya Predesh</option>
+      <option value="[MH]-Maharashtra">[MH] Maharashtra</option>
+      <option value="[MN]-Manipur">[MN] Manipur</option>
+      <option value="[ML]-Meghalaya">[ML] Meghalaya</option>
+      <option value="[MZ]-Mizoram">[MZ] Mizoram</option>
+      <option value="[NL]-Nagaland">[NL] Nagaland</option>
+      <option value="[OD]-Odisha">[OD] Odisha</option>
+      <option value="[PY]-Puducherry">[PY] Puducherry</option>
+      <option value="[PB]-Punjab">[PB] Punjab</option>
+      <option value="[RJ]-Rajasthan">[RJ] Rajasthan</option>
+      <option value="[SK]-Sikkim">[SK] Sikkim</option>
+      <option value="[TN]-Tamil Nadu">[TN] Tamil Nadu</option>
+      <option value="[TS]-Telangana">[TS] Telangana</option>
+      <option value="[TR]-Tripura">[TR] Tripura</option>
+      <option value="[UP]-Uttar Predesh">[UP] Uttar Predesh</option>
+      <option value="[UK]-Uttarakhand">[UK] Uttarakhand</option>
+      <option value="[WB]-West Bengal">[WB] West Bengal</option>
+      <option value="[OT]-Other Territory">[OT] Other Territory</option>
+    </select>
+    <input type="text" id="place_of_supply2" name="place_of_supply2">
+
+  </div>
+</div>
+
+<div class="row">
+  <label for="tax" class="col-md-3" id="tax_label">Tax</label>
+  <div class="col-md-6 p-3">
+      <select class="form-control text-dark bg-light form-select" id="tax" name="tax" onchange="find_tax()">
+          <option value="">-- Select Tax --</option>
+              <option value="0">GST0[0%]</option>
+              <option value="3">GST3[3%]</option>
+              <option value="5">GST5[5%]</option>
+              <option value="12">GST12[12%]</option>
+              <option value="18">GST18[18%]</option>
+              <option value="28">GST28[28%]</option>
+      </select>
+  </div>
+</div>
+
+<div class="row">
+<label  class="col-md-3" id="tax2_label" style="display: none;">Tax</label>
+<div class="col-md-6 p-3">
+    <select class="form-control text-dark bg-light form-select" id="tax2" name="tax2" onchange="find_tax()" style="display: none;">
+        <option value="">-- Select Tax --</option>
+            <option value="0">IGST0[0%]</option>
+            <option value="3">IGST3[3%]</option>
+            <option value="5">IGST5[5%]</option>
+            <option value="12">IGST12[12%]</option>
+            <option value="18">IGST18[18%]</option>
+            <option value="28">IGST28[28%]</option>
+    </select>
+</div>
+
+</div>
+
     
     
     
@@ -2360,44 +2439,44 @@ document.getElementById("hsn_code").addEventListener("input", function() {
               <div class="col-md-6 mt-2">
                 <select class="form-control text-dark bg-light" id="v_srcsupply" name="v_sourceofsupply">
                   <option value="Nill"></option>
-                  <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
-                  <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
-                  <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
-                  <option value="[AS] Assam">[AS] Assam</option>
-                  <option value="[BR] Bihar">[BR] Bihar</option>
-                  <option value="[CH] Chandigarh">[CH] Chandigarh</option>
-                  <option value="[CG] Chhattisgarh">[CG] Chhattisgarh</option>
-                  <option value="[DNH] Dadra and Nagar Haveli">[DNH] Dadra and Nagar Haveli</option>
-                  <option value="[DD] Damn anad Diu">[DD] Damn anad Diu</option>
-                  <option value="[DL] Delhi">[DL] Delhi</option>
-                  <option value="[GA] Goa">[GA] Goa</option>
-                  <option value="[GJ] Gujarat">[GJ] Gujarat</option>
-                  <option value="[HR] Haryana">[HR] Haryana</option>
-                  <option value="[HP] Himachal Predesh">[HP] Himachal Predesh</option>
-                  <option value="[JK] Jammu and Kashmir">[JK] Jammu and Kashmir</option>
-                  <option value="[JH] Jharkhand">[JH] Jharkhand</option>
-                  <option value="[KA] Karnataka">[KA] Karnataka</option>
-                  <option value="[KL] Kerala">[KL] Kerala</option>
-                  <option value="[LA] Ladakh">[LA] Ladakh</option>
-                  <option value="[LD] Lakshadweep">[LD] Lakshadweep</option>
-                  <option value="[MP] Madhya Predesh">[MP] Madhya Predesh</option>
-                  <option value="[MH] Maharashtra">[MH] Maharashtra</option>
-                  <option value="[MN] Manipur">[MN] Manipur</option>
-                  <option value="[ML] Meghalaya">[ML] Meghalaya</option>
-                  <option value="[MZ] Mizoram">[MZ] Mizoram</option>
-                  <option value="[NL] Nagaland">[NL] Nagaland</option>
-                  <option value="[OD] Odisha">[OD] Odisha</option>
-                  <option value="[PY] Puducherry">[PY] Puducherry</option>
-                  <option value="[PB] Punjab">[PB] Punjab</option>
-                  <option value="[RJ] Rajasthan">[RJ] Rajasthan</option>
-                  <option value="[SK] Sikkim">[SK] Sikkim</option>
-                  <option value="[TN] Tamil Nadu">[TN] Tamil Nadu</option>
-                  <option value="[TS] Telangana">[TS] Telangana</option>
-                  <option value="[TR] Tripura">[TR] Tripura</option>
-                  <option value="[UP] Uttar Predesh">[UP] Uttar Predesh</option>
-                  <option value="[UK] Uttarakhand">[UK] Uttarakhand</option>
-                  <option value="[WB] West Bengal">[WB] West Bengal</option>
-                  <option value="[OT] Other Territory">[OT] Other Territory</option>
+                  <option value="[AN]-Andaman and Nicobar Islads">[AN]-Andaman and Nicobar Islads</option>
+                  <option value="[AD]-Andhra Predhesh">[AD]-Andhra Predhesh</option>
+                  <option value="[AR]-Arunachal Predesh">[AR]-Arunachal Predesh</option>
+                  <option value="[AS]-Assam">[AS]-Assam</option>
+                  <option value="[BR]-Bihar">[BR]-Bihar</option>
+                  <option value="[CH]-Chandigarh">[CH]-Chandigarh</option>
+                  <option value="[CG]-Chhattisgarh">[CG]-Chhattisgarh</option>
+                  <option value="[DNH]-Dadra and Nagar Haveli">[DNH]-Dadra and Nagar Haveli</option>
+                  <option value="[DD]-Damn anad Diu">[DD]-Damn anad Diu</option>
+                  <option value="[DL]-Delhi">[DL]-Delhi</option>
+                  <option value="[GA]-Goa">[GA]-Goa</option>
+                  <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+                  <option value="[HR]-Haryana">[HR]-Haryana</option>
+                  <option value="[HP]-Himachal Predesh">[HP]-Himachal Predesh</option>
+                  <option value="[JK]-Jammu and Kashmir">[JK]-Jammu and Kashmir</option>
+                  <option value="[JH]-Jharkhand">[JH]-Jharkhand</option>
+                  <option value="[KA]-Karnataka">[KA]-Karnataka</option>
+                  <option value="[KL]-Kerala">[KL]-Kerala</option>
+                  <option value="[LA]-Ladakh">[LA]-Ladakh</option>
+                  <option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+                  <option value="[MP]-Madhya Predesh">[MP]-Madhya Predesh</option>
+                  <option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+                  <option value="[MN]-Manipur">[MN]-Manipur</option>
+                  <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+                  <option value="[MZ]-Mizoram">[MZ]-Mizoram</option>
+                  <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+                  <option value="[OD]-Odisha">[OD]-Odisha</option>
+                  <option value="[PY]-Puducherry">[PY]-Puducherry</option>
+                  <option value="[PB]-Punjab">[PB]-Punjab</option>
+                  <option value="[RJ]-Rajasthan">[RJ]-Rajasthan</option>
+                  <option value="[SK]-Sikkim">[SK]-Sikkim</option>
+                  <option value="[TN]-Tamil Nadu">[TN]-Tamil Nadu</option>
+                  <option value="[TS]-Telangana">[TS]-Telangana</option>
+                  <option value="[TR]-Tripura">[TR]-Tripura</option>
+                  <option value="[UP]-Uttar Predesh">[UP]-Uttar Predesh</option>
+                  <option value="[UK]-Uttarakhand">[UK]-Uttarakhand</option>
+                  <option value="[WB]-West Bengal">[WB]-West Bengal</option>
+                  <option value="[OT]-Other Territory">[OT]-Other Territory</option>
                 </select>
               </div>       
             </div>
@@ -3354,6 +3433,94 @@ document.getElementById("hsn_code").addEventListener("input", function() {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+  function show_tax()
+  {
+                    var vend_place=document.getElementById("source_of_supply").value;
+                    var cust_place=document.getElementById("place_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    document.getElementById("source_of_supply2").value=vend_place
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+
+
+  }
+
+  function show_tax2()
+  {
+                    var cust_place=document.getElementById("place_of_supply").value;
+                    var vend_place=document.getElementById("source_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    document.getElementById("place_of_supply2").value=cust_place
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+
+
+  }
+
+  function find_tax()
+  {
+    var cus_place=document.getElementById("place_of_supply2").value;
+    var vnd_place=document.getElementById("source_of_supply2").value;
+    var amt=document.getElementById("amount").value;
+    if(cus_place == vnd_place)
+    {
+      var tx=document.getElementById('tax').value;
+      var tax_amt=parseInt(amt)*parseInt(tx)/100;
+      var igst=0;
+      var gst=tax_amt/2;
+      var cgst=gst;
+      var sgst=gst;
+      document.getElementById('igst').value=igst;
+      document.getElementById('cgst').value=cgst;
+      document.getElementById('sgst').value=sgst;
+    }
+    else{
+      var tx=document.getElementById('tax2').value;
+      var tax_amt=parseInt(amt)*parseInt(tx)/100;
+      var igst=tax_amt;
+      var cgst=0;
+      var sgst=0;
+      document.getElementById('igst').value=igst;
+      document.getElementById('cgst').value=cgst;
+      document.getElementById('sgst').value=sgst;
+    }
+
+  }
+</script>
+
+
+
+
 <script>
   $(document).ready(function() {
     $("#fname, #lname").change(function() {
@@ -3519,6 +3686,7 @@ function reloadVendor() {
 
                     $("#gst_treatment").val(gstTreatment);
                     $("#source_of_supply").val(s_supply);
+                    $("#source_of_supply2").val(s_supply);
                     $("#vend_address").val(adrs+"\n"+city+"\n"+state+"\n"+country);
 
                     if (gstin) 
@@ -3530,6 +3698,29 @@ function reloadVendor() {
                     {
                         $("#gstin_field").hide();
                     }
+                    var vend_place=s_supply;
+                    var cust_place=document.getElementById("place_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+
+
+
                 },
                 error: function (xhr, status, error) 
                 {
@@ -3539,6 +3730,7 @@ function reloadVendor() {
         }
 
         fetchVendorGSTTreatment();
+        show_tax();
 
         // Call the function when the vendor selection changes
         $("#vendor").change(function() {
@@ -3675,6 +3867,97 @@ $.ajax({
 });
 
 }
+
+
+// ......................... ajax for customer gst according to customer selection..........
+
+$(document).ready(function(){
+  $('#customer').change(function(){
+    var name = $("#customer").val();
+    console.log("helooooooooooooooooooo")
+    console.log(name)
+    $.ajax({
+      url: "{% url 'exp_get_customerdet' %}", 
+            data: { 
+                    id : name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
+                },
+
+            type : 'POST',
+            success: function(data) {
+              var gstTreatment = data.gst_treatment;
+                    var gstin = data.gstin;
+                    var s_supply=data.cust_place_supply;
+                    var adrs=data.address;
+                    var city=data.city;
+                    var state=data.cus_state;
+                    var country=data.country;
+                    var pin=data.pincode;
+                    console.log("helloooooooooooooooooooooooooooooooo");
+
+                    $("#caddress_field").removeClass('d-none');
+                    $("#caddress_field").addClass('d-flex');
+
+                    $("#c_supply_field").removeClass('d-none');
+                    $("#c_supply_field").addClass('d-flex');
+
+                    $("#cgsttreat_field").removeClass('d-none');
+                    $("#cgsttreat_field").addClass('d-flex');
+                    console.log("helloooooooooooooooooooooooooooooooo");
+                   
+
+                   
+                      // $("#caddress_field").show();
+                      // $("#c_supply_field").show();
+                    // document.getElementById('caddress_field').style.display='block';
+                    
+
+                    $("#cgst_treatment").val(gstTreatment);
+                    $("#place_of_supply").val(s_supply);
+                    $("#place_of_supply2").val(s_supply);
+                    $("#cust_address").val(adrs+"\n"+city+"\n"+state+"\n"+country+"\n"+pin);
+
+                    if (gstin) 
+                    {
+                        $("#cgstin").val(gstin);
+                        $("#cgstin_field").removeClass('d-none');
+                         $("#cgstin_field").addClass('d-flex');
+
+                    } 
+                    else 
+                    {
+                      $("#cgstin_field").removeClass('d-flex');
+                         $("#cgstin_field").addClass('d-none');
+                    }
+
+                    var cust_place=s_supply;
+                    var vend_place=document.getElementById("source_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+            }
+    });
+  });
+});
+ 
+
+
+
 
 //--------payment terms modal-----------
 

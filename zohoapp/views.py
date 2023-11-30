@@ -4263,6 +4263,7 @@ def edit_sales_order(request,id):
         adjust=request.POST.getlist('adjust')
         adjust = float(adjust[0])
         sales.adjust=adjust
+        
         if sales.estimate:
             est_obj=Estimates.objects.get(id=sales.estimate)
             est_obj.balance=sales.balance
@@ -6267,6 +6268,21 @@ def get_vendordet(request):
 
     return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr,'source_supply':source_supply},safe=False)
 
+def exp_get_customerdet(request):
+    print("hellooooooooooooooooooooooooooooooooooo")
+    company= company_details.objects.get(user = request.user)
+    id=request.POST.get('id')
+    print(id)
+    cust=customer.objects.get(id=id)
+    address=cust.Address1
+    city=cust.city
+    cus_state=cust.state
+    country=cust.country
+    pincode=cust.zipcode
+    cust_place_supply=cust.placeofsupply
+    gstin = cust.GSTIN
+    gsttr = cust.GSTTreatment
+    return JsonResponse({'cus_state':cus_state,'country':country,'address':address,'city':city,'pincode':pincode,'gst_treatment':gsttr, 'gstin': gstin ,'cust_place_supply':cust_place_supply},safe=False)
 
 @login_required(login_url='login')
 def get_customerdet(request):
@@ -10057,6 +10073,11 @@ def attach_expense_file(request,pk):
 #            estobj.save()
 #     return redirect('estimateslip',estobj.id)
 
+def expense_status_edit(request,pk):
+    exp_data=ExpenseE.objects.get(id=pk)
+    exp_data.status='save'
+    exp_data.save()
+    return redirect('expense_details',exp_data.id)
 
 def exp_sort_by_amount(request):
     user=request.user.id

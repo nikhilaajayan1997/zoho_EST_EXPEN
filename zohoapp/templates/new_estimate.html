@@ -2646,14 +2646,11 @@ $.ajax({
 
 $(document).ready(function() {
     $('#customer_sel').change(function() {
-
         var name = $("#customer_sel").val();
         var na = name.split(' ')[0];
         var table = document.getElementById("item_table");
         $.ajax({
-
             url: "{% url 'get_customerdet' %}", 
-
             data: { 
                     id : na,
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
