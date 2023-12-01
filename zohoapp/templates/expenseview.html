@@ -434,7 +434,7 @@
                             <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
                                 <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
                                     data-target="#files"><i class="fa fa-paperclip"></i> Attach File</a>
-                                {% if expense.document != "" %}
+                                {% if expense.attachment != "" %}
                                 <a class="dropdown-item" href="{{expense.attachment.url}}"><i
                                         class="fa fa-download"></i> Download File</a>
                                 {% endif %}
@@ -635,7 +635,7 @@
 
             <!-- overview -->
             <div id="Overview" class="tabcontent mt-0 border-0 p-4 mx-0" style="overflow-x: hidden; border-top: #ccc double 2px; background-color: burlywood ;border-radius: 5px;">
-                <h3 class="mb-0 mx-5 text-muted" style="color: rgb(161, 195, 226);">{{ company.company_name }}</h3>
+                <!-- <h3 class="mb-0 mx-5 text-muted" style="color: rgb(161, 195, 226);">{{ company.company_name }}</h3> -->
                 <center>
                     <h2 class="mb-4" style=" color: #434141;">Expense</h2>
                 </center>
@@ -643,7 +643,7 @@
                 <div class="row g-0">
                     <div class="col-md-7">
                         <div class="p-5" >
-                            <p class="text-black" style="font-size: 16px;">Expense Details</p>
+                            <h4 class="text-black" style="color: brown;">Expense Details</h4>
                             <div class="d-flex justify-content-between align-items-center mb-5">
                                 <b>
                                     <span style=" color: #434141;">
@@ -652,164 +652,288 @@
                                 </b>
                             </div>
                             <hr class="my-4">
+
+                            
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-black">Customer Name:</h6>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.customer_name.customerName}}</p>
-                                </div>
-                            </div>
-            
-                            <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-black">Vendor:</h6>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.vendor.vendor_display_name}}</p>
-                                </div>
-                            </div>
-            
-                            <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black"> Date:</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-8 mt-3">
                                     <p class="mb-0" style="font-size: 18px; color: #434141;">{{ expense.date |date:'d-m-Y' }}</p>
                                 </div>
                             </div>
             
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black">Destination of Supply:</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-8 mt-3">
                                     <p class="mb-0" style="font-size: 18px; color: #434141;">{{expense.destination_of_supply}}</p>
                                 </div>
                             </div>
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black">Tax:</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #434141;"> {{expense.tax}}</p>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0" style="font-size: 18px; color: #434141;"> {{expense.tax}} %</p>
                                 </div>
                             </div>
 
                            
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black">Notes :</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-8 mt-3">
                                     <p class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{expense.notes}}</p>
                                 </div>
 
                             </div>
                             
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                              <div class="col-md-6 mt-3">
+                              <div class="col-md-4 mt-3">
                                   <h6 class="mb-0 text-black">Expense Account</h6>
                               </div>
-                              <div class="col-md-6 mt-3">
+                              <div class="col-md-8 mt-3">
                                   <p class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{expense.expense_account}}</p>
                               </div>
 
                           </div>
                           <div class="row mb-4 d-flex justify-content-between align-items-center">
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-4 mt-3">
                                 <h6 class="mb-0 text-black">Paid Through</h6>
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-8 mt-3">
                                 <p class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{expense.paid}}</p>
                             </div>
 
                         </div>
                         <div class="row mb-4 d-flex justify-content-between align-items-center">
-                          <div class="col-md-6 mt-3">
+                          <div class="col-md-4 mt-3">
                               <h6 class="mb-0 text-black">Expense Type</h6>
                           </div>
-                          <div class="col-md-6 mt-3">
+                          <div class="col-md-8 mt-3">
                               <p class="mb-0 text-capitalize" style="font-size: 18px; color: #434141;">{{ expense.expense_type }}</p>
                           </div>
 
-                      </div>
+                        </div>
+                        <hr>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">Customer Name:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.customer_name.customerName}}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="mb-0 text-black">Customer Address:</h6>
+                                </div>
+                                <div class="col-md-8 ">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.customer_name.Address1}} <br>
+                                        {{expense.customer_name.city}},{{expense.customer_name.state}} ,{{expense.customer_name.country}} ,
+                                        {{expense.customer_name.customerEmail}}
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                           
+
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="mb-0 text-black">Gst Type:</h6>
+                                </div>
+                                <div class="col-md-8 ">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.customer_name.GSTTreatment}} <br>
+                                        
+                                        
+                                    </p>
+                                </div>
+                            </div>
+
+                            {% if expense.customer_name.GSTIN %} 
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="mb-0 text-black">GST Number:</h6>
+                                </div>
+                                <div class="col-md-8 ">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.customer_name.GSTIN}} 
+                                        
+                                    </p>
+                                </div>
+                            </div>
+
+                            {% endif %}
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4">
+                                    <h6 class="mb-0 text-black">Place Of Supply:</h6>
+                                </div>
+                                <div class="col-md-8 ">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.customer_place_supply}} 
+                                        
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+            
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">Vendor:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.vendor.vendor_display_name}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">Vendor Address:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.vendor.baddress}},{{expense.vendor.bcity}},
+                                        {{expense.vendor.bstate}},{{expense.vendor.bcountry}} <br> {{expense.vendor.vendor_email}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">Gst Type:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.vendor.gst_treatment}}
+                                    </p>
+                                </div>
+                            </div>
+                            {% if expense.vendor.gst_number %}
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">GST Number:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.vendor.gst_number}}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">Place Of Supply:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0 " style="font-size: 18px; color: #434141;">{{expense.vendor.source_supply}}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+            
+            
                             
                            
                             <!-- <hr class="my-4"> -->
                         </div>
                     </div>
                     <div class="col-md-5  " style="background-color:#8b3131; border-radius: 5px;" >
-                        <div class="p-5">
+                        <div class="p-2">
                             <div class="d-block justify-content-between mb-5">
+                                <div class="row pt-3">
+                                    <div class="col-md-12">
+                                        <h4 style="color: rgb(245, 163, 12);text-align: center;">Company Details</h4>
+                                    </div>
+                                </div>
                                 <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-black">Amount</h6>
+                                    <div class="col-md-4 mt-3">
+                                        <h6 class="mb-0 text-black">Company</h6>
+                                    </div>
+                                    <div class="col-md-8 mt-3">
+                                        <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{expense.company.company_name}}</p>
+                                    </div>
+                               </div>
+                               <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                    <div class="col-md-4 mt-3">
+                                        <h6 class="mb-0 text-black">Company Address</h6>
+                                    </div>
+                                    <div class="col-md-8 mt-3">
+                                        <p class="mb-0" style=" color: #fbf3f3;">{{expense.company.address}} <br>
+                                            {{expense.company.city}}  <br> {{expense.company.state}},{{expense.company.pincode}} <br> {{expense.company.company_email}}
+                                        </p>
+                                    </div>
+                               </div>
+                               <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                    <div class="col-md-4 mt-3">
+                                        <h6 class="mb-0 text-black">Contact Number</h6>
+                                    </div>
+                                    <div class="col-md-8 mt-3">
+                                        <p class="mb-0" style=" color: #fbf3f3;">{{expense.company.contact_number}} 
+                                            
+                                        </p>
+                                    </div>
+                               </div>
+                               <hr>
+                               <div class="row">
+                                <div class="col-md-12">
+                                    <h4 style="color: rgb(228, 152, 12);text-align: center;">Tax Details</h4>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{expense.currency}} {{expense.amount}}</p>
-                                </div>
-                            </div>
+                               </div>
+                                <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                    <div class="col-md-4 mt-3">
+                                        <h6 class="mb-0 text-black">Amount</h6>
+                                    </div>
+                                    <div class="col-md-8 mt-3">
+                                        <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{expense.currency}} {{expense.amount}}</p>
+                                    </div>
+                               </div>
             
                             <!-- IGST -->
+                            {% if expense.igst != 0 %}
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-black">GST:</h6>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{expense.gst_treatment}}</p>
-                                </div>
-                            </div>
-            
-                            <!-- CGST -->
-                            <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black">CGST:</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{ creditnote.cgst }}</p>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{expense.igst}}</p>
                                 </div>
                             </div>
+                            {% endif %}
             
-                            <!-- SGST -->
+                            <!-- CGST -->
+                            {% if expense.cgst != 0 %}
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="mb-0 text-black">CGST:</h6>
+                                </div>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{ expense.cgst }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <!-- SGST -->
+                            {% if expense.cgst != 0 %}
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black">SGST:</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color:#fbf3f3;">{{ creditnote.sgst }}</p>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0" style="font-size: 18px; color:#fbf3f3;">{{ expense.sgst }}</p>
                                 </div>
                             </div>
+                            {% endif %}
             
                             <!-- Total Tax -->
                             <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
+                                <div class="col-md-4 mt-3">
                                     <h6 class="mb-0 text-black">Total Tax:</h6>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;"></p>
+                                <div class="col-md-8 mt-3">
+                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{ expense.tax }}%</p>
                                 </div>
                             </div>
             
-                            <!-- Shipping Charge -->
-                            <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-black">Shipping Charge:</h6>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color:#fbf3f3;">{{ creditnote.shipping_charge }}</p>
-                                </div>
-                            </div>
-            
-                            <!-- Total -->
-                            <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                <div class="col-md-6 mt-3">
-                                    <h6 class="mb-0 text-black">Total:</h6>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <p class="mb-0" style="font-size: 18px; color: #fbf3f3;">{{ creditnote.total }}</p>
-                                </div>
-                            </div>
+                           
             
                            
 

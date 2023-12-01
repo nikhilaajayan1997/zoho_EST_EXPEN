@@ -4263,7 +4263,7 @@ def edit_sales_order(request,id):
         adjust=request.POST.getlist('adjust')
         adjust = float(adjust[0])
         sales.adjust=adjust
-        
+
         if sales.estimate:
             est_obj=Estimates.objects.get(id=sales.estimate)
             est_obj.balance=sales.balance
@@ -9940,6 +9940,7 @@ def add_customers1(request):
 def expensepage(request):
     company = company_details.objects.get(user = request.user)
     expenses = ExpenseE.objects.filter(user=request.user)
+
     context = {
         'expenses': expenses,
         'company':company
@@ -10103,6 +10104,18 @@ def exp_sort_by_expen_acc(request):
             }  
     return render(request,'expense.html',context)
 
+def get_account_no(request):
+    bank_name=request.POST.get('id')
+    cmp_user=company_details.objects.get(user=request.user.id)
+    user1=User.objects.get(id=cmp_user.user.id)
+    if Bankcreation.objects.filter(name=bank_name,user=user1.id).exists():
+        acc_obj=Bankcreation.objects.get(name=bank_name,user=user1.id)
+        accno=acc_obj.ac_no
+
+        return JsonResponse({'accno':accno},safe=False)
+    else:
+        return JsonResponse({'accno':0},safe=False)
+
 def save_expense(request):
     company = company_details.objects.get(user = request.user)
     if request.user.is_authenticated:
@@ -10120,7 +10133,14 @@ def save_expense(request):
             amount = request.POST.get('amount')
             currency = request.POST.get('currency')
             expense_type = request.POST.get('expense_type')
-            paid = request.POST.get('paid')
+            paid = request.POST.get('select_payment')
+            accno=request.POST.get('acc_no')
+            upiid=request.POST.get('upi_id')
+            chequeno=request.POST.get('cheque_no')
+            if accno:
+                bank=Bankcreation.objects.get(ac_no=accno)
+                bankid=bank.id
+
 
             notes = request.POST.get('notes')
             if request.POST.get('expense_type') == 'goods':
@@ -10134,13 +10154,23 @@ def save_expense(request):
             gstin=request.POST.get('gstin',None)
             destination_of_supply = request.POST.get('destination_of_supply')
             reverse_charge = request.POST.get('reverse_charge')
-            tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
             c = request.POST.get('customer')
             customere = customer.objects.get(id=c)
             v= request.POST.get('vendor')
             vendor=vendor_table.objects.get(id=v)
             vend_name=vendor.vendor_display_name 
+            c_placesupply=request.POST['place_of_supply2']
+            v_placesupply=request.POST['source_of_supply2']
+            if c_placesupply == v_placesupply:
+                tax = request.POST.get('tax')
+            else:
+                tax = request.POST.get('tax2')
+
+            igst=request.POST['igst']
+            cgst=request.POST['cgst']
+            sgst=request.POST['sgst']
+            reference=request.POST['reference_number']
             print("hellooooooooooooooooooooooooooooo")
             print(vend_name)
             vend_name1=vend_name.upper()
@@ -10174,7 +10204,17 @@ def save_expense(request):
                 vendor=vendor,
                 company=company,
                 vendor_name=vend_name1,
-                status=status
+                status=status,
+                reference_number=reference,
+                igst=igst,
+                cgst=cgst,
+                sgst=sgst,
+                customer_place_supply= c_placesupply,
+                vendor_place_supply=v_placesupply,
+                accno=accno,
+                bankid=bankid,
+                upiid=upiid,
+                chequeno=chequeno
             )
 
             expense.save()
@@ -10188,8 +10228,30 @@ def save_expense(request):
             account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
             cp= company_details.objects.get(user = request.user)
-            return render(request, 'addexpense.html', {'company':cp,'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,
-            })
+            paym = payment_terms.objects.filter(user=request.user.id)
+            banks=Bankcreation.objects.all()
+
+            try:
+                latest_bill = ExpenseE.objects.filter(company = cp).order_by('-reference_number').first()
+                if latest_bill:
+                    print("ssssssssssssssssssssssssssssssssssssssss") 
+                    last_number = int(latest_bill.reference_number)
+                    print(last_number)
+                    new_number = last_number + 1
+                    print(new_number)
+                else:
+                   new_number=1
+
+                if deletedexpenses.objects.filter(cid=cp).exists():
+                   deleted=deletedexpenses.objects.get(cid = cp)
+                   if deleted:
+                       while int(deleted.reference_number) >= new_number:
+                           new_number+=1
+                return render(request, 'addexpense.html', {'banks':banks,'pay':paym,'company':cp,'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,'count':new_number})
+            except Exception as e:
+                return redirect("expensepage")
+            
+            
    
 def upload_documents(request, expense_id):
     if request.method == 'POST':
@@ -10427,6 +10489,20 @@ def edit_expensee(request,expense_id):
     company = company_details.objects.get(user = request.user)
     if request.user.is_authenticated:
         expense = ExpenseE.objects.get(id=expense_id)
+        vend_address=expense.vendor.baddress
+        vend_city=expense.vendor.bcity
+        vend_state=expense.vendor.bstate
+        vend_country=expense.vendor.bcountry
+        vend_place_supply=expense.vendor_place_supply
+
+        cust_address=expense.customer_name.Address1
+        cust_city=expense.customer_name.city
+        cust_state=expense.customer_name.state
+        cust_country=expense.customer_name.country
+        cust_place_supply=expense.customer_place_supply
+        cust_gsttreatment=expense.customer_name.GSTTreatment
+        cust_gstno=expense.customer_name.GSTIN
+
 
         if request.method == 'POST':
             date = request.POST.get('date')
@@ -10506,7 +10582,12 @@ def edit_expensee(request,expense_id):
             account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
             cp= company_details.objects.get(user = request.user)
-            return render(request, 'editexpense.html', {'company':cp ,'vendor': v, 'customer': c, 'accounts': accounts, 'account_types': account_types, 'expense': expense})
+            return render(request, 'editexpense.html', {'company':cp ,'vendor': v, 'customer': c, 'accounts': accounts, 
+                                                        'account_types': account_types, 'expense': expense,'vend_address':vend_address,
+                                                        'vend_city':vend_city,'vend_state':vend_state,'vend_country':vend_country,
+                                                        'vend_place_supply':vend_place_supply,'cust_address':cust_address,'cust_city':cust_city,
+                                                        'cust_state':cust_state,'cust:country':cust_country,'cust_place_supply':cust_place_supply,
+                                                        'cust_gsttreatment':cust_gsttreatment,'cust_gstno':cust_gstno})
 
 def delet(request,id):
     items=ExpenseE.objects.filter(id=id)

@@ -999,6 +999,10 @@ class ExpenseE(models.Model):
     currency=models.TextField(max_length=255,null=True, blank=True)
     expense_type=models.TextField(max_length=255,null=True, blank=True)
     paid=models.TextField(max_length=255,null=True, blank=True)
+    bankid=models.TextField(max_length=255,null=True, blank=True)
+    accno=models.TextField(max_length=255,null=True, blank=True)
+    chequeno=models.TextField(max_length=255,null=True, blank=True)
+    upiid=models.TextField(max_length=255,null=True, blank=True)
     vendor= models.ForeignKey(vendor_table, on_delete=models.CASCADE,null=True, blank=True)
     notes=models.TextField(max_length=255,null=True, blank=True)
     hsn_code=models.TextField(max_length=255,null=True, blank=True)
@@ -1017,6 +1021,14 @@ class ExpenseE(models.Model):
     image = models.FileField(upload_to='expense_image/', blank=True, null=True)
     status=models.TextField(max_length=100,null=True, blank=True)
     attachment= models.FileField(upload_to='attachment/', blank=True, null=True)
+    customer_place_supply=models.TextField(max_length=255,null=True, blank=True)
+    vendor_place_supply=models.TextField(max_length=255,null=True, blank=True)
+    igst=models.IntegerField(blank=True,null=True)
+    cgst=models.IntegerField(blank=True,null=True)
+    sgst=models.IntegerField(blank=True,null=True)
+    reference_number=models.IntegerField(blank=True,null=True)
+
+
     
     
 class AttachE(models.Model):
@@ -1030,6 +1042,9 @@ class expense_comments(models.Model):
     comments=models.TextField(max_length=1000,blank=True,null=True)
     date = models.DateField(null=True, blank=True)
 
+class deletedexpenses(models.Model):
+    cid = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True)
+    reference_number = models.CharField(max_length=50)
 
     
     

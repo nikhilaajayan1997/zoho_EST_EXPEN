@@ -191,6 +191,41 @@
     </style>
 
 
+    <script>
+      window.onload=function(){ 
+        document.getElementById('vend_address').value='{{vend_address}}'+'\n'+'{{vend_city}}'+'\n'+'{{vend_state}}'+'\n'+'{{vend_country}}';
+        document.getElementById('source_of_supply').value='{{vend_place_supply}}';
+        document.getElementById('source_of_supply2').value='{{vend_place_supply}}';
+
+        document.getElementById("cgst_treatment").value='{{cust_gsttreatment}}';
+        if('{{cust_gstno}}')
+        {
+          document.getElementById("cgstin").value='{{cust_gstno}}';
+          $('#cgstin').removeClass('d-none');
+          $('#cgstin').addClass('d-flex');
+        }
+        document.getElementById("cust_address").value='{{cust_address}}'+'\n'+'{{cust_city}}'+'\n'+'{{cust_state}}'+'\n'+'{{cust_country}}';
+        document.getElementById('place_of_supply').value='{{cust_place_supply}}';
+        document.getElementById('place_of_supply2').value='{{cust_place_supply}}';
+
+        if('{{vend_place_supply}}' == '{{cust_place_supply}}')
+        {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+        }
+        else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+        }
+
+      }
+    </script>
+
+
 <div class="container-fulid containerprof">
 
   <div class="card radius-15 p-3">
@@ -537,6 +572,61 @@ document.getElementById("hsn_code").addEventListener("input", function() {
           <input type="text" class="form-control text-dark bg-light" id="gstin" name="gstin">
       </div>
     </div>
+
+    <div class="row" id="address_field" >
+      <label class="col-md-3">Address</label>
+      <div class="col-md-6 p-3">
+          <textarea  class="form-control text-dark bg-light" style="height: 10rem;" id="vend_address" name="vend_address"></textarea>
+      </div>
+    </div>
+    
+    <div class="row" id="s_supply_field" >
+      <label class="col-md-3">Source Of Supply</label>
+      <div class="col-md-6 p-3">
+        <select class="form-control text-dark bg-light form-select" id="source_of_supply" onchange="show_tax()" name="source_of_supply">
+          <option value="[AN]-Andaman and Nicobar Islads">[AN]-Andaman and Nicobar Islads</option>
+          <option value="[AD]-Andhra Predhesh">[AD]-Andhra Predhesh</option>
+          <option value="[AR]-Arunachal Predesh">[AR]-Arunachal Predesh</option>
+          <option value="[AS]-Assam">[AS]-Assam</option>
+          <option value="[BR]-Bihar">[BR]-Bihar</option>
+          <option value="[CH]-Chandigarh">[CH]-Chandigarh</option>
+          <option value="[CG]-Chhattisgarh">[CG]-Chhattisgarh</option>
+          <option value="[DNH]-Dadra and Nagar Haveli">[DNH]-Dadra and Nagar Haveli</option>
+          <option value="[DD]-Damn anad Diu">[DD]-Damn anad Diu</option>
+          <option value="[DL]-Delhi">[DL]-Delhi</option>
+          <option value="[GA]-Goa">[GA]-Goa</option>
+          <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+          <option value="[HR]-Haryana">[HR]-Haryana</option>
+          <option value="[HP]-Himachal Predesh">[HP]-Himachal Predesh</option>
+          <option value="[JK]-Jammu and Kashmir">[JK]-Jammu and Kashmir</option>
+          <option value="[JH]-Jharkhand">[JH]-Jharkhand</option>
+          <option value="[KA]-Karnataka">[KA]-Karnataka</option>
+          <option value="[KL]-Kerala">[KL]-Kerala</option>
+          <option value="[LA]-Ladakh">[LA]-Ladakh</option>
+          <option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+          <option value="[MP]-Madhya Predesh">[MP]-Madhya Predesh</option>
+          <option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+          <option value="[MN]-Manipur">[MN]-Manipur</option>
+          <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+          <option value="[MZ]-Mizoram">[MZ]-Mizoram</option>
+          <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+          <option value="[OD]-Odisha">[OD]-Odisha</option>
+          <option value="[PY]-Puducherry">[PY]-Puducherry</option>
+          <option value="[PB]-Punjab">[PB]-Punjab</option>
+          <option value="[RJ]-Rajasthan">[RJ]-Rajasthan</option>
+          <option value="[SK]-Sikkim">[SK]-Sikkim</option>
+          <option value="[TN]-Tamil Nadu">[TN]-Tamil Nadu</option>
+          <option value="[TS]-Telangana">[TS]-Telangana</option>
+          <option value="[TR]-Tripura">[TR]-Tripura</option>
+          <option value="[UP]-Uttar Predesh">[UP]-Uttar Predesh</option>
+          <option value="[UK]-Uttarakhand">[UK]-Uttarakhand</option>
+          <option value="[WB]-West Bengal">[WB]-West Bengal</option>
+          <option value="[OT]-Other Territory">[OT]-Other Territory</option>
+        </select>
+        <input type="text" id="source_of_supply2" name="source_of_supply2">
+      </div>
+    </div>
+    
  
   
       
@@ -666,40 +756,15 @@ document.getElementById("hsn_code").addEventListener("input", function() {
 </div>
   
   
-  
+<!--   
       <div class=" row">
         <label for="invoice" class="col-md-3 text-white">Invoice</label>
         <div class="col-md-6 p-3">
           <input type="text text-white" class="form-control text-dark bg-light" id="invoice" name="invoice" value="{{expense.invoice}}">
         </div>
       </div>
-      <div class="row">
-        <label for="tax" class="col-md-3 text-white">Tax</label>
-        <div class="col-md-6 p-3">
-          <select class="form-control text-dark bg-light" id="tax" name="tax">
-            <option value="">-- Select Expense Tax --</option>
-            <option value="">Non-Taxable</option>
-            <optgroup label="Taxes" id="taxesGroup">
-              <option value="IGST0[0%]" {% if expense.tax == 'IGST0[0%]' %}selected{% endif %}>IGST0[0%]</option>
-              <option value="IGST3[3%]" {% if expense.tax == 'IGST3[3%]' %}selected{% endif %}>IGST3[3%]</option>
-              <option value="IGST5[5%]" {% if expense.tax == 'IGST5[5%]' %}selected{% endif %}>IGST5[5%]</option>
-              <option value="IGST12[12%]" {% if expense.tax == 'IGST12[12%]' %}selected{% endif %}>IGST12[12%]</option>
-              <option value="IGST18[18%]" {% if expense.tax == 'IGST18[18%]' %}selected{% endif %}>IGST18[18%]</option>
-              <option value="IGST28[28%]" {% if expense.tax == 'IGST28[28%]' %}selected{% endif %}>IGST28[28%]</option>
-            </optgroup>
-            <optgroup label="Tax Group" id="taxGroup">
-              <option value="GST0[0%]" {% if expense.tax == 'GST0[0%]' %}selected{% endif %}>GST0[0%]</option>
-              <option value="GST3[3%]" {% if expense.tax == 'GST3[3%]' %}selected{% endif %}>GST3[3%]</option>
-              <option value="GST5[5%]" {% if expense.tax == 'GST5[5%]' %}selected{% endif %}>GST5[5%]</option>
-              <option value="GST12[12%]" {% if expense.tax == 'GST12[12%]' %}selected{% endif %}>GST12[12%]</option>
-              <option value="GST18[18%]" {% if expense.tax == 'GST18[18%]' %}selected{% endif %}>GST18[18%]</option>
-              <option value="GST28[28%]" {% if expense.tax == 'GST28[28%]' %}selected{% endif %}>GST28[28%]</option>
-            </optgroup>
-          </select>
-        </div>
-      </div>
-      
-     
+
+      -->
           
         
       
@@ -716,6 +781,112 @@ document.getElementById("hsn_code").addEventListener("input", function() {
             <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a>
           </div>
         </div>
+
+        <div class="row " id="cgsttreat_field" >
+          <label class="col-md-3">GST Treatment</label>
+          <div class="col-md-6 p-3">
+              <input type="text" class="form-control text-dark bg-light" id="cgst_treatment" name="cgst_treatment">
+          </div>
+        </div>
+        
+
+        <div class="row d-none" id="cgstin_field" >
+          <label class="col-md-3">GSTIN</label>
+          <div class="col-md-6 p-3">
+              <input type="text" class="form-control text-dark bg-light" id="cgstin" name="cgstin">
+          </div>
+        </div>
+        
+        <div class="row " id="caddress_field" >
+          <label class="col-md-3">Address</label>
+          <div class="col-md-6 p-3">
+              <textarea  class="form-control text-dark bg-light" style="height: 10rem;" id="cust_address" name="cust_address"></textarea>
+          </div>
+        </div>
+  
+        
+  <div class="row" id="c_supply_field" onchange="show_tax2()">
+    <label class="col-md-3">place Of Supply</label>
+    <div class="col-md-6 p-3">
+      <select class="form-control text-dark bg-light form-select" id="place_of_supply" name="place_of_supply">
+        <option value="[AN]-Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
+        <option value="[AD]-Andhra Predhesh">[AD] Andhra Predhesh</option>
+        <option value="[AR]-Arunachal Predesh">[AR] Arunachal Predesh</option>
+        <option value="[AS]-Assam">[AS] Assam</option>
+        <option value="[BR]-Bihar">[BR] Bihar</option>
+        <option value="[CH]-Chandigarh">[CH] Chandigarh</option>
+        <option value="[CG]-Chhattisgarh">[CG] Chhattisgarh</option>
+        <option value="[DNH]-Dadra and Nagar Haveli">[DNH] Dadra and Nagar Haveli</option>
+        <option value="[DD]-Damn anad Diu">[DD] Damn anad Diu</option>
+        <option value="[DL]-Delhi">[DL] Delhi</option>
+        <option value="[GA]-Goa">[GA] Goa</option>
+        <option value="[GJ]-Gujarat">[GJ] Gujarat</option>
+        <option value="[HR]-Haryana">[HR] Haryana</option>
+        <option value="[HP]-Himachal Predesh">[HP] Himachal Predesh</option>
+        <option value="[JK]-Jammu and Kashmir">[JK] Jammu and Kashmir</option>
+        <option value="[JH]-Jharkhand">[JH] Jharkhand</option>
+        <option value="[KA]-Karnataka">[KA] Karnataka</option>
+        <option value="[KL]-Kerala">[KL] Kerala</option>
+        <option value="[LA]-Ladakh">[LA] Ladakh</option>
+        <option value="[LD]-Lakshadweep">[LD] Lakshadweep</option>
+        <option value="[MP]-Madhya Predesh">[MP] Madhya Predesh</option>
+        <option value="[MH]-Maharashtra">[MH] Maharashtra</option>
+        <option value="[MN]-Manipur">[MN] Manipur</option>
+        <option value="[ML]-Meghalaya">[ML] Meghalaya</option>
+        <option value="[MZ]-Mizoram">[MZ] Mizoram</option>
+        <option value="[NL]-Nagaland">[NL] Nagaland</option>
+        <option value="[OD]-Odisha">[OD] Odisha</option>
+        <option value="[PY]-Puducherry">[PY] Puducherry</option>
+        <option value="[PB]-Punjab">[PB] Punjab</option>
+        <option value="[RJ]-Rajasthan">[RJ] Rajasthan</option>
+        <option value="[SK]-Sikkim">[SK] Sikkim</option>
+        <option value="[TN]-Tamil Nadu">[TN] Tamil Nadu</option>
+        <option value="[TS]-Telangana">[TS] Telangana</option>
+        <option value="[TR]-Tripura">[TR] Tripura</option>
+        <option value="[UP]-Uttar Predesh">[UP] Uttar Predesh</option>
+        <option value="[UK]-Uttarakhand">[UK] Uttarakhand</option>
+        <option value="[WB]-West Bengal">[WB] West Bengal</option>
+        <option value="[OT]-Other Territory">[OT] Other Territory</option>
+      </select>
+      <input type="text" id="place_of_supply2" name="place_of_supply2">
+  
+    </div>
+  </div>
+  
+
+  <div class="row">
+    <label for="tax" class="col-md-3" id="tax_label">Tax</label>
+    <div class="col-md-6 p-3">
+        <select class="form-control text-dark bg-light form-select" id="tax" name="tax" onchange="find_tax()">
+            <option value="{{expense.tax}}" selected>GST{{expense.tax}}[{{expense.tax}}%]</option>
+                <option value="0">GST0[0%]</option>
+                <option value="3">GST3[3%]</option>
+                <option value="5">GST5[5%]</option>
+                <option value="12">GST12[12%]</option>
+                <option value="18">GST18[18%]</option>
+                <option value="28">GST28[28%]</option>
+        </select>
+    </div>
+  </div>
+  
+  <div class="row">
+  <label  class="col-md-3" id="tax2_label" style="display: none;">Tax</label>
+  <div class="col-md-6 p-3">
+      <select class="form-control text-dark bg-light form-select" id="tax2" name="tax2" onchange="find_tax()" style="display: none;">
+          <option value="{{expense.tax}}" selected>IGST{{expense.tax}}[{{expense.tax}}%]</option>
+              <option value="0">IGST0[0%]</option>
+              <option value="3">IGST3[3%]</option>
+              <option value="5">IGST5[5%]</option>
+              <option value="12">IGST12[12%]</option>
+              <option value="18">IGST18[18%]</option>
+              <option value="28">IGST28[28%]</option>
+      </select>
+  </div>
+  
+  </div>
+  
+
+
    
   
     <div class=" row">
@@ -3251,6 +3422,95 @@ document.getElementById("hsn_code").addEventListener("input", function() {
     </div>
   </div>  
 </div>
+
+
+<script>
+  $(document).ready(function(){
+  $('#customer').change(function(){
+    var name = $("#customer").val();
+    console.log("helooooooooooooooooooo")
+    console.log(name)
+    $.ajax({
+      url: "{% url 'exp_get_customerdet' %}", 
+            data: { 
+                    id : name,
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
+                },
+
+            type : 'POST',
+            success: function(data) {
+              var gstTreatment = data.gst_treatment;
+                    var gstin = data.gstin;
+                    var s_supply=data.cust_place_supply;
+                    var adrs=data.address;
+                    var city=data.city;
+                    var state=data.cus_state;
+                    var country=data.country;
+                    var pin=data.pincode;
+                    console.log("helloooooooooooooooooooooooooooooooo");
+
+                    $("#caddress_field").removeClass('d-none');
+                    $("#caddress_field").addClass('d-flex');
+
+                    $("#c_supply_field").removeClass('d-none');
+                    $("#c_supply_field").addClass('d-flex');
+
+                    $("#cgsttreat_field").removeClass('d-none');
+                    $("#cgsttreat_field").addClass('d-flex');
+                    console.log("helloooooooooooooooooooooooooooooooo");
+                   
+
+                   
+                      // $("#caddress_field").show();
+                      // $("#c_supply_field").show();
+                    // document.getElementById('caddress_field').style.display='block';
+                    
+
+                    $("#cgst_treatment").val(gstTreatment);
+                    $("#place_of_supply").val(s_supply);
+                    $("#place_of_supply2").val(s_supply);
+                    $("#cust_address").val(adrs+"\n"+city+"\n"+state+"\n"+country+"\n"+pin);
+
+                    if (gstin) 
+                    {
+                        $("#cgstin").val(gstin);
+                        $("#cgstin_field").removeClass('d-none');
+                         $("#cgstin_field").addClass('d-flex');
+
+                    } 
+                    else 
+                    {
+                      $("#cgstin_field").removeClass('d-flex');
+                         $("#cgstin_field").addClass('d-none');
+                    }
+
+                    var cust_place=s_supply;
+                    var vend_place=document.getElementById("source_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    } 
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+            }
+    });
+  });
+});
+ 
+
+</script>
 <script>
 $(document).ready(function() {
   $("#fname, #lname").change(function() {

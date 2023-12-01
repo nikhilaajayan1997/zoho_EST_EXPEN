@@ -370,6 +370,7 @@ urlpatterns = [
     path('attach_expense_file/<int:pk>',views.attach_expense_file,name='attach_expense_file'),
     path('expense_status_edit/<int:pk>',views.expense_status_edit,name='expense_status_edit'),
     path('exp_get_customerdet',views.exp_get_customerdet,name='exp_get_customerdet'),
+    path('get_account_no',views.get_account_no,name='get_account_no'),
 
 
     path('expensepage',views.expensepage,name='expensepage'),
