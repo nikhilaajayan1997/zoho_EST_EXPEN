@@ -371,6 +371,7 @@ urlpatterns = [
     path('expense_status_edit/<int:pk>',views.expense_status_edit,name='expense_status_edit'),
     path('exp_get_customerdet',views.exp_get_customerdet,name='exp_get_customerdet'),
     path('get_account_no',views.get_account_no,name='get_account_no'),
+    path('import_expense',views.import_expense,name='import_expense'),
 
 
     path('expensepage',views.expensepage,name='expensepage'),

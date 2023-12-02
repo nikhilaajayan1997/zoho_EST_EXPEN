@@ -81,6 +81,11 @@
         margin-top: 0%;
 
     }
+
+    .modal{
+      z-index: 9999;
+      overflow: scroll;
+    }
     
     @media (max-width: 768px) {
         .flowchart {
@@ -217,6 +222,8 @@
                 </div>
                 <div class="col-md-3">
                     <button  id="export" class="btn btn-outline-warning  px-3 py-2" onclick="export_excel()">Export</button>
+                    <a  style="color: white; height:35px;" id="importBtn" data-toggle="modal" data-target="#import_modal" class="btn btn-outline-warning text-warning mr-1 pt-2" >Import</a>
+
 
                     <a href="{% url 'save_expense' %}" class="btn btn-outline-warning  text-right px-3 py-2" role="button">
                       <b>+</b> New
@@ -260,6 +267,46 @@
             </tbody>
         </table>
     </div>
+
+
+    
+
+<!-- ................................... import modal ................. -->
+
+<div class="modal fade" id="import_modal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+        <div class="modal-header " style="background: rgb(32, 35, 37);">
+          <h1 class="text-light">Import Estimate</h1>
+        </div>
+        <div class="modal-body" style="background: rgb(32, 35, 37);">
+          <div class="card p-3 m-3">        
+            <div class="row">
+              <div class="col-md-12 col-lg-12 col-sm-12">
+                <h5 class="text-danger">IMPORTANT:</h5>
+                <p class="text-light">File should have 2 sheets named 'Sheet1' & 'Sheet2'and column name & order should be in the given format(Uppercase)</p><br>
+                <p class="text-light">Place of supply should be in the following format ,eg: for kerala  Type [KL]-Kerala  </p>
+              </div>
+            </div>
+          </div>
+          <a href="" class="text-primary" style="font-size:medium;">Download Sample File here</a> <br>
+  
+          <form action="{% url 'import_expense' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h6 class="text-light">File</h6>
+            <input type="file" name="excel_file" class="form-control" style="width: 50%;"><br>
+            <button class="btn btn-outline-warning mt-3">IMPORT</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ..........................................import modal end  ........................... -->
+
+
+
+
 </div>
 </div>       
 <hr>
@@ -330,6 +377,11 @@
     
 </div>
 </div>
+
+
+
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
   $(document).ready(function() {

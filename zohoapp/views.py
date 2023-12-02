@@ -10115,6 +10115,78 @@ def get_account_no(request):
         return JsonResponse({'accno':accno},safe=False)
     else:
         return JsonResponse({'accno':0},safe=False)
+    
+def import_expense(request):
+    user1=request.user.id
+    user2=User.objects.get(id=user1)
+    cmp=company_details.objects.get(user=user1)
+    if request.method == 'POST' and 'excel_file' in request.FILES:
+        excel_file = request.FILES.get('excel_file')
+        wb = load_workbook(excel_file)
+        try:
+            ws = wb["Sheet1"]
+            header_row = ws[1]
+            column_names = [cell.value for cell in header_row]
+            print("Column Names:", column_names)
+        except:
+            print('sheet not found')
+            messages.error(request,'`challan` sheet not found.! Please check.')
+            return redirect('expensepage')
+        ws = wb["Sheet1"]
+        estimate_columns = ['SLNO','EXPENSE ACCOUNT','AMOUNT','CURRENCY','EXPENSE TYPE','PAID THROUGH','ACCOUNT NUMBER','CHEQUE NUMBER','UPI ID','HSN','DESTINATION OF SUPPLY','REVERSE CHARGE','TAX','CUSTOMER NAME','VENDOR NAME','DATE','SAC','STATUS','CUSTOMER PLACE OF SUPPLY','VENDOR PLACE OF SUPPLY','IGST','CGST','SGST']
+        estimate_sheet = [cell.value for cell in ws[1]]
+        if estimate_sheet != estimate_columns:
+            print('invalid sheet')
+            messages.error(request,'`challan` sheet column names or order is not in the required formate.! Please check.')
+            return redirect("expensepage")
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            slno,expense_account,amount,currency,expense_type,paid_through,account_number,chequeno,upiid,hsn,destination_supply,reverse_charge,tax,customer_name,vendor_name,date,sac,status,customer_place_supply,vendor_place_supply,igst,cgst,sgst = row
+            if slno is None or customer_place_supply is None or vendor_place_supply is None or amount is None or tax is None or customer_name is None or vendor_name is None:
+                print('challan == invalid data')
+                messages.error(request,'`challan` sheet entries missing required fields.! Please check.')
+                return redirect("expensepage")
+
+        # getting data from expense sheet and create estimate.
+        ws = wb['Sheet1']
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            slno,expense_account,amount,currency,expense_type,paid_through,account_number,chequeno,upiid,hsn,destination_supply,reverse_charge,tax,customer_name,vendor_name,date,sac,status,customer_place_supply,vendor_place_supply,igst,cgst,sgst = row
+            dcNo = slno
+            if slno is None:
+                continue
+            latest_bill = ExpenseE.objects.filter(company = cmp).order_by('-reference_number').first()
+            if latest_bill:
+                last_number = int(latest_bill.reference)
+                new_number = last_number + 1
+            else:
+                new_number = 1
+            if deletedexpenses.objects.filter(cid = cmp).exists():
+                    deleted = deletedexpenses.objects.get(cid = cmp)
+                    if deleted:
+                        while int(deleted.reference_number) >= new_number:
+                            new_number+=1
+            vendname=vendor_name.upper()
+            custobj=customer.objects.get(customerName=customer_name)
+            vendobj=vendor_table.objects.get(vendor_display_name=vendor_name)
+            custid=custobj.id
+            vendid=vendobj.id
+            cmpid=cmp.id
+            if account_number or account_number != '0':
+                bnkobj=Bankcreation.objects.get(ac_no=account_number)
+                bnkid=bnkobj.id
+            else:
+                bnkid=""
+            challn=ExpenseE(expense_account=expense_account,amount=amount,currency=currency,expense_type=expense_type,
+                            paid=paid_through,bankid=bnkid,accno=account_number,chequeno=chequeno,upiid=upiid,hsn_code=hsn,
+                            destination_of_supply=destination_supply,reverse_charge=reverse_charge,tax=tax,
+                            customername=customer_name,vendor_name=vendor_name,date=date,sac=sac,status=status,
+                            customer_place_supply=customer_place_supply,vendor_place_supply=vendor_place_supply,
+                            igst=igst,cgst=cgst,sgst=sgst)
+            challn.save()
+            messages.success(request, 'Data imported successfully.!')
+            return redirect("expensepage")
+                
+
+
 
 def save_expense(request):
     company = company_details.objects.get(user = request.user)
@@ -10157,6 +10229,7 @@ def save_expense(request):
             invoice = request.POST.get('invoice')
             c = request.POST.get('customer')
             customere = customer.objects.get(id=c)
+            custo_name=customere.customerName
             v= request.POST.get('vendor')
             vendor=vendor_table.objects.get(id=v)
             vend_name=vendor.vendor_display_name 
@@ -10214,7 +10287,8 @@ def save_expense(request):
                 accno=accno,
                 bankid=bankid,
                 upiid=upiid,
-                chequeno=chequeno
+                chequeno=chequeno,
+                customername=custo_name
             )
 
             expense.save()
@@ -10503,6 +10577,10 @@ def edit_expensee(request,expense_id):
         cust_gsttreatment=expense.customer_name.GSTTreatment
         cust_gstno=expense.customer_name.GSTIN
 
+        igst=expense.igst
+        cgst=expense.cgst
+        sgst=expense.sgst
+
 
         if request.method == 'POST':
             date = request.POST.get('date')
@@ -10510,8 +10588,25 @@ def edit_expensee(request,expense_id):
             amount = request.POST.get('amount')
             currency = request.POST.get('currency')
             expense_type = request.POST.get('expense_type')
-            paid = request.POST.get('paid')
+            paid = request.POST.get('select_payment')
             notes = request.POST.get('notes')
+            igst=request.POST.get('igst')
+            cgst=request.POST.get('cgst')
+            sgst=request.POST.get('sgst')
+            chequeno=request.POST.get('cheque_no')
+            upiid=request.POST.get('upi_id')
+            acc_no=request.POST.get('acc_no')
+            print("hellooooooooooooooooooooooooo")
+            print(acc_no)
+            customer_place_supply=request.POST.get('place_of_supply2')
+            vendor_place_supply=request.POST.get('source_of_supply2')
+            if acc_no and acc_no != '0':
+                bnk=Bankcreation.objects.get(ac_no=acc_no)
+                bankid=bnk.id
+            else:
+                bankid=""
+
+
             if request.POST.get('expense_type') == 'goods':
                 hsn_code = request.POST.get('sac')
                 sac = request.POST.get('hsn_code')
@@ -10525,8 +10620,12 @@ def edit_expensee(request,expense_id):
             invoice = request.POST.get('invoice')
             c = request.POST.get('customer')
             customere = customer.objects.get(id=c)
+            custo_name1=customere.customerName
+            custo_name=custo_name1.upper()
             v = request.POST.get('vendor')
             vendor = vendor_table.objects.get(id=v)
+            vendor_name1=vendor.vendor_display_name
+            vendor_name=vendor_name1.upper()
             reporting_tags = request.POST.get('reporting_tags')
             taxamt = request.POST.get('taxamt', False)
            
@@ -10548,8 +10647,19 @@ def edit_expensee(request,expense_id):
                 image = expense.image
             else:
                 image = None
+            
 
             expense.date = date
+            expense.bankid=bankid
+            expense.accno=acc_no
+            expense.igst=igst
+            expense.cgst=cgst
+            expense.sgst=sgst
+            expense.chequeno=chequeno
+            expense.upiid=upiid
+            expense.customer_place_supply=customer_place_supply
+            expense.vendor_place_supply=vendor_place_supply
+
             expense.expense_account = expense_account
             expense.amount = amount
             expense.currency = currency
@@ -10569,6 +10679,8 @@ def edit_expensee(request,expense_id):
             expense.reporting_tags = reporting_tags
             expense.vendor = vendor
             expense.image=image
+            expense.customername=custo_name
+            expense.vendor_name=vendor_name
             
             expense.company=company
             expense.save()
@@ -10582,12 +10694,16 @@ def edit_expensee(request,expense_id):
             account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
             cp= company_details.objects.get(user = request.user)
+            cmp_user=company_details.objects.get(user=request.user.id)
+            user1=User.objects.get(id=cmp_user.id)
+            banks=Bankcreation.objects.filter(user=user1.id)
             return render(request, 'editexpense.html', {'company':cp ,'vendor': v, 'customer': c, 'accounts': accounts, 
                                                         'account_types': account_types, 'expense': expense,'vend_address':vend_address,
                                                         'vend_city':vend_city,'vend_state':vend_state,'vend_country':vend_country,
                                                         'vend_place_supply':vend_place_supply,'cust_address':cust_address,'cust_city':cust_city,
                                                         'cust_state':cust_state,'cust:country':cust_country,'cust_place_supply':cust_place_supply,
-                                                        'cust_gsttreatment':cust_gsttreatment,'cust_gstno':cust_gstno})
+                                                        'cust_gsttreatment':cust_gsttreatment,'cust_gstno':cust_gstno,
+                                                        'banks':banks,'igst':igst,'cgst':cgst,'sgst':sgst})
 
 def delet(request,id):
     items=ExpenseE.objects.filter(id=id)

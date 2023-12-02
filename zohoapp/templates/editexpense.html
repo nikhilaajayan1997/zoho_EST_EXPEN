@@ -197,6 +197,10 @@
         document.getElementById('source_of_supply').value='{{vend_place_supply}}';
         document.getElementById('source_of_supply2').value='{{vend_place_supply}}';
 
+        document.getElementById('igst').value='{{igst}}';
+        document.getElementById('cgst').value='{{cgst}}';
+        document.getElementById('sgst').value='{{sgst}}';
+        
         document.getElementById("cgst_treatment").value='{{cust_gsttreatment}}';
         if('{{cust_gstno}}')
         {
@@ -241,6 +245,8 @@
    
       <form method="POST" action="{% url 'edit_expensee' expense.id %}" enctype="multipart/form-data" id="myForm">
       {% csrf_token %}
+      <input type="number" name="igst" id="igst" value="0">  <input type="number" name="cgst" id="cgst" value="0">
+  <input type="number" name="sgst" id="sgst" value="0">
       <div class="row">
         <label for="date" class="col-md-3  text-white">Date</label>
         <div class="col-md-6 p-3">
@@ -516,33 +522,185 @@ document.getElementById("hsn_code").addEventListener("input", function() {
       </div>
     </div>
     
-    <div class="row">
-      <label for="paid" class="col-md-3  text-white">Paid Through</label>
-      <div class="col-md-6 p-3">
-        <select class="form-control  text-dark bg-light" id="paid" name="paid">
-          <option value="">-- Paid Through --</option>
-          <optgroup label="Bank">
-            <option value="credit card" {% if expense.paid == 'credit card' %}selected{% endif %}>Credit Card</option>
-            <option value="debit card" {% if expense.paid == 'debit card' %}selected{% endif %}>Debit Card</option>
-            <option value="netbanking" {% if expense.paid == 'netbanking' %}selected{% endif %}>Net Banking</option>
-          </optgroup>
-          <optgroup label="Cash">
-            <option value="Petty Cash" {% if expense.paid == 'Petty Cash' %}selected{% endif %}>Petty Cash</option>
-            <option value="Undeposited Funds" {% if expense.paid == 'Undeposited Funds' %}selected{% endif %}>Undeposited Funds</option>
-          </optgroup>
-          <optgroup label="Other current asset">
-            <option value="Advance tax" {% if expense.paid == 'Advance tax' %}selected{% endif %}>Advance tax</option>
-            <option value="Employee Advance" {% if expense.paid == 'Employee Advance' %}selected{% endif %}>Employee Advance</option>
-            <option value="Prepaid Expenses" {% if expense.paid == 'Prepaid Expenses' %}selected{% endif %}>Prepaid Expenses</option>
-          </optgroup>
-          <optgroup label="Payment clearing account">
-            <option value="Strip Clearing Acccount" {% if expense.paid == 'Strip Clearing Acccount' %}selected{% endif %}>Strip Clearing Acccount</option>
-          </optgroup>
-        </select>
-      </div>
-    </div>
-      
+                         {% if expense.paid == 'no_option' %}
 
+                                <div class="row">
+                                  <div class="col-md-3">
+                                    <label for="validationCustom02">Paid Through</label>      
+                                  </div>
+                                  <div class="col-md-6 mt-3">
+                                    
+                                    <!-- <input type="number" class="form-control" style="width: 110%;" name="referenceNumber" id="referenceNumber" value="{{next_id}}" readonly> -->
+                                    <select name="select_payment" id="select_payment"  onclick="show_fields()"  class="form-control text-dark">
+                                        <option value="no_option">select</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Cheque">Cheque</option>
+                                        <option value="UPI">UPI</option>
+                                        {% for i in banks%}
+                                        <option value="{{ i.name }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                  </div>
+                                  </div>
+                                    {% else %}
+                                  <div class="row">
+                                      <div class="col-md-3 ">
+                                        <label for="validationCustom02">Paid Through</label>      
+                                      </div>
+                                    <div class="col-md-6 mt-3">
+                                    <!-- <input type="number" class="form-control" style="width: 110%;" name="referenceNumber" id="referenceNumber" value="{{next_id}}" readonly> -->
+                                    <select name="select_payment" id="select_payment"  onclick="show_fields()"  class="form-control text-dark">
+                                        <option value="{{expense.paid}}" selected>{{expense.paid}}</option>
+                                        <option value="no_option">select</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Cheque">Cheque</option>
+                                        <option value="UPI">UPI</option>
+                                        {% for i in banks%}
+                                        <option value="{{ i.name }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                              </div>
+                              {% endif %}
+<!-- .............................................. -->
+{% if expense.paid != 'no_option' and expense.paid != 'Cash' and expense.paid != 'UPI' and expense.paid != 'Cheque' %}
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="cheque_no_label" style="display: none;" >Cheque Number</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark" style="display: none;" name="cheque_no" id="cheque_no" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="upi_id_label" style="display: none;" name="credit_note_no">UPI Id</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark " style="display: none;" name="upi_id" id="upi_id" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="acc_no_label"   style="display: block;" >Ac/Number</label>
+  </div>
+  <div class="col-md-6 mt-3 ">
+    <input type="text" class="form-control text-dark" value="{{expense.accno}}" id="acc_no" name="acc_no" style="display: block;" >
+  </div>
+</div>
+
+{% elif expense.paid == 'no_option' %}
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="cheque_no_label" style="display: none;" >Cheque Number</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark" style="display: none;" name="cheque_no" id="cheque_no" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="upi_id_label" style="display: none;" name="credit_note_no">UPI Id</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark " style="display: none;" name="upi_id" id="upi_id" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="acc_no_label"  style="display: none;" >Ac/Number</label>
+  </div>
+  <div class="col-md-6 mt-3 ">
+    <input type="text" class="form-control text-dark" id="acc_no" name="acc_no" style="display: none;" >
+  </div>
+</div>
+{% elif expense.paid == 'Cash' %}
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="cheque_no_label" style="display: none;" >Cheque Number</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control" style="display: none;" name="cheque_no" id="cheque_no" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="upi_id_label" style="display: none;" name="credit_note_no">UPI Id</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark" style="display: none;" name="upi_id" id="upi_id" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="acc_no_label"  style="display: none;" >Ac/Number</label>
+  </div>
+  <div class="col-md-6 mt-3 ">
+    <input type="text" class="form-control text-dark" id="acc_no" name="acc_no" style="display: none;" >
+  </div>
+</div>
+{% elif expense.paid == 'Cheque' %}
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="cheque_no_label" style="display: block;" >Cheque Number</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark" value="{{expense.chequeno}}" style="display: block;" name="cheque_no" id="cheque_no" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="upi_id_label" style="display: none;" name="credit_note_no">UPI Id</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark " style="display: none;" name="upi_id" id="upi_id" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="acc_no_label"  style="display: none;" >Ac/Number</label>
+  </div>
+  <div class="col-md-6 mt-3 ">
+    <input type="text" class="form-control text-dark" id="acc_no" name="acc_no" style="display: none;" >
+  </div>
+</div>
+{% elif expense.paid == 'UPI' %}  
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="cheque_no_label" style="display: none;" >Cheque Number</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark " style="display: none;" name="cheque_no" id="cheque_no" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="upi_id_label" style="display: block;" name="credit_note_no">UPI Id</label>
+  </div>
+  <div class="col-md-6 mt-3">
+    <input type="text" class="form-control text-dark" value="{{expense.upiid}}"  style="display: block;" name="upi_id" id="upi_id" >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <label for="validationCustom02" id="acc_no_label"  style="display: none;" >Ac/Number</label>
+  </div>
+  <div class="col-md-6 mt-3 ">
+    <input type="text" class="form-control text-dark" id="acc_no" name="acc_no" style="display: none;" >
+  </div>
+</div>
+{% endif %}
+<!-- ............................................................. -->
    <div class="row">
     <label for="vendor" class="col-md-3">Vendor</label>
     <div class="col-md-6 p-3">
@@ -3425,6 +3583,88 @@ document.getElementById("hsn_code").addEventListener("input", function() {
 
 
 <script>
+
+$(document).ready(function(){
+                $('#select_payment').on('change',function(){
+                    $.ajax({
+                        type:'POST',
+                        url:"{% url 'get_account_no' %}",
+                        data:{
+                            id:$('#select_payment').val(),
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+
+                        },
+                        success:function(data){
+                          console.log("hzzzzzzzzzzzzzzzzzzzzzzzzz");
+                          console.log(data.accno);
+                            document.getElementById('acc_no').value = data.accno;
+
+                        }
+                    })
+                })
+            })
+
+function show_fields()
+  {
+      var option=document.getElementById('select_payment').value;
+      if(option == 'Cash'){
+        document.getElementById('acc_no').value="";
+          document.getElementById('upi_id').value="";
+          document.getElementById('cheque_no').value="";
+          document.getElementById('acc_no_label').style.display='none';
+          document.getElementById('acc_no').style.display='none';
+          document.getElementById('cheque_no_label').style.display='none';
+          document.getElementById('cheque_no').style.display='none';
+          document.getElementById('upi_id_label').style.display='none';
+          document.getElementById('upi_id').style.display='none';
+      }
+      else if(option == 'Cheque'){
+          document.getElementById('acc_no').value="";
+          document.getElementById('upi_id').value="";
+          document.getElementById('cheque_no').value="";
+
+          document.getElementById('acc_no_label').style.display='none';
+          document.getElementById('acc_no').style.display='none';
+          document.getElementById('cheque_no_label').style.display='block';
+          document.getElementById('cheque_no').style.display='block';
+          document.getElementById('upi_id_label').style.display='none';
+          document.getElementById('upi_id').style.display='none';
+
+      }
+      else if(option == 'UPI'){
+        document.getElementById('acc_no').value="";
+          document.getElementById('upi_id').value="";
+          document.getElementById('cheque_no').value="";
+          document.getElementById('acc_no_label').style.display='none';
+          document.getElementById('acc_no').style.display='none';
+          document.getElementById('cheque_no_label').style.display='none';
+          document.getElementById('cheque_no').style.display='none';
+          document.getElementById('upi_id_label').style.display='block';
+          document.getElementById('upi_id').style.display='block';
+      }
+      else if(option == 'no_option'){
+        document.getElementById('acc_no').value="";
+          document.getElementById('upi_id').value="";
+          document.getElementById('cheque_no').value="";
+          document.getElementById('acc_no_label').style.display='none';
+          document.getElementById('acc_no').style.display='none';
+          document.getElementById('cheque_no_label').style.display='none';
+          document.getElementById('cheque_no').style.display='none';
+          document.getElementById('upi_id_label').style.display='none';
+          document.getElementById('upi_id').style.display='none';
+      }
+      else
+      {
+        
+          document.getElementById('acc_no_label').style.display='block';
+          document.getElementById('acc_no').style.display='block';
+          document.getElementById('cheque_no_label').style.display='none';
+          document.getElementById('cheque_no').style.display='none';
+          document.getElementById('upi_id_label').style.display='none';
+          document.getElementById('upi_id').style.display='none';
+      }
+  }
+
   $(document).ready(function(){
   $('#customer').change(function(){
     var name = $("#customer").val();
@@ -3508,7 +3748,89 @@ document.getElementById("hsn_code").addEventListener("input", function() {
     });
   });
 });
- 
+
+
+function show_tax()
+  {
+                    var vend_place=document.getElementById("source_of_supply").value;
+                    var cust_place=document.getElementById("place_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    document.getElementById("source_of_supply2").value=vend_place
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+
+
+  }
+
+  function show_tax2()
+  {
+                    var cust_place=document.getElementById("place_of_supply").value;
+                    var vend_place=document.getElementById("source_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    document.getElementById("place_of_supply2").value=cust_place
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+
+
+  }
+
+  function find_tax()
+  {
+    var cus_place=document.getElementById("place_of_supply2").value;
+    var vnd_place=document.getElementById("source_of_supply2").value;
+    var amt=document.getElementById("amount").value;
+    if(cus_place == vnd_place)
+    {
+      var tx=document.getElementById('tax').value;
+      var tax_amt=parseInt(amt)*parseInt(tx)/100;
+      var igst=0;
+      var gst=tax_amt/2;
+      var cgst=gst;
+      var sgst=gst;
+      document.getElementById('igst').value=igst;
+      document.getElementById('cgst').value=cgst;
+      document.getElementById('sgst').value=sgst;
+    }
+    else{
+      var tx=document.getElementById('tax2').value;
+      var tax_amt=parseInt(amt)*parseInt(tx)/100;
+      var igst=tax_amt;
+      var cgst=0;
+      var sgst=0;
+      document.getElementById('igst').value=igst;
+      document.getElementById('cgst').value=cgst;
+      document.getElementById('sgst').value=sgst;
+    }
+
+  }
 
 </script>
 <script>
@@ -3653,18 +3975,72 @@ $(document).ready(function() {
                     vendor: selectedVendor
                 },
                 success: function (response) {
-                    var gstTreatment = response.gst_treatment;
+
+                  var gstTreatment = response.gst_treatment;
                     var gstin = response.gstin;
+                    var s_supply=response.sourcesupply;
+                    var adrs=response.address;
+                    var city=response.city;
+                    var state=response.state;
+                    var country=response.country;
+
+                    if(adrs != null )
+                    {
+                      $("#address_field").show();
+                      $("#s_supply_field").show();
+                    }
 
                     $("#gst_treatment").val(gstTreatment);
+                    $("#source_of_supply").val(s_supply);
+                    $("#source_of_supply2").val(s_supply);
+                    $("#vend_address").val(adrs+"\n"+city+"\n"+state+"\n"+country);
 
-                    // if (gstin) {
-                    if (gstin || gstin === null) {
+                    if (gstin) 
+                    {
                         $("#gstin_field").show();
                         $("#gstin").val(gstin);
-                    } else {
+                    } 
+                    else 
+                    {
                         $("#gstin_field").hide();
                     }
+                    var vend_place=s_supply;
+                    var cust_place=document.getElementById("place_of_supply2").value;
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                    console.log(vend_place);
+                    console.log(cust_place);
+                    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+                    if(vend_place == cust_place)
+                    {
+                      document.getElementById("tax").style.display="block";
+                      document.getElementById("tax_label").style.display="block";
+                      document.getElementById("tax2").style.display="none";
+                      document.getElementById("tax2_label").style.display="none";
+                    }
+                    else{
+                      document.getElementById("tax2").style.display="block";
+                      document.getElementById("tax2_label").style.display="block";
+                      document.getElementById("tax").style.display="none";
+                      document.getElementById("tax_label").style.display="none";
+                    }
+
+
+
+
+
+
+                    // var gstTreatment = response.gst_treatment;
+                    // var gstin = response.gstin;
+
+                    // $("#gst_treatment").val(gstTreatment);
+
+                    // if (gstin || gstin === null) {
+                    //     $("#gstin_field").show();
+                    //     $("#gstin").val(gstin);
+                    // } else {
+                    //     $("#gstin_field").hide();
+                    // }
                 },
                 error: function (xhr, status, error) {
                     console.error(error);

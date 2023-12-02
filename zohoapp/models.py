@@ -1013,6 +1013,7 @@ class ExpenseE(models.Model):
     tax=models.TextField(max_length=255,null=True, blank=True)
     invoice=models.TextField(max_length=255,null=True, blank=True)
     vendor_name=models.CharField(max_length=100,null=True, blank=True)
+    customername=models.CharField(max_length=100,null=True, blank=True)
     customer_name = models.ForeignKey(customer, on_delete=models.CASCADE,null=True, blank=True)
     reporting_tags=models.TextField(max_length=255,null=True, blank=True)
     date = models.DateField(null=True, blank=True)
@@ -1027,10 +1028,7 @@ class ExpenseE(models.Model):
     cgst=models.IntegerField(blank=True,null=True)
     sgst=models.IntegerField(blank=True,null=True)
     reference_number=models.IntegerField(blank=True,null=True)
-
-
-    
-    
+  
 class AttachE(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default='')
     expense = models.ForeignKey(ExpenseE, on_delete=models.CASCADE, null=True)
