@@ -233,6 +233,13 @@
             </div>
           
     <hr>
+    <div class="row">
+        <div class="col-md-12">
+            {% for message in messages %}
+            <b style="color: rgb(189, 124, 3);">{{message}}</b>
+            {% endfor %}
+        </div>
+    </div>
     <div >
         <div>
             <table id="table" class="table mt-4" >
@@ -250,18 +257,14 @@
             <tbody id="tbl">
                 {% for expense in expenses %}
                 <tr style="cursor: pointer;">
-                    <td><a href="{% url 'expense_details' expense.id %}">{{ expense.date }}</a></td>
-                    <td>{{ expense.vendor_name }}</td>
-                    <td>{{ expense.expense_account }}</td>
-                    <td>{{ expense.expense_type }}</td>
-                    <td>{{ expense.paid }}</td>
-                    <td>{{ expense.amount }}</td> 
-                    <td>{{ expense.status }}</td>
-                    <!-- <td{% if forloop.last %} class="disabled-column"{% endif %}> {% if expense.is_active %}
-                        Active 
-                    {% else %}
-                        Inactive
-                    {% endif %}</td> -->
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.date }}</a></td>
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.vendor_name }}</a></td>
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.expense_account }}</a></td>
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.expense_type }}</a></td>
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.paid }}</a></td>
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.amount }}</a></td> 
+                    <td><a href="{% url 'expense_details' expense.id %}" style="color: white;">{{ expense.status }}</a></td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
@@ -277,24 +280,85 @@
     <div class="modal-dialog modal-xl">
       <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
         <div class="modal-header " style="background: rgb(32, 35, 37);">
-          <h1 class="text-light">Import Estimate</h1>
+          <h1 class="text-light">Import Expense</h1>
         </div>
         <div class="modal-body" style="background: rgb(32, 35, 37);">
           <div class="card p-3 m-3">        
             <div class="row">
               <div class="col-md-12 col-lg-12 col-sm-12">
                 <h5 class="text-danger">IMPORTANT:</h5>
-                <p class="text-light">File should have 2 sheets named 'Sheet1' & 'Sheet2'and column name & order should be in the given format(Uppercase)</p><br>
-                <p class="text-light">Place of supply should be in the following format ,eg: for kerala  Type [KL]-Kerala  </p>
+                <p class="text-light">File should have  sheet named 'Sheet1' and column name & order should be in the given format(Uppercase)</p><br>
+                <p class="text-light">Place of supply should be in the following format ,eg: for kerala  Type [KL]-Kerala  </p><br>
+                <div class="row">
+                    <div class="col-md-4">
+                        [AN]-Andaman and Nicobar Islads<br>
+      [AD]-Andhra Predhesh <br>
+      [AR]-Arunachal Predesh <br>
+      [AS]-Assam<br>
+      [BR]-Bihar<br>
+      [CH]-Chandigarh<br>
+      [CG]-Chhattisgarh<br>
+      [DNH]-Dadra and Nagar Haveli<br>
+      [DD]-Damn anad Diu<br>
+      [DL]-Delhi<br>
+      [GA]-Goa<br>
+      [GJ]-Gujarat<br>
+      [HR]-Haryana<br>
+
+                    </div>
+                    <div class="col-md-4">
+                        [HP]-Himachal Predesh<br>
+      [JK]-Jammu and Kashmir<br>
+      [JH]-Jharkhand<br>
+      [KA]-Karnataka<br>
+      [KL]-Kerala<br>
+      [LA]-Ladakh<br>
+      [LD]-Lakshadweep<br>
+      [MP]-Madhya Predesh<br>
+      [MH]-Maharashtra<br>
+      [MN]-Manipur<br>
+      [ML]-Meghalaya<br>
+      [MZ]-Mizoram<br>
+                        
+                    </div>
+                    <div class="col-md-4">
+                        [NL]-Nagaland<br>
+      [OD]-Odisha<br>
+      [PY]-Puducherry<br>
+      [PB]-Punjab<br>
+      [RJ]-Rajasthan<br>
+      [SK]-Sikkim<br>
+      [TN]-Tamil Nadu<br>
+      [TS]-Telangana<br>
+      [TR]-Tripura<br>
+      [UP]-Uttar Predesh<br>
+      [UK]-Uttarakhand<br>
+      [WB]-West Bengal<br>
+      [OT]-Other Territory<br>
+                    </div>
+                </div><br><br>
+                <p class="text-light">Vendor and customer name should be given with salutaion  and the name and salutaion should be in uppercase<br>
+                    eg :MR. ADITHYA CHOPRA
+                </p><br>
+                <p class="text-light">Status should be given in one of the following format <br>
+                    draft  <br>
+                    save
+                </p><br>
+                <p class="text-light">If you have IGST Tax ,then fill CGST and SGST filled with 0  <br>
+                    If you have CGST and SGST Tax ,then fill IGST filled with 0
+                    
+                </p>
+
+
               </div>
             </div>
           </div>
-          <a href="" class="text-primary" style="font-size:medium;">Download Sample File here</a> <br>
+          <a href="{% url 'downloadExpenseSampleImportFile' %}" class="text-primary" style="font-size:medium;">Download Sample File here</a> <br>
   
           <form action="{% url 'import_expense' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h6 class="text-light">File</h6>
-            <input type="file" name="excel_file" class="form-control" style="width: 50%;"><br>
+            <input type="file" name="excel_file" class="form-control text-dark" style="width: 50%;"><br>
             <button class="btn btn-outline-warning mt-3">IMPORT</button>
           </form>
         </div>

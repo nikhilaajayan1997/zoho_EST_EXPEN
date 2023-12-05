@@ -1,106 +1,185 @@
-def import_estimate(request):
-    user1=request.user.id
-    user2=User.objects.get(id=user1)
-    cmp=company_details.objects.get(user=user1)
-    if request.method == 'POST' and 'excel_file' in request.FILES:
-        excel_file = request.FILES.get('excel_file')
+# @login_required(login_url='login')
+# def edited_prod(request, id):
+#     print(id)
+#     user = request.user
+#     c = customer.objects.all()
+#     p = AddItem.objects.filter(user = request.user)
+#     invoiceitem = invoice_item.objects.filter(inv_id=id)
+#     invoic = invoice.objects.get(id=id)
+#     cust = invoic.customer.placeofsupply
+#     cust_id = invoic.customer.id
+#     pay = payment_terms.objects.filter(user = request.user)
+#     sales = Sales.objects.all()
+#     purchase = Purchase.objects.all()
+#     invpay = InvoicePayment.objects.filter(invoice_id=id)
+#     ip = InvoicePayment.objects.filter(invoice__user=request.user)
+
+
+
+#     invp = invpay[0] if invpay else None
+#     banks = Bankcreation.objects.all()
+#     unit = Unit.objects.all()
+    
+#     company = company_details.objects.get(user=request.user.id)
+#     comp = company.state
+    
+
+#     if request.method == 'POST':
+#         x = request.POST["hidden_state"]
+#         y = request.POST["hidden_cus_place"]
+#         print("Value of x:", x)
+#         print("Value of y:", y)
+#         u = request.user.id
+#         u2 = User.objects.get(id=u)
+#         c = request.POST['cx_name']
+#         cus = customer.objects.get(id=c)
+
+#         invoic.customer = cus
+#         invoic.user = u2
+#         invoic.terms = request.POST.get('term', "")
+#         invoic.inv_date = request.POST.get('inv_date', "")
+#         invoic.due_date = request.POST.get('due_date', "")
+#         invoic.cxnote = request.POST.get('customer_note', "")
+#         invoic.subtotal = request.POST.get('subtotal', "")
+#         invoic.igst = request.POST.get('igst', "")
+#         invoic.cgst = request.POST.get('cgst', "")
+#         invoic.sgst = request.POST.get('sgst', "")
+#         invoic.t_tax = request.POST.get('totaltax', "")
+#         invoic.grandtotal = request.POST.get('t_total', "")
+#         invoic.paid_amount = request.POST.get('paid_amount', "")
+#         invoic.balance = request.POST.get('balance', "")
+#         if invoic.estimate:
+#             est_obj=Estimates.objects.get(id=invoic.estimate)
+#             est_obj.balance=invoic.balance
+#             est_obj.save()
+
+#         old = invoic.file
+#         new = request.FILES.get('file')
+#         if old and not new:
+#             invoic.file = old
+#         else:
+#             invoic.file = new
+
+#         invoic.terms_condition = request.POST.get('ter_cond')
+
         
-        wb = load_workbook(excel_file)
-        try:
-            ws = wb["Sheet1"]
-            header_row = ws[1]
-            column_names = [cell.value for cell in header_row]
-            print("Column Names:", column_names)
-        except:
-          print('sheet not found')
-          messages.error(request,'`challan` sheet not found.! Please check.')
-          return redirect('allestimates')
         
-        ws = wb["Sheet1"]
-        estimate_columns = ['SLNO','CUSTOMER NAME','CUSTOMER MAILID','ESTIMATE DATE','EXPIRY DATE','PLACE OF SUPPLY','SUB TOTAL','IGST','CGST','SGST','TAX AMOUNT','SHIPPING CHARGE','ADJUSTMENT','GRAND TOTAL','STATUS']
-        estimate_sheet = [cell.value for cell in ws[1]]
-        if estimate_sheet != estimate_columns:
-          print('invalid sheet')
-          messages.error(request,'`challan` sheet column names or order is not in the required formate.! Please check.')
-          return redirect("allestimates")
+
+#         invoic.save()
         
-        for row in ws.iter_rows(min_row=2, values_only=True):
-          slno,customer_name,customer_mailid,estimate_date,expiry_date,place_of_supply,subtotal,igst,cgst,sgst,taxamount,shipping_charge,adjustment,grandtotal,status = row
-          if slno is None or place_of_supply is None or taxamount is None or grandtotal is None:
-            print('challan == invalid data')
-            messages.error(request,'`challan` sheet entries missing required fields.! Please check.')
-            return redirect("allestimates")
-          
-        # checking items sheet columns
-        ws = wb["Sheet2"]
-        items_columns = ['ESTIMATE NO','ITEM NAME','HSN','QUANTITY','RATE','TAX PERCENTAGE','DISCOUNT','AMOUNT']
-        items_sheet = [cell.value for cell in ws[1]]
-        if items_sheet != items_columns:
-          print('invalid sheet')
-          messages.error(request,'`items` sheet column names or order is not in the required formate.! Please check.')
-          return redirect("allestimates")
+#         if invp:
+#             invp.payment_method = request.POST.get('payment_method', "")
+#             if invp.payment_method == 'cash':
+#                 pass
+#             elif invp.payment_method == 'cheque':
+#                 invp.cheque_number = request.POST.get('cheque_number', '')
+#             elif invp.payment_method == 'upi':
+#                 invp.upi_id = request.POST.get('upi_id', '')
+#             else:
+#                 invp.bank_id = request.POST.get('bank_name', "")
+
+#             invp.save()
+
+#         print("/////////////////////////////////////////////////////////")
         
-        for row in ws.iter_rows(min_row=2, values_only=True):
-          chl_no,item_name,hsn,quantity,rate,tax_percentage,discount,amount=row
-          if chl_no is None or item_name is None or quantity is None or tax_percentage is None or amount is None:
-            print('items == invalid data')
-            messages.error(request,'`items` sheet entries missing required fields.! Please check.')
-            return redirect("allestimates")
-        
-         # getting data from estimate sheet and create estimate.
-        ws = wb['Sheet1']
-        for row in ws.iter_rows(min_row=2, values_only=True):
-            slno,customer_name,customer_mailid,estimate_date,expiry_date,place_of_supply,subtotal,igst,cgst,sgst,taxamount,shipping_charge,adjustment,grandtotal,status = row
-            dcNo = slno
-            if slno is None:
-                continue
-            # Fetching last bill and assigning upcoming bill no as current + 1
-            # Also check for if any bill is deleted and bill no is continuos w r t the deleted bill
-            latest_bill = Estimates.objects.filter(company = cmp).order_by('-reference').first()
-            if latest_bill:
-                last_number = int(latest_bill.reference)
-                new_number = last_number + 1
-            else:
-                new_number = 1
-            if deletedestimates.objects.filter(cid = cmp).exists():
-                    deleted = deletedestimates.objects.get(cid = cmp)
-                    if deleted:
-                        while int(deleted.reference_number) >= new_number:
-                            new_number+=1
-            if Estimates.objects.filter(company=cmp,reference=1).exists():
-                estobj=Estimates.objects.get(company=cmp,reference=1)
-                estno=estobj.estimate_no
-                refno=estobj.reference
-                print("eeeeeeeeee   ssssssssssssssss   tttttttttttttttttttt")
-                ref_len=len(str(refno))
-                ref_len2=int(ref_len)
-                
-                sliced_str=estno[:-ref_len2]
-                print("eeeeeeeeee   ssssssssssssssss   tttttttttttttttttttt")
-                print(sliced_str)
-                print("-------------------------------------------------------------")
-                estno=sliced_str+str(new_number)
-            else:
-                estno="EST-"+str(new_number)
-            custname=customer_name.upper()
-            cust=customer.objects.get(customerEmail=customer_mailid)
-            challn=Estimates(customer_name=custname,customer_mailid=customer_mailid,customer_placesupply=place_of_supply,
-                            reference=new_number,estimate_date=estimate_date,expiry_date=expiry_date,sub_total=subtotal,igst=igst,
-                            cgst=cgst,sgst=sgst,tax_amount=taxamount,shipping_charge=shipping_charge,adjustment=adjustment,total=grandtotal,
-                            status=status,estimate_no=estno,convert_invoice='not_converted',convert_sales='not_converted',
-                            convert_recinvoice='not_converted',company=cmp,customer=cust,user=user2)
-            challn.save()
-            # Items for the estimate
-            ws = wb['Sheet2']
-            for row in ws.iter_rows(min_row=2, values_only=True):
-                chl_no,item_name,hsn,quantity,rate,tax_percentage,discount,amount=row
-                if int(chl_no) == int(dcNo):
-                    print(row)
-                if discount is None:
-                    discount=0
-                # if price is None:
-                #     price=0
-                EstimateItems.objects.create(item_name = item_name,hsn=hsn,quantity=int(quantity),rate = float(rate),tax_percentage=tax_percentage,discount = float(discount),amount=amount,estimate=challn)
-        messages.success(request, 'Data imported successfully.!')
-        return redirect("allestimates")
-           
+#         if x == y:
+#             invoiceitem.item = request.POST.getlist('item[]')
+#             invoiceitem.hsn = request.POST.getlist('hsn[]')
+#             invoiceitem.quantity = request.POST.getlist('quantity[]')
+#             invoiceitem.rate = request.POST.getlist('rate[]')
+#             invoiceitem.desc = request.POST.getlist('desc[]')
+#             invoiceitem.tax = request.POST.getlist('tax[]')
+#             invoiceitem.amount = request.POST.getlist('amount[]')
+            
+#             print("hai")
+            
+#         else:
+#             invoiceitem.itemm = request.POST.getlist('itemm[]')
+#             invoiceitem.hsnn = request.POST.getlist('hsnn[]')
+#             invoiceitem.quantityy = request.POST.getlist('quantityy[]')
+#             invoiceitem.ratee = request.POST.getlist('ratee[]')
+#             invoiceitem.descc = request.POST.getlist('descc[]')
+#             invoiceitem.taxx = request.POST.getlist('taxx[]')
+#             invoiceitem.amountt = request.POST.getlist('amountt[]')
+            
+            
+#         if x == y:
+#             print("manage")
+#             print("Length of invoiceitem.item: ", len(invoiceitem.item))
+#             print("Length of invoiceitem.hsn: ", len(invoiceitem.hsn))
+#             print("Length of invoiceitem.quantity: ", len(invoiceitem.quantity))
+#             print("Length of invoiceitem.desc: ", len(invoiceitem.desc))
+#             print("Length of invoiceitem.tax: ", len(invoiceitem.tax))
+#             print("Length of invoiceitem.amount: ", len(invoiceitem.amount))
+#             print("Length of invoiceitem.rate: ", len(invoiceitem.rate))
+#             print("Value of x: ", x)
+#             print("Value of y: ", y)
+#             if len(invoiceitem.item) == len(invoiceitem.hsn) == len(invoiceitem.quantity) == len(invoiceitem.desc) == len(invoiceitem.tax) == len(invoiceitem.amount) == len(invoiceitem.rate):
+#                 print("11")
+#                 mapped = zip(invoiceitem.item, invoiceitem.hsn, invoiceitem.quantity, invoiceitem.desc, invoiceitem.tax, invoiceitem.amount, invoiceitem.rate)
+#                 mapped = list(mapped)
+#                 for element in mapped:
+#                     created = invoice_item.objects.get_or_create(inv=invoic, product=element[0], hsn=element[1],
+#                                                                  quantity=element[2], discount=element[3], tax=element[4],
+#                                                                  total=element[5], rate=element[6])
+#                     print("moveon")
+
+#                 return redirect('invoice_overview', id)
+
+#         else:
+#             if len(invoiceitem.itemm) == len(invoiceitem.hsnn) == len(invoiceitem.quantityy) == len(invoiceitem.descc) == len(invoiceitem.taxx) == len(invoiceitem.amountt) == len(invoiceitem.ratee):
+#                 mapped = zip(invoiceitem.itemm, invoiceitem.hsnn, invoiceitem.quantityy, invoiceitem.descc, invoiceitem.taxx, invoiceitem.amountt, invoiceitem.ratee)
+#                 mapped = list(mapped)
+#                 for element in mapped:
+#                     print("Debug - Values before filter:", invoic, element[0], element[1])
+#                     existing_items = invoice_item.objects.filter(
+#                         inv=invoic,
+#                         product=element[0],
+#                         hsn=element[1],
+#                         quantity=element[2],
+#                             discount=element[3],
+#                             tax=element[4],
+#                             total=element[5],
+#                             rate=element[6]
+#                     )
+
+#                     if not existing_items.exists():
+#                         created = invoice_item.objects.create(
+#                             inv=invoic,
+#                             product=element[0],
+#                             hsn=element[1],
+#                             quantity=element[2],
+#                             discount=element[3],
+#                             tax=element[4],
+#                             total=element[5],
+#                             rate=element[6]
+#                         )
+#                         print("Debug - After create")
+
+
+
+
+#                 return redirect('invoice_overview', id)
+
+#     context = {
+#         'user': user,
+#         'c': c,
+#         'p': p,
+#         'inv': invoiceitem,
+#         'i': invoic,
+#         'pay': pay,
+#         'sales': sales,
+#         'purchase': purchase,
+#         'units': unit,
+#         'company': company,
+#         'cust': cust,
+#         'comp': comp,
+#         'custo_id': cust_id,
+#         'invpay': invpay,
+#         'banks': banks,
+#         'invp':invp,
+#          'ip':ip,
+    
+#     }
+
+#     return render(request, 'invoiceedit.html', context)

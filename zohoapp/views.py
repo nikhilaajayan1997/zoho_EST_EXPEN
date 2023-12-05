@@ -1629,7 +1629,7 @@ def allestimates(request):
 def item_dropdown_estimate(request):
     user = User.objects.get(id=request.user.id)
     options = {}
-    option_objects = AddItem.objects.filter(user = request.user)
+    option_objects = AddItem.objects.filter(user = request.user,satus='active')
     for option in option_objects:
       display_name = option.Name        
     #   options[option.id] = [option.Name,option.id]
@@ -1772,8 +1772,8 @@ def newestimate(request):
     user = request.user
     company = company_details.objects.get(user=user)
     cmp1=company.id
-    items = AddItem.objects.filter(user_id=user.id)
-    customers = customer.objects.filter(user_id=user.id)
+    items = AddItem.objects.filter(user_id=user.id,satus='active')
+    customers = customer.objects.filter(user_id=user.id,status='active')
     unit=Unit.objects.all()
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
@@ -2057,8 +2057,8 @@ def editestimate(request,est_id):
     user = request.user
     company = company_details.objects.get(user=user)
     comp=company.state
-    customers = customer.objects.filter(user_id=user.id)
-    items = AddItem.objects.filter(user_id=user.id)
+    customers = customer.objects.filter(user_id=user.id,status='active')
+    items = AddItem.objects.filter(user_id=user.id,satus='active')
     estimate = Estimates.objects.get(id=est_id)
     
     cust=estimate.customer_placesupply
@@ -2074,6 +2074,7 @@ def editestimate(request,est_id):
     sales=Sales.objects.all()
     purchase=Purchase.objects.all()
     payments = payment_terms.objects.all()
+
 
     est_items = EstimateItems.objects.filter(estimate=estimate)
     context = {
@@ -2096,7 +2097,6 @@ def editestimate(request,est_id):
         'cust_state':cust_state,
         'cust_country':cust_country,
         'cust_city':cust_city,
-
     }
     return render(request,'edit_estimate.html', context)
 
@@ -4204,13 +4204,13 @@ def delet_sales(request,id):
 def edit_sales_order(request,id):
     user = request.user
     company = company_details.objects.get(user=user)
-    c = customer.objects.all()
-    itm = AddItem.objects.all()
+    c = customer.objects.filter(user=request.user.id)
+    itm = AddItem.objects.filter(user=request.user.id)
     salesitem = sales_item.objects.filter(sale_id=id)
     sales = SalesOrder.objects.get(id=id)
     sales_id = SalesOrder.objects.get(id=id)
-    pay=payment_terms.objects.all()
-    bank = Bankcreation.objects.all()
+    pay=payment_terms.objects.all(user=request.user.id)
+    bank = Bankcreation.objects.all(user=request.user.id)
     unit=Unit.objects.all()
     last_record = SalesOrder.objects.last()
     sale=Sales.objects.all()
@@ -6268,21 +6268,7 @@ def get_vendordet(request):
 
     return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr,'source_supply':source_supply},safe=False)
 
-def exp_get_customerdet(request):
-    print("hellooooooooooooooooooooooooooooooooooo")
-    company= company_details.objects.get(user = request.user)
-    id=request.POST.get('id')
-    print(id)
-    cust=customer.objects.get(id=id)
-    address=cust.Address1
-    city=cust.city
-    cus_state=cust.state
-    country=cust.country
-    pincode=cust.zipcode
-    cust_place_supply=cust.placeofsupply
-    gstin = cust.GSTIN
-    gsttr = cust.GSTTreatment
-    return JsonResponse({'cus_state':cus_state,'country':country,'address':address,'city':city,'pincode':pincode,'gst_treatment':gsttr, 'gstin': gstin ,'cust_place_supply':cust_place_supply},safe=False)
+
 
 @login_required(login_url='login')
 def get_customerdet(request):
@@ -9947,6 +9933,23 @@ def expensepage(request):
        }
     return render(request,'expense.html',context)
 
+
+def exp_get_customerdet(request):
+    print("hellooooooooooooooooooooooooooooooooooo")
+    company= company_details.objects.get(user = request.user)
+    id=request.POST.get('id')
+    print(id)
+    cust=customer.objects.get(id=id)
+    address=cust.Address1
+    city=cust.city
+    cus_state=cust.state
+    country=cust.country
+    pincode=cust.zipcode
+    cust_place_supply=cust.placeofsupply
+    gstin = cust.GSTIN
+    gsttr = cust.GSTTreatment
+    return JsonResponse({'cus_state':cus_state,'country':country,'address':address,'city':city,'pincode':pincode,'gst_treatment':gsttr, 'gstin': gstin ,'cust_place_supply':cust_place_supply},safe=False)
+
 def filter_by_draft_exp(request):
     user = request.user
     company=company_details.objects.get(user=user)
@@ -10116,10 +10119,30 @@ def get_account_no(request):
     else:
         return JsonResponse({'accno':0},safe=False)
     
+def downloadExpenseSampleImportFile(request):
+    estimate_table_data = [['SLNO','EXPENSE ACCOUNT','AMOUNT','CURRENCY','EXPENSE TYPE','PAID THROUGH','ACCOUNT NUMBER','CHEQUE NUMBER','UPI ID','HSN','DESTINATION OF SUPPLY','REVERSE CHARGE','TAX','CUSTOMER NAME','VENDOR NAME','DATE','SAC','STATUS','CUSTOMER PLACE OF SUPPLY','VENDOR PLACE OF SUPPLY','IGST','CGST','SGST']]      
+    wb = Workbook()
+    sheet1 = wb.active
+    sheet1.title = 'Sheet1'
+    
+
+    # Populate the sheets with data
+    for row in estimate_table_data:
+        sheet1.append(row)  
+    
+    # Create a response with the Excel file
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=expense_sample_file.xlsx'
+     # Save the workbook to the response
+    wb.save(response)
+    return response
+    
 def import_expense(request):
+    print("heloooooooooooooooooooooooo")
     user1=request.user.id
     user2=User.objects.get(id=user1)
     cmp=company_details.objects.get(user=user1)
+    print("heloooooooooooooooooooooooo")
     if request.method == 'POST' and 'excel_file' in request.FILES:
         excel_file = request.FILES.get('excel_file')
         wb = load_workbook(excel_file)
@@ -10155,7 +10178,7 @@ def import_expense(request):
                 continue
             latest_bill = ExpenseE.objects.filter(company = cmp).order_by('-reference_number').first()
             if latest_bill:
-                last_number = int(latest_bill.reference)
+                last_number = int(latest_bill.reference_number)
                 new_number = last_number + 1
             else:
                 new_number = 1
@@ -10170,7 +10193,9 @@ def import_expense(request):
             custid=custobj.id
             vendid=vendobj.id
             cmpid=cmp.id
-            if account_number or account_number != '0':
+            print("-----------------------------------------------")
+            print(account_number)
+            if account_number is not None and account_number != '0':
                 bnkobj=Bankcreation.objects.get(ac_no=account_number)
                 bnkid=bnkobj.id
             else:
@@ -10180,7 +10205,8 @@ def import_expense(request):
                             destination_of_supply=destination_supply,reverse_charge=reverse_charge,tax=tax,
                             customername=customer_name,vendor_name=vendor_name,date=date,sac=sac,status=status,
                             customer_place_supply=customer_place_supply,vendor_place_supply=vendor_place_supply,
-                            igst=igst,cgst=cgst,sgst=sgst)
+                            igst=igst,cgst=cgst,sgst=sgst,reference_number=new_number,company=cmp,customer_name=custobj,
+                            user=user2,vendor=vendobj)
             challn.save()
             messages.success(request, 'Data imported successfully.!')
             return redirect("expensepage")
@@ -10327,17 +10353,17 @@ def save_expense(request):
             
             
    
-def upload_documents(request, expense_id):
-    if request.method == 'POST':
-        user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        expense = ExpenseE.objects.get(id=expense_id)
-        attachment_file = request.FILES.get('attachment')
+# def upload_documents(request, expense_id):
+#     if request.method == 'POST':
+#         user_id = request.user.id
+#         user = User.objects.get(id=user_id)
+#         expense = ExpenseE.objects.get(id=expense_id)
+#         attachment_file = request.FILES.get('attachment')
 
-        doc_data = AttachE.objects.create(user=user, expense=expense, attachment=attachment_file)
-        doc_data.save()
+#         doc_data = AttachE.objects.create(user=user, expense=expense, attachment=attachment_file)
+#         doc_data.save()
 
-        return redirect("expense_details", pk=expense.pk)
+#         return redirect("expense_details", pk=expense.pk)
    
 def upload_documents(request, expense_id):
     if request.method == 'POST':

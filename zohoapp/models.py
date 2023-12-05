@@ -1631,6 +1631,7 @@ class InvoicePayment(models.Model):
 class deletedestimates(models.Model):
     cid = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True)
     reference_number = models.CharField(max_length=50)
+    
 class Estimates(models.Model): 
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
