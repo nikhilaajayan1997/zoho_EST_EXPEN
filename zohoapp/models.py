@@ -1039,7 +1039,7 @@ class expense_comments(models.Model):
     expense = models.ForeignKey(ExpenseE,on_delete=models.CASCADE, null=True)
     comments=models.TextField(max_length=1000,blank=True,null=True)
     date = models.DateField(null=True, blank=True)
-
+ 
 class deletedexpenses(models.Model):
     cid = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True)
     reference_number = models.CharField(max_length=50)
@@ -1631,7 +1631,7 @@ class InvoicePayment(models.Model):
 class deletedestimates(models.Model):
     cid = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True)
     reference_number = models.CharField(max_length=50)
-    
+
 class Estimates(models.Model): 
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)

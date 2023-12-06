@@ -1769,27 +1769,26 @@ def downloadEstimateSampleImportFile(request):
     
 
 def newestimate(request):
-    user = request.user
-    company = company_details.objects.get(user=user)
-    cmp1=company.id
-    items = AddItem.objects.filter(user_id=user.id,satus='active')
-    customers = customer.objects.filter(user_id=user.id,status='active')
-    unit=Unit.objects.all()
-    sales=Sales.objects.all()
-    purchase=Purchase.objects.all()
-    payments = payment_terms.objects.filter(user=user)
-    print("helloooooooooooooooooooooooooo")
-
-    try:
-        latest_bill = Estimates.objects.filter(company = cmp1).order_by('-reference').first()
-        # latest_bill = Estimates.objects.filter(company = cmp1).values_list('reference',flat=True).last()
-        print("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii") 
-        if latest_bill:
-                print("ssssssssssssssssssssssssssssssssssssssss") 
-                last_number = int(latest_bill.reference)
-                print(last_number)
-                new_number = last_number + 1
-                print(new_number)
+        user = request.user
+        company = company_details.objects.get(user=user)
+        cmp1=company.id
+        items = AddItem.objects.filter(user_id=user.id,satus='active')
+        customers = customer.objects.filter(user_id=user.id,status='active')
+        unit=Unit.objects.all()
+        sales=Sales.objects.all()
+        purchase=Purchase.objects.all()
+        payments = payment_terms.objects.filter(user=user)
+        print("helloooooooooooooooooooooooooo")
+        if Estimates.objects.filter(company = cmp1).exists():
+            latest_bill = Estimates.objects.filter(company = cmp1).order_by('-reference').first()
+            # latest_bill = Estimates.objects.filter(company = cmp1).values_list('reference',flat=True).last()
+            print("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii") 
+            if latest_bill:
+                    print("ssssssssssssssssssssssssssssssssssssssss") 
+                    last_number = int(latest_bill.reference)
+                    print(last_number)
+                    new_number = last_number + 1
+                    print(new_number)
         else:
                 new_number = 1
         print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx") 
@@ -1808,12 +1807,6 @@ def newestimate(request):
                 context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments}
                 return render(request,'new_estimate.html',context)
         
-    
-    except Exception as e:
-        return redirect("allestimates")
-                    
-                    
- 
 
 def itemdata_est(request):
     cur_user = request.user
@@ -4209,8 +4202,8 @@ def edit_sales_order(request,id):
     salesitem = sales_item.objects.filter(sale_id=id)
     sales = SalesOrder.objects.get(id=id)
     sales_id = SalesOrder.objects.get(id=id)
-    pay=payment_terms.objects.all(user=request.user.id)
-    bank = Bankcreation.objects.all(user=request.user.id)
+    pay=payment_terms.objects.filter(user=request.user.id)
+    bank = Bankcreation.objects.filter(user=request.user.id)
     unit=Unit.objects.all()
     last_record = SalesOrder.objects.last()
     sale=Sales.objects.all()
@@ -4309,7 +4302,6 @@ def edit_sales_order(request,id):
 
     }
     return render(request,'edit_sale_page.html',context)
-    
     
 def create_delivery_chellan(request):
     user = request.user
@@ -5255,7 +5247,7 @@ def itemdata_challan(request):
 def customer_dropdown_estimate(request):
     user = User.objects.get(id=request.user.id)
     options = {}
-    option_objects = customer.objects.all()
+    option_objects = customer.objects.filter(user=user.id,status='active')
     for option in option_objects:
         display_name = option.customerName
         options[option.id] = [display_name, f"{display_name}"]
@@ -10210,15 +10202,12 @@ def import_expense(request):
             challn.save()
             messages.success(request, 'Data imported successfully.!')
             return redirect("expensepage")
-                
-
-
+        
 
 def save_expense(request):
     company = company_details.objects.get(user = request.user)
     if request.user.is_authenticated:
         if request.method == 'POST':
-           
             date = request.POST.get('date')
             stat=request.POST['sub']
             if stat == 'draft':
@@ -10226,7 +10215,6 @@ def save_expense(request):
             else:
                 status='save'
             
-           
             expense_account = request.POST.get('expense_account')
             amount = request.POST.get('amount')
             currency = request.POST.get('currency')
@@ -10235,9 +10223,11 @@ def save_expense(request):
             accno=request.POST.get('acc_no')
             upiid=request.POST.get('upi_id')
             chequeno=request.POST.get('cheque_no')
-            if accno:
+            if accno and accno != '0':
                 bank=Bankcreation.objects.get(ac_no=accno)
                 bankid=bank.id
+            else:
+                bankid=""
 
 
             notes = request.POST.get('notes')
@@ -10330,8 +10320,7 @@ def save_expense(request):
             cp= company_details.objects.get(user = request.user)
             paym = payment_terms.objects.filter(user=request.user.id)
             banks=Bankcreation.objects.all()
-
-            try:
+            if ExpenseE.objects.filter(company = cp).exists():
                 latest_bill = ExpenseE.objects.filter(company = cp).order_by('-reference_number').first()
                 if latest_bill:
                     print("ssssssssssssssssssssssssssssssssssssssss") 
@@ -10339,17 +10328,16 @@ def save_expense(request):
                     print(last_number)
                     new_number = last_number + 1
                     print(new_number)
-                else:
-                   new_number=1
+            else:
+                new_number=1
 
-                if deletedexpenses.objects.filter(cid=cp).exists():
+            if deletedexpenses.objects.filter(cid=cp).exists():
                    deleted=deletedexpenses.objects.get(cid = cp)
                    if deleted:
                        while int(deleted.reference_number) >= new_number:
                            new_number+=1
-                return render(request, 'addexpense.html', {'banks':banks,'pay':paym,'company':cp,'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,'count':new_number})
-            except Exception as e:
-                return redirect("expensepage")
+            return render(request, 'addexpense.html', {'banks':banks,'pay':paym,'company':cp,'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,'count':new_number})
+            
             
             
    
@@ -19398,7 +19386,7 @@ def est_sort_by_estno_estimate_view(request,pk):
             }  
     return render(request, 'estimate_slip.html', context)
 
-def convert_to_recinvoice(request,pk):
+def convert_to_reccinvoice(request,pk):
     user = request.user.id
     estimate=Estimates.objects.get(id=pk)
     recinvo_status=estimate.convert_recinvoice

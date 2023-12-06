@@ -870,7 +870,7 @@ urlpatterns = [
     path('est_sort_by_name_estimate_view/<int:pk>',views.est_sort_by_name_estimate_view,name='est_sort_by_name_estimate_view'),
     path('est_sort_by_estno_estimate_view/<int:pk>',views.est_sort_by_estno_estimate_view,name='est_sort_by_estno_estimate_view'),
     path('item_dropdown_estimate',views.item_dropdown_estimate,name='item_dropdown_estimate'),
-    path('convert_to_recinvoice/<int:pk>',views.convert_to_recinvoice,name='convert_to_recinvoice'),
+    path('convert_to_reccinvoice/<int:pk>',views.convert_to_reccinvoice,name='convert_to_reccinvoice'),
 
     path('import_estimate',views.import_estimate,name='import_estimate'),
     path('downloadEstimateSampleImportFile',views.downloadEstimateSampleImportFile,name='downloadEstimateSampleImportFile'),
