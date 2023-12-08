@@ -1799,7 +1799,7 @@ def newestimate(request):
                         new_number+=1
         print("helloooooooooooooooooooooooooo")
         if Estimates.objects.filter(reference=1).exists():
-                est_obj=Estimates.objects.get(reference=1)
+                est_obj=Estimates.objects.get(reference=1,company=cmp1)
                 est_no=est_obj.estimate_no
                 context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments,'est_no':est_no}
                 return render(request,'new_estimate.html',context)

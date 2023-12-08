@@ -216,14 +216,14 @@ $(function() {
         </div>
         <div class="col-md-9 col-lg-9">
             <div class="row "  >
-                <div class="col-md-3 text-light" style="font-size: 2.3rem;">
+                <div class="col-md-4 text-light" style="font-size: 2.3rem;">
                     {{estimate.estimate_no }} <br>
-                    <button class="btn btn-outline-warning text-warning " onclick="overview_function()"  title="Overview"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-outline-warning text-warning " onclick="template_function()"  title="Template"><i class="fa fa-file-word"></i></button>
-                    <button class="btn btn-outline-warning text-warning" id="toggleTemplate4" onclick="showslip_function(),toggleTemplate('estimate_slip','estimate_slip')"  title="Slip"><i class="fas fa-receipt"></i></button>
+                    <button class="btn  text-white " onclick="overview_function()"  style="background-color: chocolate;" title="Overview"><i class="fa fa-eye">Overview</i></button>
+                    <button class="btn  text-black " onclick="template_function()" style="background-color: rgb(235, 230, 230);"  title="Template"><i class="fa fa-file-word">Templates</i></button>
+                    <!-- <button class="btn btn-outline-warning text-warning" id="toggleTemplate4" onclick="showslip_function(),toggleTemplate('estimate_slip','estimate_slip')"  title="Slip"><i class="fas fa-receipt"></i></button> -->
                     
                 </div>
-                <div class="col-md-9 text-white text-right my-auto" style="text-align: end;"><br><br>
+                <div class="col-md-8 text-white text-right my-auto" style="text-align: end;"><br><br>
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <a href="{% url 'editestimate' estimate.id %}" class="btn btn-outline-warning   ms-1  text-warning"
                          data-toggle="tooltip" title="Edit">
@@ -239,7 +239,7 @@ $(function() {
                             <i class="far fa-file-pdf"></i></a>
                         {% endif %}
                         
-                        
+
 <!--                            
                         {% if setting_variable.slip == 'yes' %}
                             <div class="dropdown m-0 p-0 ms-1  btn-sm " title="slip" style="border-radius: 5px;">
@@ -288,11 +288,12 @@ $(function() {
                                 </div>
                             </div>
 
-                            
+                            <button class="btn btn-outline-warning text-warning ms-1" id="toggleTemplate4" onclick="showslip_function(),toggleTemplate('estimate_slip','estimate_slip')"  title="Slip"><i class="fas fa-receipt"></i></button>
 
-                        <a href="{% url 'emailattachment' %}" class="btn btn-outline-warning text-warning ms-1"
+
+                        <!-- <a href="{% url 'emailattachment' %}" class="btn btn-outline-warning text-warning ms-1"
                          data-toggle="tooltip" title="Email">
-                            <i class="fas fa-envelope"></i></a>
+                            <i class="fas fa-envelope"></i></a> -->
 
 
                         <div class="dropdown ms-1" title="comments" >
@@ -525,8 +526,8 @@ $(function() {
                 </div>
 
 <!-- ......................................................  template 1 ............................................ -->
-                <div class="slip p-2 convert_to_pdf bg-light printTemplates template1" id="whatToPrint"
-                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);" >
+                <div class="slip p-2 convert_to_pdf  printTemplates template1" id="whatToPrint"
+                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);background-color:rgb(255, 221, 176);" >
                     <div style="background-color:#8b3131;padding-top: 3%;padding-bottom: 3%;border-radius: 25px;">
                         <div class="row">
                             <div class="col-sm-12 col-lg-12 col-md-12">
@@ -537,34 +538,34 @@ $(function() {
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-2" style="padding-left: 3%;padding-right: 3%;">
+                    <div class="row mt-4" style="padding-left: 3%;padding-right: 3%;">
                         <div class="col-md-12 ">
                             
-                            <h3 class="text-dark">ESTIMATE</h3>
+                            <h2 class="text-dark">ESTIMATE</h2>
                             <h6 class="text-dark" >Estimate Number : {{estimate.estimate_no }} <span style="color:rgb(218, 142, 3);">({{ estimate.status }})</span></h6>
                             <h6 class="text-dark " >Order Date : {{ estimate.estimate_date }}</h6>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row " style="padding-left: 3%;padding-right: 3%;">
-                        <div class="col-md-12 mt-auto">
+                    <!-- <hr> -->
+                    <div class="row " style="padding-left: 3%;padding-right: 3%;margin-top: -10%;">
+                        <div class="col-md-12 mt-auto" style="margin-left: 28rem;margin-top: -22%;">
                             <h6 style="color: rgb(218, 142, 3);">Billing Address:</h6>
                             <h6 style="color: black;">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span> </h6>
                             {% if estimate.customer.GSTIN %}
                             <h6 class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
                             {% endif %}
                             <h6 style="color: black;">{{ estimate.customer.Address1 }} ,{{ estimate.customer.city }} <br>{{ estimate.customer.state }} ,{{ estimate.customer.zipcode }} <br>{{ estimate.customer.phone1 }}</h6>
-                            <div style="margin-left: 28rem;margin-top: -22%;">
+                            <!-- <div style="margin-left: 28rem;margin-top: -22%;">
                                 <h6 style="color: rgb(218, 142, 3);">Shipping Address:</h6>
                                 <h6 style="color: black;">{{ estimate.customer.sAddress1 }} ,{{ estimate.customer.scity }} <br>{{ estimate.customer.sstate }} ,{{ estimate.customer.szipcode }} <br>{{ estimate.customer.sphone1 }}</h6>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <br>
                     <div>
                         <table class="table mt-5" style="border-color: black;border-collapse: collapse;background-color: rgb(237, 237, 240);">
                             <thead >
-                                <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
+                                <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;background-color: rgb(247, 247, 250);"> 
                                     <th style="color: black;">#</th>
                                     <th  style="width: 30rem;color: black;">Item</th>
                                     <th  style="width: 30rem;color: black;">Hsn</th>
@@ -577,7 +578,7 @@ $(function() {
                             </thead>
                             <tbody style="border-left: 1px solid black;border-right: 1px solid black">
                                 {% for item in items %}
-                                <tr style="border-bottom: 1px solid black;">
+                                <tr style="border-bottom: 1px solid black;background-color: rgb(255, 221, 176);">
                                     <td>{{ forloop.counter }}</td>
                                     <td style="text-align: center;">{{ item.item_name }}</td>
                                     <td style="text-align: center;">{{ item.hsn }}</td>
@@ -640,22 +641,16 @@ $(function() {
 
    <!-- ............................................... template 2 ...................................................              -->
 
-   <div class="slip p-2 convert_to_pdf bg-light printTemplates template2" id="whatToPrint2"
-                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;background-color: #ffffff;
-                    background-image: linear-gradient(45deg, #ffffff 0%, #FFFB7D 33%, #ffffff 66%, #85FFBD 100%);
-                    ;
-                    ">
+   <div class="slip p-2 convert_to_pdf printTemplates template2" id="whatToPrint2"
+                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;background-color: rgb(255, 221, 176);">
 
-            <div style="background-color: #FBAB7E;
-            background-image: linear-gradient(112deg, #FBAB7E 0%, #F7CE68 100%);
-            
-            padding-top: 3%;border-radius: 25px;
-            ">
+            <div style="background-color: #8b3131; 
+            padding-top: 3%;border-radius: 25px;padding-bottom: 3%;">
                 <div class="row">
                     <div class="col-md-12 col-lg-12 col-sm-12">
-                        <center><h1 style="color: black;">ESTIMATE</h1></center>
-                        <center><h6 style="color: black;">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6></center>
-                        <center><h6 style="color: black;">Order Date : {{ estimate.estimate_date }}</h6></center>
+                        <center><h1 style="color: rgb(240, 238, 238);">ESTIMATE</h1></center>
+                        <!-- <center><h6 style="color: black;">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6></center>
+                        <center><h6 style="color: black;">Order Date : {{ estimate.estimate_date }}</h6></center> -->
                     </div>
                 </div>
             </div>
@@ -667,34 +662,52 @@ $(function() {
                         <h6 class="text-dark" >{{ company.city }},{{ company.state }}</h6>
                         <h6 class="text-dark" >{{ company.company_email }}</h6>
                         <h6 class="text-dark" >{{ company.contact_number }}</h6>
-                        <h6 class="text-dark" style="margin-left: 70%;margin-top: -19%;">Bill To :</h6>
-                        <h6 style="color: rgb(218, 142, 3);margin-left: 70%;">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span><br><span class="text-dark">{{ estimate.customer.Address1 }},&nbsp;{{ estimate.customer.city }}</span> </h6>
+                        <p></p>
+                        <h6 class="text-dark" style="margin-left: 70%;margin-top: -19%;"></h6>
+                        <h6 style="color: rgb(218, 142, 3);margin-left: 70%;">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6>
+                        <h6 style="margin-left: 70%;" class="text-dark ">Order Date : {{ estimate.estimate_date }}</h6>
+                    </div>
+                </div>
+                <br>
+                <hr>
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div style="background-color:#777676; width: 25%;height: 2rem;">
+                            <h6 style="text-transform: uppercase;color:rgb(248, 248, 247);padding-top: 3%;text-align: center;">Bill To :</h6>
+                        </div>
+                        <h6 style="color: rgb(218, 142, 3);" class="mt-2">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span><br><span class="text-dark">{{ estimate.customer.Address1 }} <br> {{ estimate.customer.city }}</span> </h6>
+                        
+                        <div style="background-color:#777676; width: 25%;height: 2rem;margin-left: 70%;margin-top: -17%;text-align: center;">
+                            <h6 style="color: rgb(253, 251, 251);padding-top:3% ;">GST Details :</h6>
+                        </div>
+                        <h6 class="mt-2" style="color: rgb(218, 142, 3);margin-left: 70%;">{{ estimate.customer.GSTTreatment }} </h6>
                         {% if estimate.customer.GSTIN %}
                         <h6 style="margin-left: 70%;" class="text-dark ">GSTIN : {{ estimate.customer.GSTIN }}</h6>
                         {% endif %}
                     </div>
+
                 </div>
+                <p></p><br>
                 <hr>
 
 
-                    <table class="table mt-2 " style="border-color: black;border-collapse: collapse;background-color: #ffffff;
-                    background-image: linear-gradient(45deg, #ffffff 0%, #FFFB7D 33%, #ffffff 66%, #85FFBD 100%);
-                    ">
+
+                    <table class="table table-bordered mt-2 " style="border-color: black;border-collapse: collapse;background-color: rgb(224, 237, 243);">
                         <thead >
                             <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
-                                <th style="color: black;">#</th>
-                                <th  style="width: 30rem;color: black;">Item</th>
-                                <th  style="width: 30rem;color: black;">Hsn</th>
-                                <th  style="color: black;width: 20rem;">Quantity</th>
-                                <th  style="color: black;width: 20rem;">Rate</th>
-                                <th  style="color: black;width: 20rem;">Discount</th>
-                                <th  style="color: black;width: 20rem;">Tax</th>
-                                <th  style="color: black;width: 20rem;">Amount</th>
+                                <th style="color: brown;">#</th>
+                                <th  style="width: 30rem;color: rgb(148, 28, 28);">Item</th>
+                                <th  style="width: 30rem;color: brown;">Hsn</th>
+                                <th  style="color: brown;width: 20rem;">Quantity</th>
+                                <th  style="color: brown;width: 20rem;">Rate</th>
+                                <th  style="color: brown;width: 20rem;">Discount</th>
+                                <th  style="color: brown;width: 20rem;">Tax</th>
+                                <th  style="color: brown;width: 20rem;">Amount</th>
                             </tr>
                         </thead>
                         <tbody style="border-left: 1px solid black;border-right: 1px solid black">
                             {% for item in items %}
-                            <tr style="border-bottom: 1px solid black;">
+                            <tr style="border-bottom: 1px solid black;color: black;">
                                 <td>{{ forloop.counter }}</td>
                                 <td style="text-align: center;">{{ item.item_name }}</td>
                                 <td style="text-align: center;">{{ item.hsn }}</td>
@@ -754,17 +767,16 @@ $(function() {
                     </div>
                 </div>
     <!-- ..............................................  template 3..................................................... -->
-    <div class="slip convert_to_pdf bg-light printTemplates template3" id="whatToPrint3"
-                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;">
-                <div style="background-color: #286dad;
-                background-image: linear-gradient(135deg, #286dad 0%, #797cab 24%, #773b3b 49%, #7355bd 75%, #7f3737 100%);
+    <div class="slip convert_to_pdf  printTemplates template3" id="whatToPrint3"
+                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);display: none;background-color: rgb(255, 221, 176);">
+                <div style="background-color: #8b3131;
                 padding-top: 3%;
                 ">
                     <div class="row">
                         <div class="col-md-12 col-lg-12 col-sm-12">
-                            <center><h1 style="color: black;">ESTIMATE</h1></center>
-                            <center><h6 style="color: black;">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6></center>
-                            <center><h6 style="color: black;">Order Date : {{ estimate.estimate_date }}</h6></center>
+                            <center><h1 style="color: rgb(247, 243, 243);">ESTIMATE</h1></center>
+                            <center><h6 style="color: rgb(247, 241, 241);">Estimate Number : {{estimate.estimate_no }} <span style="color: rgb(192, 128, 8);">({{ estimate.status }})</span> </h6></center>
+                            <center><h6 style="color: rgb(250, 246, 246);">Order Date : {{ estimate.estimate_date }}</h6></center>
                         </div>
                     </div>
                 </div>
@@ -785,7 +797,7 @@ $(function() {
                     </div>
                     <hr>
                     <div style="padding-left: 3%;padding-right: 3%;">
-                    <table class="table mt-2 " style="border-color: black;border-collapse: collapse;background-color: rgb(166, 166, 248);">
+                    <table class="table table-bordered mt-2 " style="border-color: black;border-collapse: collapse;background-color: rgb(255, 221, 176);">
                         <thead>
                             <tr style="border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;border-top: 1px solid black;"> 
                                 <th style="color: black;">#</th>

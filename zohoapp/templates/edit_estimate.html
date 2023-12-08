@@ -58,7 +58,15 @@
         document.getElementById("customer_id").value="{{ cust_id }}";
         document.getElementById("customer_gst_treat").value="{{ cust_gst_treat }}";
         document.getElementById("customer_gstno").value="{{ cust_gstno }}";
+        if("{{ cust_address }}" != "")
+        {
         document.getElementById('customer_address').value = "{{ cust_address }}" + '\n' + "{{ cust_city }}" + '\n' + "{{ cust_state }}" +'\n' + "{{ cust_country }}" ;
+        }
+        else
+        {
+          $("#cus_billing_address").removeClass('d-flex');
+          $("#cus_billing_address").addClass('d-none');
+        }
         var GSTNO=document.getElementById('customer_gstno').value;
               var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
@@ -358,7 +366,7 @@ function calc(){
                   </div>
               </div>
 
-              <div class="row mb-4 " id="cus_billing_address" >
+              <div class="row mb-4 d-flex" id="cus_billing_address" >
                 <div class="col-sm-2"><label >Customer Address</label></div>
                 <div class="col-sm-6">
                   <!-- <input type="text" id="customer_mail" name="customer_mail" class="form-control text-dark"
@@ -3015,7 +3023,17 @@ $(document).ready(function() {
               $('#cus_place_second').val(data.cust_place_supply);
               $('#customer_gst_treat').val(data.gst_treatment);
               $('#customer_gstno').val(data.cust_gstno);
+              var adrs=data.address;
+              if( adrs != "" )
+              {
               document.getElementById('customer_address').value = data.address + '\n' + data.city + '\n' + data.pincode +'\n' + data.cus_state+'\n'+data.country ;
+              $("#cus_billing_address").removeClass('d-none');
+              $("#cus_billing_address").addClass('d-flex');
+            }
+            else{
+              $("#cus_billing_address").removeClass('d-flex');
+              $("#cus_billing_address").addClass('d-none');
+            }
               var GSTNO=document.getElementById('customer_gstno').value;
               var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
