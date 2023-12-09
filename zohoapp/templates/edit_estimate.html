@@ -453,16 +453,39 @@ function calc(){
                     <div class="col-sm-6"> <input type="number" id="reference" name="reference" class="form-control text-black"
                         value="{{estimate.reference}}"></div>
                 </div>
-
-                <div class="row mb-4 border-bottom pb-5">
-                    <div class="col-sm-2"><label for="reference">Estimate Date*</label></div>
-                    <div class="col-sm-2"> <input type="date" id="estimate_date" name="estimate_date" class="form-control text-black"
-                        value="{{estimate.estimate_date|date:'Y-m-d'}}" style="width: 100%;height: 35px;">
-                    </div>
-                    <div class="col-sm-2 text-right"><label for="reference">Expiry Date</label></div>
-                    <div class="col-sm-2"> <input type="date" id="expiry_date" name="expiry_date" class="form-control text-black"
-                        value="{{estimate.expiry_date|date:'Y-m-d'}}" style="width: 100%;height: 35px;"></div>
+                <div class="row mb-4  mt-3">
+                  <div class="col-sm-2"><label for="reference">Estimate Date*</label></div>
+                  <div class="col-sm-2 col-md-6"> 
+                    <input type="date" id="estimate_date" name="estimate_date" value="{{estimate.estimate_date|date:'Y-m-d'}}" class="form-control text-dark" style="width: 100%;height: 35px;">
+                  </div>
+  
                 </div>
+                <div class="row mt-2">
+                  <div class="col-md-2 col-lg-2  mt-2">
+                    <label for="c_terms">Payment Terms</label>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <div class="d-flex">
+                      <select class="form-control text-dark bg-light" onclick="calculateExpiryDate()" id="c_terms" name="c_terms" required>
+                        <option value="">Select </option>
+                        {% for p in payments %}
+                        <option value="{{p.Terms}} {{p.id}}">{{p.Terms}}</option>
+                        {% endfor %}
+                      </select>                
+                      <a href="#" class="btn  py-2 my-1" data-target="#newpayment" data-toggle="modal"  style="background-color: chocolate; color: black; height: 80%; margin-left: 2vh; font-size: large;">+</a>   
+                    </div>
+                  </div>       
+                </div>
+
+                <div class="row mb-4 border-bottom mt-3 pb-5">
+                    
+                  <div class="col-sm-2 text-right"><label for="reference">Expiry Date</label></div>
+                  <div class="col-sm-6 col-md-6 "> 
+                    <input type="date" id="expiry_date" name="expiry_date" value="{{estimate.expiry_date|date:'Y-m-d'}}" class="form-control text-dark"
+                          style="width: 100%;height: 35px;"></div>
+              </div>
+
+                
 <!-- ...........................................................  TABLE 1    ....................................... -->
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-12">
@@ -1352,7 +1375,7 @@ function calc(){
                 </div>
               </div>
             </div>
-            <div class="row mt-2">
+            <!-- <div class="row mt-2">
               <div class="col-md-3 mt-2">
                 <label for="">Customer Status</label><br>
               </div>
@@ -1368,7 +1391,7 @@ function calc(){
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="row mt-5">
               <div class="col-md-3">
                 <label for="ctitle">Title</label>
@@ -2101,7 +2124,7 @@ function calc(){
                 <div class="d-flex">
                   <select class="form-control bg-light text-dark" id="item_units" name="item_units" required>
                     <option value="" hidden>Select Unit</option>
-                    {% for u in unit %}
+                    {% for u in units %}
                     <option value="{{u.id}}">{{u.unit}}</option>
                     {% endfor %}
                   </select>                
@@ -2714,6 +2737,39 @@ function calc(){
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <script>
+
+function calculateExpiryDate()
+  {
+    var estimate=document.getElementById('estimate_date').value;
+    console.log(estimate);
+    var terms=document.getElementById('c_terms').value;
+    var strg=terms.substring(0,3);
+    var upper=strg.toUpperCase();
+    if(upper == 'NET')
+    {
+      var num=0;
+      const match = terms.match(/\d+/);
+      if(match)
+      { 
+        num=match[0];
+      }
+      const expiryDate = new Date(estimate);
+      expiryDate.setDate(expiryDate.getDate() + parseInt(num,10));    // Format the result as DD-MM-YYYY
+  
+  
+  // Add leading zeros if needed
+     const formattedExpiryDate = expiryDate.toISOString().split('T')[0];
+     console.log("hellooooooooooooooooooooooooooooooooooooooooo")
+     console.log(formattedExpiryDate);
+     document.getElementById("expiry_date").value=formattedExpiryDate;
+
+     }
+  
+  }
+
+    </script>
+
+    <script>
       function trackinventory(){
         $("#trackdiv1").toggle();
         $("#trackdiv2").toggle();
@@ -2894,13 +2950,13 @@ else{
   custType = $('#individual').val();
 }
 
-if ($('input[name="radioCust2"]:checked').val() == 'active'){
+// if ($('input[name="radioCust2"]:checked').val() == 'active'){
 
-custstatus = $('#active').val();
-}
-else{
-custstatus = $('#inactive').val();
-}
+// custstatus = $('#active').val();
+// }
+// else{
+// custstatus = $('#inactive').val();
+// }
   
 if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
   cust_tax = $('#custtax1').val();
@@ -2939,7 +2995,6 @@ $.ajax({
       tax_preference :cust_tax,
       currency : $("#c_curn").val(),
       openingbalance : openbal,
-      status:custstatus,
       paymentterms : $("#c_terms").val(),
       street1 : $("#cstreet1").val(),
       street2 : $("#cstreet2").val(),
@@ -3423,7 +3478,7 @@ function reloadUnit() {
                 <td>
                     <div class='form-group'>
                         <select
-                            class='form-control bg-transparent text-light border-0 item_select' name='item[]'
+                            class='form-control bg-transparent text-light border-0 item_select itm' name='item[]'
                             id='item${RowCount}'>
                             <option class='text-dark'>Select Items</option>
                             {% for i in items %}
@@ -3486,7 +3541,7 @@ function reloadUnit() {
                 <td>
                     <div class='form-group'>
                         <select
-                            class='form-control bg-transparent text-light border-0 item_selectt' name='itemm[]'
+                            class='form-control bg-transparent text-light border-0 item_selectt itmm' name='itemm[]'
                             id='itemm${RowCountt}'>
                             <option class='text-dark'>Select Items</option>
                             {% for i in items %}

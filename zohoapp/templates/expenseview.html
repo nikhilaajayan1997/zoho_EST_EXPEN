@@ -358,16 +358,16 @@
                 </div>
              <div class="row">
                 <div class="col-md-4 col-lg-4 col-sm-6">
-                    <a class=" mx-2 btn btn-outline-warning text-warning px-2 py-2" onclick="show_template()" role="button"><i
+                    <a class=" mx-2 btn  text-dark px-2 py-2" style="background-color: rgb(238, 236, 235);" onclick="show_template()" role="button"><i
                             class="fa fa-file-word "></i> Template</a>
-                    <a class="btn btn-outline-warning text-warning px-2 py-2" onclick="show_overview()" role="button"><i class="fa fa-eye"></i>
+                    <a class="btn  text-white px-2 py-2" style="background-color: chocolate;" onclick="show_overview()" role="button"><i class="fa fa-eye"></i>
                         Overview</a>
                 </div>
                <div class="col-md-8 col-lg-8 col-sm-6">
                 <div class="d-flex" style="float: right; margin-right: 25px;">
                     
                     <div class="mx-1">
-                        <div class="dropdown" title="share">
+                        <!-- <div class="dropdown" title="share">
                             <a href=" " class="btn btn-outline-warning py-2 fas fa-share-alt dropdown-toggle  text-warning"  
                                 data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
                             </a>
@@ -379,7 +379,14 @@
                                 data-target=""><center>{% send_email object.title "New: {{object.title}}. Check it out!" object_or_url "<b>Email</b>" %}</center></a>
                                         
                             </div>
-                        </div>
+                        </div> -->
+                        <a class="text-dark" data-toggle="dropdown">
+                            <button class="btn btn-outline-warning py-2" title="Share"><i class="fas fa-share"></i></button>
+                          </a>
+                          <div class="dropdown-menu ">
+                            <a class="dropdown-item" data-target="#shareBillEmail" data-toggle="modal">GMAIL</a>
+                            <a class="dropdown-item" href="">{% post_to_whatsapp object_or_url "&nbsp; &nbsp;WhatsApp" %}</a>
+                          </div>
                     </div>
                     <div class="m-0">
                         <!-- <a href="" class=" far fa-comment-alt btn btn-outline-warning text-warning px-2 py-2" title="COMMENTS"
@@ -458,17 +465,17 @@
                     <button id="toggleTemplate3" onclick="toggleTemplate('whatToPrint3','toggleTemplate3')" class="btn btn-outline-warning btn-sm m-2 templateToggleButtons">3</button>
                 </div>
   <!-- ...........................................  Template 1 ............................... -->
-                <div id="whatToPrint" class="print-only page tabcontent p-5 m-3 printTemplates" style="display: block; background-color: azure">
-                    <div class="text-center">
-                        <h2 class="text-uppercase text-black">Expense Details</h2>
-                        <span style="color: rgb(17, 17, 17);">( {{expense.status}} ) </span>
+                <div id="whatToPrint" class="print-only page tabcontent m-3 printTemplates" style="display: block; background-color: rgb(255, 221, 176)">
+                    <div class="text-center" style="background-color: #8b3131;">
+                        <h2 class="text-uppercase text-white pt-3">Expense Details</h2>
+                        <span style="color: rgb(247, 243, 243);" class="pb-3">( {{expense.status}} ) </span>
                     </div>
                     <div class="extra-info mt-5">
                         <div class="row">
                             <div class="col-6">
-                                <div class="p-1" style="width: 100%;height:2rem;border-radius: 15px;text-align: center;background-color: chocolate;">
+                                <div class="p-1" style="width: 100%;height:2rem;border-radius: 15px;text-align: center;background-color: #8b3131;">
 
-                                <h4  style="color: black; border-bottom: 1px solid #ccc; padding-bottom: 10px;"><b>{{expense.expense_account}}</b></h4>
+                                <h4  style="color: rgb(236, 233, 233); border-bottom: 1px solid #ccc; padding-bottom: 10px;"><b>{{expense.expense_account}}</b></h4>
                                 </div>
                                 <p class="address p-2" style="color: black;">
                                     {{company.company_name}}<br>
@@ -483,8 +490,8 @@
                     <section class="store-user mt-3">
                         <div class="row">
                             <div class="col-6">
-                                <div class="p-1" style="width: 100%;height:2rem;border-radius: 15px;text-align: center;background-color: chocolate;">
-                                <h4 class="text-black" style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+                                <div class="p-1" style="width: 100%;height:2rem;border-radius: 15px;text-align: center;background-color: #8b3131;">
+                                <h4 class="text-white" style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
                                     Bill To
                                 </h4>
                             </div>
@@ -501,9 +508,9 @@
                     <section class="store-user mt-3">
                         <div class="row">
                             <div class="col-6">
-                                <div class="p-1" style="width: 100%;height:2rem;border-radius: 15px;text-align: center;background-color: chocolate;">
+                                <div class="p-1" style="width: 100%;height:2rem;border-radius: 15px;text-align: center;background-color: #8b3131;">
 
-                                <h4 class="text-black" style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Deliver To</h4>
+                                <h4 class="text-white" style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;">Deliver To</h4>
                             </div>
                                 <h6 class="text-capitalize mt-2" style="color: black;">{{expense.customer_name.customerName}}</h6>
                                 <p class="address p-2">
@@ -518,8 +525,8 @@
                     </section>
                 </div>
  <!-- ........................................... Template 2  ..........................................  -->
- <div id="whatToPrint2" class="print-only page tabcontent p-1 m-3 printTemplates" style="display: none; background-color: azure">
-    <div class="text-center " style="background-color: brown;height: 6rem;border-radius: 25px;">
+ <div id="whatToPrint2" class="print-only page tabcontent p-1 m-3 printTemplates" style="display: none; background-color: rgb(255, 221, 176)">
+    <div class="text-center " style="background-color:#8b3131;height: 6rem;border-radius: 25px;">
         <h2 class="text-uppercase text-light pt-4" >Expense Details</h2>
      <span style="color: rgb(223, 221, 217);">( {{expense.status}} ) </span>
 
@@ -570,8 +577,8 @@
  </div>
  
  <!-- ....................................................... Template 3..................................... -->
- <div id="whatToPrint3" class="print-only page tabcontent  printTemplates" style="display:none; background-color: azure">
-    <div class="text-center" style="background-color: rgb(2, 2, 58);">
+ <div id="whatToPrint3" class="print-only page tabcontent  printTemplates" style="display:none; background-color: rgb(255, 221, 176)">
+    <div class="text-center" style="background-color:#8b3131;">
         <h2 class="text-uppercase text-light">Expense Detail </h2>
         <p class="address p-2" style="color: rgb(204, 203, 203);">
         {{company.company_name}}<br>
@@ -599,7 +606,7 @@
     <section class="store-user mt-3">
         <div class="row ps-3">
             <div class="col-6">
-                <h4 style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;color: rgb(2, 2, 58);">Bill To</h4>
+                <h4 style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;color: #8b3131;">Bill To</h4>
                 <h6 class="text-capitalize" style="color: black;">{{expense.vendor.first_name}}</h6>
                 <p class="address p-2">
                     {{expense.vendor.vendor_email}}<br>
@@ -613,7 +620,7 @@
     <section class="store-user mt-3">
         <div class="row ps-3">
             <div class="col-6">
-                <h4 style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;color: rgb(2, 2, 58);">Deliver To</h4>
+                <h4 style="font-weight: 700; border-bottom: 1px solid #ccc; padding-bottom: 10px;color: #8b3131;">Deliver To</h4>
                 <h6 class="text-capitalize" style="color: black;">{{expense.customer_name.customerName}}</h6>
                 <p class="address p-2">
                     {{expense.customer_name.customerEmail}}<br>
@@ -982,6 +989,42 @@
             </div>
         </div>
     </div>
+
+              <!-- Share bill Modal -->
+              <div class="modal fade" id="shareBillEmail">
+                <div class="modal-dialog modal-xl">
+                  <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+                    <div class="modal-header" style="background: rgb(32, 35, 37);">
+                      <h5 class="m-3 text-uppercase" id="shareBillEmailLabel">Share Sales Order Via Email</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                          aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" style="background: rgb(32, 35, 37);">
+                      <div class="card p-3 m-3">
+                        <form action="{% url 'shareExpenseToEmail' expense.id %}" method="post" class="needs-validation"
+                          id="share_to_email_form" autocomplete="off">
+                          {% csrf_token %}
+                          <div class="form-group">
+                            <label for="emailIds">Email IDs</label>
+                            <textarea class="form-control text-dark" name="email_ids" id="emailIds" rows="5"
+                              placeholder="Multiple emails can be added by separating with a comma(,)." required></textarea>
+                          </div>
+                          <div class="form-group mt-2">
+                            <label for="item_unitname">Message(optional)</label>
+                            <textarea name="email_message" id="email_message" class="text-dark form-control" cols=""
+                              rows="4" placeholder="This message will be sent along with Bill details."></textarea>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="modal-footer d-flex justify-content-center" style="border-top: 1px solid #ffff;">
+                        <button type="submit" id="share_with_email"
+                          class="submitShareEmailBtn rounded-pill text-grey w-50 my-4 mx-3" >SEND MAIL</button>
+                      </div>
+                    </div>
+    
+                  </div>
+                </div>
+              </div>
 
     <!-- ....................................  comment list modal ................ -->
 
@@ -1453,6 +1496,52 @@ $(document).ready(function () {
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+     $(document).ready(function () {
+    $('#share_with_email').on('click', function () {
+      var emailsInput = document.getElementById('emailIds');
+      var emailsString = emailsInput.value.trim();
+
+      var emails = emailsString.split(',').map(function (email) {
+        return email.trim();
+      });
+
+      var emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
+      var invalidEmails = []
+      if (emailsString == "") {
+        alert('Enter valid email addresses..')
+      }
+      else {
+        for (var i = 0; i < emails.length; i++) {
+          var currentEmail = emails[i];
+
+          if (currentEmail != "" && !emailRegex.test(currentEmail)) {
+            console.log(currentEmail + ' is invalid!');
+            invalidEmails.push(currentEmail)
+          }
+        }
+
+        if (invalidEmails.length > 0) {
+          alert('Invalid emails..Please check!\n' + invalidEmails)
+          // alert(invalidEmails)
+        } else {
+          $('#share_to_email_form').submit();
+        }
+      }
+    })
+  });
+
+  function shareOnWhatsApp() {
+    var url = window.location.href;
+    var text = url;
+    text = encodeURIComponent(text);
+    var whatsappUrl = "whatsapp://send?text=" + text;
+    window.location.href = whatsappUrl;
+  }
+
+</script>
 
 <script>
     function show_overview()

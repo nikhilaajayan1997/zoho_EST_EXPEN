@@ -373,7 +373,7 @@ urlpatterns = [
     path('get_account_no',views.get_account_no,name='get_account_no'),
     path('import_expense',views.import_expense,name='import_expense'),
     path('downloadExpenseSampleImportFile',views.downloadExpenseSampleImportFile,name='downloadExpenseSampleImportFile'),
-
+    path('shareExpenseToEmail/<int:pk>',views.shareExpenseToEmail,name='shareExpenseToEmail'),
 
     path('expensepage',views.expensepage,name='expensepage'),
     path('save_expense',views.save_expense,name='save_expense'),
@@ -871,6 +871,7 @@ urlpatterns = [
     path('est_sort_by_estno_estimate_view/<int:pk>',views.est_sort_by_estno_estimate_view,name='est_sort_by_estno_estimate_view'),
     path('item_dropdown_estimate',views.item_dropdown_estimate,name='item_dropdown_estimate'),
     path('convert_to_reccinvoice/<int:pk>',views.convert_to_reccinvoice,name='convert_to_reccinvoice'),
+    path('shareEstimateToEmail/<int:pk>',views.shareEstimateToEmail,name='shareEstimateToEmail'),
 
     path('import_estimate',views.import_estimate,name='import_estimate'),
     path('downloadEstimateSampleImportFile',views.downloadEstimateSampleImportFile,name='downloadEstimateSampleImportFile'),

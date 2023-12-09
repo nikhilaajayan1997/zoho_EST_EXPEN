@@ -376,7 +376,7 @@
             
             </select>
             <div class="input-group-append">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create_account" style="width: 20px; height: 38px;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
+              <button type="button" class="btn " data-toggle="modal" data-target="#create_account" style="background-color: chocolate;;width: 20px; height: 38px;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
           </div>
 
           
@@ -542,7 +542,9 @@ document.getElementById("hsn_code").addEventListener("input", function() {
      
     
       <div class="row">
-        <label class="col-md-3">Vendor</label>
+        <div class="col-md-3">
+          <label >Vendor</label>
+        </div>
         <div class="col-md-6 p-3">
             <div class="input-group">
             <select class="form-control text-dark bg-light form-select" id="vendor" name="vendor">
@@ -553,7 +555,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
               {% endfor %}  
             </select>
             <div class="input-group-append">
-              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newvendor" style="width: 20px; height: 38px;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
+              <button type="button" class="btn" data-toggle="modal" data-target="#newvendor" style="width: 20px; height: 38px;background-color: chocolate;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
           </div>
           </div>
      
@@ -566,7 +568,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
     <div class="col-md-3">
       <label >GST Treatment</label>
     </div>
-  <div class="col-md-6 mt-3">
+  <div class="col-md-6 p-3">
       <input type="text" class="form-control text-dark bg-light" id="gst_treatment" name="gst_treatment">
   </div>
 </div>
@@ -575,7 +577,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
   <div class="col-md-3">
     <label >GSTIN</label>
   </div>
-  <div class="col-md-6 mt-3">
+  <div class="col-md-6 p-3">
       <input type="text" class="form-control text-dark bg-light" id="gstin" name="gstin">
   </div>
 </div>
@@ -587,7 +589,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
   </div>
 </div>
 
-<div class="row" id="s_supply_field" style="display: none;">
+<div class="row d-none" id="s_supply_field"></div>
   <label class="col-md-3">Source Of Supply</label>
   <div class="col-md-6 p-3">
     <select class="form-control text-dark bg-light form-select" id="source_of_supply" onchange="show_tax()" name="source_of_supply">
@@ -635,7 +637,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
 </div>
 
         
-        <div class="row">
+        <!-- <div class="row">
           <label for="destination_of_supply" class="col-md-3">Destination of Supply</label>
           <div class="col-md-6 p-3">
             <select class="form-control text-dark bg-light form-select" id="pos" name="destination_of_supply">
@@ -680,7 +682,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
       <option value="[OT]-Other Territory">[OT]-Other Territory</option>
             </select>
           </div>
-        </div>
+        </div> -->
         <div class="row">
           <label class="col-md-3">Reverse Charge</label>
           <div class="col-md-6 ">
@@ -703,13 +705,13 @@ document.getElementById("hsn_code").addEventListener("input", function() {
           </div>
         </div> -->
 
-        <div class="row">
+        <!-- <div class="row">
           <label for="invoice" class="col-md-3">Invoice</label>
           <div class="col-md-6 p-3">
               <input type="text" class="form-control text-dark bg-light" id="invoice" name="invoice" onblur="checkInvoiceOrder(this)">
           </div>
       </div>
-      <div id="warningMessage" style="display: none; color: rgb(180, 177, 20);">order is not correct!!</div>
+      <div id="warningMessage" style="display: none; color: rgb(180, 177, 20);">order is not correct!!</div> -->
       
       <script>
           let previousInvoice = "";
@@ -791,7 +793,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
               
               </select>
               <div class="input-group-append">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newcustomer" style="width: 20px; height: 38px;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
+                <button type="button" class="btn"  data-toggle="modal" data-target="#newcustomer" style="width: 20px; height: 38px;background-color: chocolate;"><p style="font-size: 23px; margin-left: -8px;"> + </p></button>
             </div>
               <!-- <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a> -->
             </div>
@@ -799,14 +801,18 @@ document.getElementById("hsn_code").addEventListener("input", function() {
       </div>
 
       <div class="row d-none" id="cgsttreat_field" >
-        <label class="col-md-3">GST Treatment</label>
-        <div class="col-md-6 p-3">
-            <input type="text" class="form-control text-dark bg-light" id="cgst_treatment" name="cgst_treatment">
+        <div class="col-md-3">
+          <label >GST Treatment</label>
+        </div>
+        <div class="col-md-6">
+            <input type="text"  class="form-control text-dark bg-light" id="cgst_treatment" name="cgst_treatment">
         </div>
       </div>
       
       <div class="row d-none" id="cgstin_field" >
-        <label class="col-md-3">GSTIN</label>
+        <div class="col-md-3">
+          <label >GSTIN</label>
+        </div>
         <div class="col-md-6 p-3">
             <input type="text" class="form-control text-dark bg-light" id="cgstin" name="cgstin">
         </div>
@@ -903,15 +909,19 @@ document.getElementById("hsn_code").addEventListener("input", function() {
     
     
       <div class="row">
-        <label for="notes" class="col-md-3">Notes</label>
+       <div class="col-md-3">
+        <label for="notes" >Notes</label>
+       </div>
         <div class="col-md-6 p-3">
-          <textarea class="form-control text-dark bg-light"  id="notes" name="notes" rows="3" style="width: 400px;"></textarea>
+          <textarea class="form-control text-dark bg-light"  id="notes" name="notes" rows="3"></textarea>
         </div>
         </div>
       <div class="row">
-        <label for="image" class="col-md-3">Attach Receipt</label>
+        <div class="col-md-3">
+          <label for="image">Attach Receipt</label>
+        </div>
         <div class="col-md-6 p-3">
-        <input type="file" class="form-control text-dark bg-light" name="image" style="width: 400px;">
+        <input type="file" class="form-control text-dark bg-light" name="image" >
       </div>
       </div>
     <!-- </div> -->
@@ -2841,7 +2851,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
                 </div>
               </div>
             </div>
-            <div class="row mt-2">
+            <!-- <div class="row mt-2">
               <div class="col-md-3 mt-2">
                 <label for="">Customer Status</label><br>
               </div>
@@ -2857,7 +2867,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="row mt-5">
               <div class="col-md-3">
                 <label for="ctitle">Title</label>
@@ -4488,14 +4498,32 @@ function reloadVendor() {
 
                     if(adrs != null )
                     {
+                      $("#vend_address").val(adrs+"\n"+city+"\n"+state+"\n"+country);
+
                       $("#address_field").show();
                       $("#s_supply_field").show();
                     }
+                    
+
+                    // $("#s_supply_field").hide();
+
+                    // if( adrs != "" )
+                    // {
+                    //   $("#vend_address").removeClass('d-none')
+                    //   $("#vend_address").addClass('d-flex')
+                    //   $("#s_supply_field").show();
+                    // }
+                    // else
+                    // {
+                    //   $("#vend_address").removeClass('d-flex')
+                    //   $("#vend_address").addClass('d-none')
+                    //   $("#s_supply_field").show();
+                    // }
 
                     $("#gst_treatment").val(gstTreatment);
                     $("#source_of_supply").val(s_supply);
                     $("#source_of_supply2").val(s_supply);
-                    $("#vend_address").val(adrs+"\n"+city+"\n"+state+"\n"+country);
+
 
                     if (gstin) 
                     {
@@ -4650,13 +4678,13 @@ else{
   custType = $('#individual').val();
 }
 
-if ($('input[name="radioCust2"]:checked').val() == 'active'){
+// if ($('input[name="radioCust2"]:checked').val() == 'active'){
 
-custstatus = $('#active').val();
-}
-else{
-custstatus = $('#inactive').val();
-}
+// custstatus = $('#active').val();
+// }
+// else{
+// custstatus = $('#inactive').val();
+// }
   
 if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
   cust_tax = $('#custtax1').val();
@@ -4695,7 +4723,6 @@ $.ajax({
       tax_preference :cust_tax,
       currency : $("#c_curn").val(),
       openingbalance : openbal,
-      status:custstatus,
       paymentterms : $("#c_terms").val(),
       street1 : $("#cstreet1").val(),
       street2 : $("#cstreet2").val(),
@@ -4788,8 +4815,8 @@ $(document).ready(function(){
                     var pin=data.pincode;
                     console.log("helloooooooooooooooooooooooooooooooo");
 
-                    $("#caddress_field").removeClass('d-none');
-                    $("#caddress_field").addClass('d-flex');
+                    // $("#caddress_field").removeClass('d-none');
+                    // $("#caddress_field").addClass('d-flex');
 
                     $("#c_supply_field").removeClass('d-none');
                     $("#c_supply_field").addClass('d-flex');
@@ -4808,7 +4835,19 @@ $(document).ready(function(){
                     $("#cgst_treatment").val(gstTreatment);
                     $("#place_of_supply").val(s_supply);
                     $("#place_of_supply2").val(s_supply);
-                    $("#cust_address").val(adrs+"\n"+city+"\n"+state+"\n"+country+"\n"+pin);
+
+
+                    if(adrs != "")
+                    {
+                      $("#cust_address").val(adrs+"\n"+city+"\n"+state+"\n"+country+"\n"+pin);
+                      $("#caddress_field").removeClass('d-none');
+                      $("#caddress_field").addClass('d-flex');
+                    }
+                    else
+                    {
+                      $("#caddress_field").removeClass('d-flex');
+                      $("#caddress_field").addClass('d-none');
+                    }
 
                     if (gstin) 
                     {

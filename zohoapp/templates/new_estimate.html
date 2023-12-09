@@ -1054,7 +1054,7 @@ function calc() {
                 <div class="d-flex">
                   <select class="form-control bg-light text-dark" id="item_units" name="item_units" required>
                     <option value="" hidden>Select Unit</option>
-                    {% for u in unit %}
+                    {% for u in unt %}
                     <option value="{{u.id}}">{{u.unit}}</option>
                     {% endfor %}
                   </select>                
@@ -1445,7 +1445,7 @@ function calc() {
                     </div>
                   </div>
                 </div>
-                <div class="row mt-2">
+                <!-- <div class="row mt-2">
                   <div class="col-md-3 mt-2">
                     <label for="">Customer Status</label><br>
                   </div>
@@ -1461,7 +1461,7 @@ function calc() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
                 <div class="row mt-5">
                   <div class="col-md-3">
                     <label for="ctitle">Title</label>
@@ -2545,12 +2545,12 @@ else{
   custType = $('#individual').val();
 }
 
-if ($('input[name="radioCust2"]:checked').val() == 'active'){
-custstatus = $('#active').val();
-}
-else{
-custstatus = $('#inactive').val();
-}
+// if ($('input[name="radioCust2"]:checked').val() == 'active'){
+// custstatus = $('#active').val();
+// }
+// else{
+// custstatus = $('#inactive').val();
+// }
   
 if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
   cust_tax = $('#custtax1').val();
@@ -2589,7 +2589,6 @@ $.ajax({
       tax_preference :cust_tax,
       currency : $("#c_curn").val(),
       openingbalance : openbal,
-      status:custstatus,
       paymentterms : $("#c_terms").val(),
       street1 : $("#cstreet1").val(),
       street2 : $("#cstreet2").val(),

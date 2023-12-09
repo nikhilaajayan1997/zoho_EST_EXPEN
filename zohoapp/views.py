@@ -43,9 +43,11 @@ from calendar import HTMLCalendar
 from django.template import loader
 from .models import customer  # Import your Customer model
 from django.db.models import Max
-
 from openpyxl import load_workbook
 from openpyxl import Workbook
+from django.core.mail import send_mail, EmailMessage
+from io import BytesIO
+
 
 def index(request):
     return render(request,'landpage.html')
@@ -1774,7 +1776,7 @@ def newestimate(request):
         cmp1=company.id
         items = AddItem.objects.filter(user_id=user.id,satus='active')
         customers = customer.objects.filter(user_id=user.id,status='active')
-        unit=Unit.objects.all()
+        unt=Unit.objects.all()
         sales=Sales.objects.all()
         purchase=Purchase.objects.all()
         payments = payment_terms.objects.filter(user=user)
@@ -1801,10 +1803,10 @@ def newestimate(request):
         if Estimates.objects.filter(reference=1).exists():
                 est_obj=Estimates.objects.get(reference=1,company=cmp1)
                 est_no=est_obj.estimate_no
-                context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments,'est_no':est_no}
+                context = {'unt':unt,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments,'est_no':est_no}
                 return render(request,'new_estimate.html',context)
         else:
-                context = {'unit':unit,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments}
+                context = {'unt':unt,'company': company,'items': items,'customers': customers,'count':new_number,'sales':sales,'purchase':purchase,'payments':payments}
                 return render(request,'new_estimate.html',context)
         
 
@@ -2788,23 +2790,25 @@ def add_cx(request):
         return redirect('add_prod')
 
 
-
-
 @login_required(login_url='login')
 def edited_prod(request, id):
     print(id)
+    print("Submitted Data - Tax:", request.POST.getlist('tax[]'))
+
     user = request.user
     c = customer.objects.all()
-    p = AddItem.objects.all()
+    p = AddItem.objects.filter(user = request.user)
     invoiceitem = invoice_item.objects.filter(inv_id=id)
     invoic = invoice.objects.get(id=id)
     cust = invoic.customer.placeofsupply
     cust_id = invoic.customer.id
-    pay = payment_terms.objects.all()
+    pay = payment_terms.objects.filter(user = request.user)
     sales = Sales.objects.all()
     purchase = Purchase.objects.all()
     invpay = InvoicePayment.objects.filter(invoice_id=id)
-    ip = InvoicePayment.objects.all()
+    ip = InvoicePayment.objects.filter(invoice__user=request.user)
+
+
 
     invp = invpay[0] if invpay else None
     banks = Bankcreation.objects.all()
@@ -2813,6 +2817,41 @@ def edited_prod(request, id):
     company = company_details.objects.get(user=request.user.id)
     comp = company.state
     
+    
+    
+    
+    user = request.user
+    company = company_details.objects.get(user=user)
+    customers = customer.objects.filter(user_id=user.id)
+    
+    c = customer.objects.all()
+
+    items = AddItem.objects.filter(user = request.user)
+    estimate = invoice.objects.get(id=id)
+    cust = estimate.customer.placeofsupply 
+    cust_id = estimate.customer.id
+    payments=payment_terms.objects.filter(user = request.user)
+    
+    pls= customer.objects.get(customerName=estimate.customer.customerName)
+    
+    est_items = invoice_item.objects.filter(inv=estimate)
+
+    unit=Unit.objects.all()
+    sale=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    accounts = Purchase.objects.all()
+    account_types = set(Purchase.objects.values_list('Account_type', flat=True))
+
+    
+    account = Sales.objects.all()
+    account_type = set(Sales.objects.values_list('Account_type', flat=True))
+    
+    
+    
+    cur_user = request.user
+    user = User.objects.get(id=cur_user.id)
+    
+    c = customer.objects.all()
 
     if request.method == 'POST':
         x = request.POST["hidden_state"]
@@ -2843,6 +2882,7 @@ def edited_prod(request, id):
             est_obj.balance=invoic.balance
             est_obj.save()
 
+
         old = invoic.file
         new = request.FILES.get('file')
         if old and not new:
@@ -2852,11 +2892,8 @@ def edited_prod(request, id):
 
         invoic.terms_condition = request.POST.get('ter_cond')
 
-        status = request.POST['sd']
-        if status == 'draft':
-            invoic.status = status
-        else:
-            invoic.status = status
+        
+        
 
         invoic.save()
         
@@ -2868,91 +2905,92 @@ def edited_prod(request, id):
                 invp.cheque_number = request.POST.get('cheque_number', '')
             elif invp.payment_method == 'upi':
                 invp.upi_id = request.POST.get('upi_id', '')
-            elif invp.payment_method == 'bank':
+            else:
                 invp.bank_id = request.POST.get('bank_name', "")
 
             invp.save()
+        est_items = invoice_item.objects.filter(inv=estimate)
+        est_items.delete()
+        if x==y:
 
-        print("/////////////////////////////////////////////////////////")
-        if x == y:
-            invoiceitem.item = request.POST.getlist('item[]')
-            invoiceitem.hsn = request.POST.getlist('hsn[]')
-            invoiceitem.quantity = request.POST.getlist('quantity[]')
-            invoiceitem.rate = request.POST.getlist('rate[]')
-            invoiceitem.desc = request.POST.getlist('desc[]')
-            invoiceitem.tax = request.POST.getlist('tax[]')
-            invoiceitem.amount = request.POST.getlist('amount[]')
-            
-            print("hai")
-            
+            est_items.item = request.POST.getlist('item[]')
+            est_items.hsn = request.POST.getlist('hsn[]')
+            est_items.quantity1 = request.POST.getlist('quantity[]')
+            est_items.quantity = [float(x) for x in est_items.quantity1]
+            est_items.rate1 = request.POST.getlist('rate[]')
+            est_items.rate = [float(x) for x in est_items.rate1]
+            est_items.discount1 = request.POST.getlist('discount[]')
+            est_items.discount = [float(x) for x in est_items.discount1]
+            est_items.tax1 = request.POST.getlist('tax[]')
+            est_items.tax = [float(x) for x in est_items.tax1]
+            est_items.amount1 = request.POST.getlist('amount[]')
+            est_items.amount = [float(x) for x in est_items.amount1]
+        
         else:
-            invoiceitem.itemm = request.POST.getlist('itemm[]')
-            invoiceitem.hsnn = request.POST.getlist('hsnn[]')
-            invoiceitem.quantityy = request.POST.getlist('quantityy[]')
-            invoiceitem.ratee = request.POST.getlist('ratee[]')
-            invoiceitem.descc = request.POST.getlist('descc[]')
-            invoiceitem.taxx = request.POST.getlist('taxx[]')
-            invoiceitem.amountt = request.POST.getlist('amountt[]')
-            
-            
-        if x == y:
-            print("manage")
-            print("Length of invoiceitem.item: ", len(invoiceitem.item))
-            print("Length of invoiceitem.hsn: ", len(invoiceitem.hsn))
-            print("Length of invoiceitem.quantity: ", len(invoiceitem.quantity))
-            print("Length of invoiceitem.desc: ", len(invoiceitem.desc))
-            print("Length of invoiceitem.tax: ", len(invoiceitem.tax))
-            print("Length of invoiceitem.amount: ", len(invoiceitem.amount))
-            print("Length of invoiceitem.rate: ", len(invoiceitem.rate))
-            print("Value of x: ", x)
-            print("Value of y: ", y)
-            if len(invoiceitem.item) == len(invoiceitem.hsn) == len(invoiceitem.quantity) == len(invoiceitem.desc) == len(invoiceitem.tax) == len(invoiceitem.amount) == len(invoiceitem.rate):
-                print("11")
-                mapped = zip(invoiceitem.item, invoiceitem.hsn, invoiceitem.quantity, invoiceitem.desc, invoiceitem.tax, invoiceitem.amount, invoiceitem.rate)
+
+            est_items.itemm = request.POST.getlist('itemm[]')
+            est_items.hsnn = request.POST.getlist('hsnn[]')
+            est_items.quantityy1 = request.POST.getlist('quantityy[]')
+            est_items.quantityy = [float(x) for x in est_items.quantityy1]
+            est_items.ratee1 = request.POST.getlist('ratee[]')
+            est_items.ratee = [float(x) for x in est_items.ratee1]
+            est_items.discountt1 = request.POST.getlist('discountt[]')
+            est_items.discountt = [float(x) for x in est_items.discountt1]
+            est_items.taxx1 = request.POST.getlist('taxx[]')
+            est_items.taxx = [float(x) for x in est_items.taxx1]
+            est_items.amountt1 = request.POST.getlist('amountt[]')
+            est_items.amountt = [float(x) for x in est_items.amountt1]
+       
+
+        
+
+        if x==y:
+            if len(est_items.item) == len(est_items.hsn) ==  len(est_items.quantity) == len(est_items.rate) == len(est_items.discount) == len(est_items.tax) == len(est_items.amount):
+                mapped = zip(est_items.item,est_items.hsn, est_items.quantity, est_items.rate, est_items.discount, est_items.tax, est_items.amount)
                 mapped = list(mapped)
                 for element in mapped:
-                    created = invoice_item.objects.get_or_create(inv=invoic, product=element[0], hsn=element[1],
-                                                                 quantity=element[2], discount=element[3], tax=element[4],
-                                                                 total=element[5], rate=element[6])
-                    print("moveon")
-
-                return redirect('invoice_overview', id)
+                    created = invoice_item.objects.create(
+                        inv=estimate, product=element[0], hsn=element[1], quantity=element[2], rate=element[3], discount=element[4], tax=element[5], total=element[6])
+            return redirect('invoice_overview', id)
 
         else:
-            if len(invoiceitem.itemm) == len(invoiceitem.hsnn) == len(invoiceitem.quantityy) == len(invoiceitem.descc) == len(invoiceitem.taxx) == len(invoiceitem.amountt) == len(invoiceitem.ratee):
-                mapped = zip(invoiceitem.itemm, invoiceitem.hsnn, invoiceitem.quantityy, invoiceitem.descc, invoiceitem.taxx, invoiceitem.amountt, invoiceitem.ratee)
+            if len(est_items.itemm) == len(est_items.hsnn) == len(est_items.quantityy) == len(est_items.ratee) == len(est_items.discountt) == len(est_items.taxx) == len(est_items.amountt):
+                mapped = zip(est_items.itemm, est_items.hsnn, est_items.quantityy, est_items.ratee, est_items.discountt, est_items.taxx, est_items.amountt)
                 mapped = list(mapped)
                 for element in mapped:
-                    created = invoice_item.objects.get_or_create(inv=invoic, product=element[0], hsn=element[1],
-                                                                 quantity=element[2], discount=element[3], tax=element[4],
-                                                                 total=element[5], rate=element[6])
-
-                return redirect('invoice_overview', id)
-
+                    created = invoice_item.objects.create(
+                        inv=estimate, product=element[0],  hsn=element[1], quantity=element[2], rate=element[3], discount=element[4], tax=element[5], total=element[6])
+            return redirect('invoice_overview', id)
     context = {
-        'user': user,
         'c': c,
-        'p': p,
-        'inv': invoiceitem,
-        'i': invoic,
-        'pay': pay,
-        'sales': sales,
-        'purchase': purchase,
-        'units': unit,
         'company': company,
-        'cust': cust,
-        'comp': comp,
-        'custo_id': cust_id,
-        'invpay': invpay,
+        'i': estimate,
+        'customers': customers,
+        'items': items,
+        'est': est_items,
+        'unit':unit,
+        'sale':sale,
+        'purchase':purchase,
+        "account":account,
+        "account_type":account_type,
+        "accounts":accounts,
+        "account_types":account_types,
+        "pls":pls,
+        'payments':payments,
+        'cust':cust,
+        'custo_id':cust_id,
+        
+         'invpay': invpay,
         'banks': banks,
         'invp':invp,
          'ip':ip,
+         'p':p,
     
     }
-
     return render(request, 'invoiceedit.html', context)
+    
 
-@login_required(login_url='login')
+
 
 def edited(request,id):
     c=customer.objects.all()
@@ -10202,7 +10240,88 @@ def import_expense(request):
             challn.save()
             messages.success(request, 'Data imported successfully.!')
             return redirect("expensepage")
+
+def shareEstimateToEmail(request,pk):
+    if request.user: 
+        # try:
+            if request.method == 'POST':
+                emails_string = request.POST['email_ids']
+                print("11111111111111111111111111111111")
+
+                # Split the string by commas and remove any leading or trailing whitespace
+                emails_list = [email.strip() for email in emails_string.split(',')]
+                email_message = request.POST['email_message']
+                # print(emails_list)
+                user = request.user
+                company = company_details.objects.get(user=user)
+                estimate = Estimates.objects.get(id=pk)
+                print("22222222222222222222222222222")
+                
+                items = EstimateItems.objects.filter(estimate=estimate)
+                context = {
+                    'company': company,
+                    'estimate': estimate,
+                    'items': items,
+                }
+                template_path = 'estimate_mail.html'
+                template = get_template(template_path)
+                html  = template.render(context)
+                result = BytesIO()
+                print("3333333333333333333333333")
+                pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)#, link_callback=fetch_resources)
+                pdf = result.getvalue()
+                filename = f'Estimate .pdf'
+                subject = f"ESTIMATE BILL"
+                email = EmailMessage(subject, f"Hi,\nPlease find the attached EXPENSE BILL . \n{email_message}\n\n--\nRegards,\n{company.company_name}\n{company.address}\n{company.state} - {company.country}\n{company.contact_number}", from_email=settings.EMAIL_HOST_USER,to=emails_list)
+                email.attach(filename,pdf,"application/pdf")
+                email.send(fail_silently=False)
+                msg = messages.success(request, 'Bill has been shared via email successfully..!')
+                return redirect('estimateslip',pk)
+        # except Exception as e:
+        #     print(e)
+        #     messages.error(request, f'{e}')
+        #     return redirect('estimateslip',pk)
         
+def shareExpenseToEmail(request,pk):
+    if request.user: 
+        try:
+            if request.method == 'POST':
+                emails_string = request.POST['email_ids']
+                # Split the string by commas and remove any leading or trailing whitespace
+                emails_list = [email.strip() for email in emails_string.split(',')]
+                email_message = request.POST['email_message']
+                # print(emails_list)
+                user = request.user
+                user1=User.objects.get(id=user.id)
+                expense = ExpenseE.objects.filter(user=user)
+                company = company_details.objects.get(user = request.user)
+                expense_account=ExpenseE.objects.get(id=pk)
+                
+                context = {
+                    'expenses': expense,
+                    'expense': expense_account,
+                    'company':company,
+                }
+                template_path = 'expense_email.html'
+                template = get_template(template_path)
+                html  = template.render(context)
+                result = BytesIO()
+                pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)#, link_callback=fetch_resources)
+                pdf = result.getvalue()
+                filename = f'Expense_Bill.pdf'
+                subject = f"EXPENSE BILL"
+                email = EmailMessage(subject, f"Hi,\nPlease find the attached EXPENSE BILL . \n{email_message}\n\n--\nRegards,\n{company.company_name}\n{company.address}\n{company.state} - {company.country}\n{company.contact_number}", from_email=settings.EMAIL_HOST_USER,to=emails_list)
+                email.attach(filename,pdf,"application/pdf")
+                email.send(fail_silently=False)
+                msg = messages.success(request, 'Bill has been shared via email successfully..!')
+                return redirect(expense_details,pk)
+        except Exception as e:
+            print(e)
+            messages.error(request, f'{e}')
+            return redirect(expense_details,pk)
+            
+        
+
 
 def save_expense(request):
     company = company_details.objects.get(user = request.user)
@@ -19297,7 +19416,7 @@ def new_estimate_customer(request):
         szipcode=request.POST.get('spincode')
         sphone1=request.POST.get('sphone')
         sfax=request.POST.get('sfax')
-        status=request.POST.get('status')
+        status="active"
 
         # shipstreet1=request.POST.get('shipstreet1')
         # shipstreet2=request.POST.get('shipstreet2')
